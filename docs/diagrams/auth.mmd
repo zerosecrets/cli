@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant A as zero cli
+    participant B as webapp '/log-in'
+    participant C as backend
+    participant D as webapp '/cli-success-login'
+
+    A->>B: Opens a browser with a login page
+    B->>D: If the user is authorized, we redirect him to the page of successful CLI authorization
+    B-->>C: Request sign-in using the form/GitHub/Google
+    C-->>B: Return refresh & access tokens
+    B->>D: After successful authorization we redirect him to the page of successful CLI authorization
+    Note over D: When the page opens, we generate <br/> server-side code, store it in <br/> the database and display it on the page.
+    D->>D: Asking the user to enter this code in the CLI
+    A->>C: The user enters the code, we validate it and generate an access token on the backend
+    C->>A: Then store it on the device

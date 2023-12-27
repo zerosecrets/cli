@@ -1,0 +1,5 @@
+mutation DeleteProject($object: DeleteProjectsInput!) {
+    deleteProjects(object: $object) {
+        affected_rows
+    }
+}

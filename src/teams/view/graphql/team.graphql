@@ -1,0 +1,21 @@
+query Team($id: uuid!) {
+  team_by_pk(id: $id) {
+    id
+    name
+    description
+
+    owner {
+      id
+      name
+    }
+
+    members {
+      id
+
+      member {
+        id
+        name
+      }
+    }
+  }
+}

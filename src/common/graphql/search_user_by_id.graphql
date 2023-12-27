@@ -1,0 +1,7 @@
+query SearchUserById($id: String!)  {
+  search_user_by_id(args: {match: $id}) {
+    id
+    email
+    name
+  }
+}

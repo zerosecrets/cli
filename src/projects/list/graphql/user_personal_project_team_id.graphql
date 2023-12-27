@@ -1,0 +1,8 @@
+query UserPersonalProjectTeamId($userId: uuid!) {
+   team(where: {_and: [
+    {name: {_eq: "Personal projects"}}
+    {ownerUserId: {_eq: $userId}}
+  ]}) {
+    id
+  }
+}

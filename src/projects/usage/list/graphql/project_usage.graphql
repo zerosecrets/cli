@@ -1,0 +1,25 @@
+query ProjectUsage($id: uuid!) {
+  token(where: {id: {_eq: $id}}, limit: 1000) {
+    id
+    name
+
+    usageHistory(order_by: {createdAt: desc}) {
+      id
+      createdAt
+      callerName
+      remoteIp
+
+      secrets_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+
+    usageHistory_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+mutation RemoveUserFromTeam($teamId: String!, $userId: String!, $ownerTeamUserId: String!) {
+  removeUserFromTeam(object: {teamId: $teamId, userId: $userId, ownerTeamUserId: $ownerTeamUserId}) {
+    success
+  }
+}

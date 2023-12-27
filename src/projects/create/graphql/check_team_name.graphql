@@ -1,0 +1,5 @@
+query CheckTeamName($userId: uuid, $name: String) {
+    team(where: {members: {member: {id: {_eq: $userId}}}, name: {_eq: $name}}) {
+        id
+    }
+}

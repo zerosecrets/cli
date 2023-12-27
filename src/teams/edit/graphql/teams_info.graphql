@@ -1,0 +1,7 @@
+query TeamsInfo {
+  team {
+    id
+    name
+    description
+  }
+}

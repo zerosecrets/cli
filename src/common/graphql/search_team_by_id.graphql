@@ -1,0 +1,6 @@
+query SearchTeamById($id: String!) {
+  search_team_by_id(args: {match: $id}) {
+    id
+    name
+  }
+}

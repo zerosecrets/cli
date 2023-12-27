@@ -1,0 +1,5 @@
+mutation CreateTeam($teamName: String!) {
+    createTeam(object: {teamName: $teamName}) {
+        teamId
+    }
+}

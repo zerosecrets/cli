@@ -1,0 +1,5 @@
+mutation UpdateProjectDescription($projectId: uuid!, $userId: uuid!, $projectDescription: String!) {
+    update_token(where: {id: {_eq: $projectId}, ownerUserId: {_eq: $userId}}, _set: {description: $projectDescription}) {
+        affected_rows
+    }
+}

@@ -1,0 +1,35 @@
+query ProjectDetails($id: uuid!) {
+  token(where: {id: {_eq: $id}}) {
+    id
+    name
+    description
+
+    owner {
+      id
+      name
+      email
+    }
+
+    usageHistory(limit: 1, order_by: {createdAt: desc}) {
+      createdAt
+    }
+
+    teams_aggregate {
+      aggregate {
+        count
+      }
+    }
+
+    integrationInstallations_aggregate {
+      aggregate {
+        count
+      }
+    }
+
+    userSecret_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+mutation SendInvite($teamId: String!, $email: String!) {
+    sendInviteUserTeam(object: {teamId: $teamId, email: $email}) {
+        success
+    }
+}

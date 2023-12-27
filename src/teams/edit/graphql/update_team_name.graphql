@@ -1,0 +1,5 @@
+mutation UpdateTeamName($id: uuid!, $name: String!) {
+  update_team_by_pk(pk_columns: {id: $id}, _set: {name: $name}) {
+    id
+  }
+}

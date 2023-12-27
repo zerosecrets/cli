@@ -1,0 +1,18 @@
+query TeamProjects($id: uuid!, $userId: uuid!) {
+  token(where: {_and: [
+    {teams: {team: {id: {_eq: $id}}}},
+    {teams: {team: {members: {member: {id: {_eq: $userId}}}}}}
+  ]}, limit: 1000) {
+    id
+    name
+
+    owner {
+      name
+      email
+    }
+
+    usageHistory(order_by: {updatedAt: desc}, limit: 1) {
+      updatedAt
+    }
+  }
+}

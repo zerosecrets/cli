@@ -1,0 +1,22 @@
+query UsageDetails($id: uuid!) {
+  usageHistory_by_pk(id: $id) {
+    id
+    callerName
+    createdAt
+    remoteIp
+
+    token {
+      id
+      name
+    }
+
+    secrets {
+      id
+
+      userSecret {
+        id
+        vendor
+      }
+    }
+  }
+}

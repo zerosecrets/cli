@@ -213,7 +213,7 @@ pub fn create(args: &SecretsCreateArgs) {
     let mut expander = text_template.expander();
 
     let secret_link = style(format!(
-        "{}/projects/{}?secretId={}",
+        "{}/projects/{}/{}",
         config.webapp_url,
         &project_id.to_string().replace("-", ""),
         &secret_id.replace("-", "")

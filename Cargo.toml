@@ -1,11 +1,11 @@
 [package]
 name = "zero-cli"
 description = "A command line tool for Zero Secrets Manager"
-version = "1.0.4"
+version = "2.0.0"
 authors = ["Zero <team@tryzero.com>"]
 license = "MIT OR Apache-2.0"
 homepage = "https://tryzero.com"
-repository = "https://github.com/ottofeller/zero-cli"
+repository = "https://github.com/zerosecrets/cli"
 keywords = ["cli", "zero", "secrets", "password", "security"]
 categories = ["command-line-utilities"]
 edition = "2021"

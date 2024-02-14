@@ -3,7 +3,6 @@ use crate::common::{
 };
 use graphql_client::Response;
 use reqwest::{header::HeaderMap, Client};
-use spinners::{Spinner, Spinners};
 
 /// Executes a GraphQL request and returns the response data.
 ///
@@ -74,8 +73,6 @@ where
     V: serde::Serialize,
     D: for<'a> serde::Deserialize<'a>,
 {
-    let mut sp = Spinner::new(Spinners::Dots, String::new());
-
     let response = tokio_runtime().block_on(async {
         match client
             .post(Config::new().graphql_url)
@@ -114,6 +111,5 @@ where
         }
     });
 
-    sp.stop_and_persist("", "".to_string());
     response
 }

@@ -299,7 +299,7 @@ pub fn edit(args: &SecretsEditArgs) {
     println!(
         "{}",
         style(format!(
-            "{}/projects/{}?secretId={}",
+            "{}/projects/{}/{}",
             config.webapp_url,
             secret_info.token_id.to_string().replace("-", ""),
             secret_info.id.to_string().replace("-", "")

@@ -16,8 +16,8 @@ impl Config {
             graphql_url: String::from("https://api.tryzero.com/v1/graphql"),
             items_per_page: 10,
             min_id_length: 4,
-            webapp_cli_auth_url: String::from("https://tryzero.com/cli-success-login"),
-            webapp_url: String::from("https://tryzero.com"),
+            webapp_cli_auth_url: String::from("https://app.tryzero.com/cli-success-login"),
+            webapp_url: String::from("https://app.tryzero.com"),
         }
     }
 }

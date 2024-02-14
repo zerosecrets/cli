@@ -31,7 +31,7 @@ use reqwest::header;
 pub fn authorization_headers(access_token: &str) -> header::HeaderMap {
     let mut headers = header::HeaderMap::new();
 
-    let header_value = match header::HeaderValue::from_str(&format!("Bearer {}", access_token)) {
+    let header_value = match header::HeaderValue::from_str(&format!("accessToken={}", access_token)) {
         Ok(value) => value,
         Err(_) => {
             print_formatted_error("Service error. Please try to log in again.");
@@ -39,6 +39,6 @@ pub fn authorization_headers(access_token: &str) -> header::HeaderMap {
         }
     };
 
-    headers.insert("Authorization", header_value);
+    headers.insert("Cookie", header_value);
     headers
 }

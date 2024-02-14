@@ -97,25 +97,11 @@ input CheckPaymentMethodInput {
 }
 
 type CheckPaymentMethodOutput {
-  clientSecret: String
-  paymentMethod: String
-}
-
-input CheckSubscriptionInput {
-  stripeCustomerId: String!
-}
-
-type CheckSubscriptionOutput {
   brand: String
-  cancelAt: Int
-  currentPlan: String
   expirationMonth: Int
   expirationYear: Int
-  interval: String
   last4: String
   lastUpdated: Int
-  nextPayment: Int
-  price: Int
 }
 
 input CheckUserEmailInput {
@@ -208,6 +194,11 @@ type DecodeSharingSecretsOutput {
   secrets: json!
 }
 
+type DecryptedSecretField {
+  key: String!
+  value: String!
+}
+
 input DeleteProjectsInput {
   deleteSecretsOn3rdParty: Boolean
   ids: [uuid!]!
@@ -229,7 +220,6 @@ input EmailVerifyInput {
 
 type EmailVerifyOutput {
   accessToken: String
-  refreshToken: String
 }
 
 type Environment {
@@ -253,8 +243,8 @@ input GithubSignInInput {
 }
 
 type GithubSignInOutput {
+  accessToken: String!
   isNewUser: Boolean!
-  tokens: Tokens!
 }
 
 input GoogleSignInInput {
@@ -262,13 +252,8 @@ input GoogleSignInInput {
 }
 
 type GoogleSignInOutput {
-  isNewUser: Boolean!
-  tokens: GoogleTokens!
-}
-
-type GoogleTokens {
   accessToken: String!
-  refreshToken: String!
+  isNewUser: Boolean!
 }
 
 type InstallationOutput {
@@ -404,6 +389,7 @@ input IntegrationUploadSecretsInputIntegration {
 
 input IntegrationUploadSecretsInputZero {
   secretsIds: [String]
+  userId: String!
 }
 
 type IntegrationUploadSecretsOutput {
@@ -459,6 +445,14 @@ input RejectTeamInviteInput {
 type RejectTeamInviteOutput {
   errorCode: String
   success: Boolean!
+}
+
+input RemovePaidFeaturesInput {
+  stripeCustomerId: String!
+}
+
+type RemovePaidFeaturesOutput {
+  success: Boolean
 }
 
 input RemoveTeamInput {
@@ -536,6 +530,7 @@ type SecretOutput {
 
 input SendEmailToContactUsInput {
   email: String!
+  message: String!
   name: String!
 }
 
@@ -570,7 +565,6 @@ input SignInInput {
 
 type SignInOutput {
   accessToken: String!
-  refreshToken: String!
 }
 
 input SignUpInput {
@@ -636,11 +630,6 @@ input String_comparison_exp {
   _similar: String
 }
 
-type Tokens {
-  accessToken: String!
-  refreshToken: String!
-}
-
 input UpdatePaymentMethodInput {
   stripeCustomerId: String!
 }
@@ -680,12 +669,20 @@ input UpdateUserSecretInput {
   slug: String!
 }
 
-input ViewSecretInput {
+input ViewSecretFieldInput {
   secretFieldId: String!
 }
 
-type ViewSecretOutput {
+type ViewSecretFieldOutput {
   value: String!
+}
+
+input ViewSecretFieldsInput {
+  secretId: String!
+}
+
+type ViewSecretFieldsOutput {
+  secretFields: [DecryptedSecretField]!
 }
 
 """The table for the CLI login"""
@@ -2267,7 +2264,6 @@ type mutation_root {
   cancelSubscription(object: CancelSubscriptionInput!): CancelSubscriptionOutput!
   changePassword(object: ChangePasswordInput!): ChangePasswordOutput!
   changeSubscription(object: ChangeSubscriptionInput!): ChangeSubscriptionOutput!
-  checkIntegrationDeploy(integration: CheckIntegrationDeployInput!): CheckIntegrationDeployOutput!
   cliAccessTokens(object: CliAccessTokensInput!): CliAccessTokensOutput!
   confirmEmailChange(object: ConfirmEmailChangeInput!): ConfirmEmailChangeOutput!
   createCustomer(object: CreateCustomerInput!): CreateCustomerOutput!
@@ -3317,6 +3313,7 @@ type mutation_root {
   recalculateTeamSeatsSubscription(object: RecalculateTeamSeatsSubscriptionInput!): RecalculateTeamSeatsSubscriptionOutput!
   refreshAccessToken(object: RefreshAccessTokenInput!): RefreshAccessTokenOutput!
   rejectTeamInvite(object: RejectTeamInviteInput!): RejectTeamInviteOutput!
+  removePaidFeatures(object: RemovePaidFeaturesInput!): RemovePaidFeaturesOutput!
   removeTeam(object: RemoveTeamInput!): RemoveTeamOutput!
   removeUserFromTeam(object: RemoveUserFromTeamInput!): RemoveUserFromTeamOutput!
   requestEmailChange(object: RequestEmailChangeInput!): RequestEmailChangeOutput!
@@ -4790,8 +4787,8 @@ enum order_by {
 type query_root {
   IntegrationProjects(where: IntegrationProjectsInput!): IntegrationProjectsOutput!
   _emptyQuery: String
+  checkIntegrationDeploy(integration: CheckIntegrationDeployInput!): CheckIntegrationDeployOutput!
   checkPaymentMethod(where: CheckPaymentMethodInput!): CheckPaymentMethodOutput!
-  checkSubscription(where: CheckSubscriptionInput!): CheckSubscriptionOutput!
   checkUserEmail(object: CheckUserEmailInput!): CheckUserEmailOutput!
 
   """
@@ -6315,7 +6312,8 @@ type query_root {
 
   """fetch data from the table: "verification" using primary key columns"""
   verification_by_pk(id: uuid!): verification
-  viewSecret(secretField: ViewSecretInput!): ViewSecretOutput!
+  viewSecretField(secretField: ViewSecretFieldInput!): ViewSecretFieldOutput!
+  viewSecretFields(secretField: ViewSecretFieldsInput!): ViewSecretFieldsOutput!
 }
 
 """enumeration of the steps of registration"""
@@ -9363,6 +9361,9 @@ type teamInvitation {
   invitedBy: uuid!
 
   """An object relationship"""
+  invitedUser: user
+
+  """An object relationship"""
   ownerTeam: user!
   status: invitationStatusEnum_enum!
 
@@ -9381,6 +9382,17 @@ type teamInvitation_aggregate {
   nodes: [teamInvitation!]!
 }
 
+input teamInvitation_aggregate_bool_exp {
+  count: teamInvitation_aggregate_bool_exp_count
+}
+
+input teamInvitation_aggregate_bool_exp_count {
+  arguments: [teamInvitation_select_column!]
+  distinct: Boolean
+  filter: teamInvitation_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 """
 aggregate fields of "teamInvitation"
 """
@@ -9388,6 +9400,25 @@ type teamInvitation_aggregate_fields {
   count(columns: [teamInvitation_select_column!], distinct: Boolean): Int!
   max: teamInvitation_max_fields
   min: teamInvitation_min_fields
+}
+
+"""
+order by aggregate values of table "teamInvitation"
+"""
+input teamInvitation_aggregate_order_by {
+  count: order_by
+  max: teamInvitation_max_order_by
+  min: teamInvitation_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "teamInvitation"
+"""
+input teamInvitation_arr_rel_insert_input {
+  data: [teamInvitation_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: teamInvitation_on_conflict
 }
 
 """
@@ -9402,6 +9433,7 @@ input teamInvitation_bool_exp {
   expiredAt: timestamptz_comparison_exp
   id: uuid_comparison_exp
   invitedBy: uuid_comparison_exp
+  invitedUser: user_bool_exp
   ownerTeam: user_bool_exp
   status: invitationStatusEnum_enum_comparison_exp
   team: team_bool_exp
@@ -9429,6 +9461,7 @@ input teamInvitation_insert_input {
   expiredAt: timestamptz
   id: uuid
   invitedBy: uuid
+  invitedUser: user_obj_rel_insert_input
   ownerTeam: user_obj_rel_insert_input
   status: invitationStatusEnum_enum
   team: team_obj_rel_insert_input
@@ -9449,6 +9482,20 @@ type teamInvitation_max_fields {
   updatedAt: timestamptz
 }
 
+"""
+order by max() on columns of table "teamInvitation"
+"""
+input teamInvitation_max_order_by {
+  createdAt: order_by
+  email: order_by
+  expiredAt: order_by
+  id: order_by
+  invitedBy: order_by
+  teamId: order_by
+  teamName: order_by
+  updatedAt: order_by
+}
+
 """aggregate min on columns"""
 type teamInvitation_min_fields {
   createdAt: timestamptz
@@ -9459,6 +9506,20 @@ type teamInvitation_min_fields {
   teamId: uuid
   teamName: String
   updatedAt: timestamptz
+}
+
+"""
+order by min() on columns of table "teamInvitation"
+"""
+input teamInvitation_min_order_by {
+  createdAt: order_by
+  email: order_by
+  expiredAt: order_by
+  id: order_by
+  invitedBy: order_by
+  teamId: order_by
+  teamName: order_by
+  updatedAt: order_by
 }
 
 """
@@ -9488,6 +9549,7 @@ input teamInvitation_order_by {
   expiredAt: order_by
   id: order_by
   invitedBy: order_by
+  invitedUser: user_order_by
   ownerTeam: user_order_by
   status: order_by
   team: team_order_by
@@ -11812,8 +11874,80 @@ type user {
   """A computed field which return the hasPassword boolean value"""
   hasPassword: Boolean
   id: uuid!
+
+  """An array relationship"""
+  invitation(
+    """distinct select on columns"""
+    distinct_on: [teamInvitation_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [teamInvitation_order_by!]
+
+    """filter the rows returned"""
+    where: teamInvitation_bool_exp
+  ): [teamInvitation!]!
+
+  """An aggregate relationship"""
+  invitation_aggregate(
+    """distinct select on columns"""
+    distinct_on: [teamInvitation_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [teamInvitation_order_by!]
+
+    """filter the rows returned"""
+    where: teamInvitation_bool_exp
+  ): teamInvitation_aggregate!
   isMarketingEmailsRequested: Boolean!
   name: String!
+
+  """An array relationship"""
+  notifications(
+    """distinct select on columns"""
+    distinct_on: [notificationUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [notificationUser_order_by!]
+
+    """filter the rows returned"""
+    where: notificationUser_bool_exp
+  ): [notificationUser!]!
+
+  """An aggregate relationship"""
+  notifications_aggregate(
+    """distinct select on columns"""
+    distinct_on: [notificationUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [notificationUser_order_by!]
+
+    """filter the rows returned"""
+    where: notificationUser_bool_exp
+  ): notificationUser_aggregate!
   password: String
   registrationStep: registrationStep_enum
 
@@ -11892,6 +12026,81 @@ type user {
 
   """An object relationship"""
   userSubscription: userSubscription
+
+  """An object relationship"""
+  user_activeTeam: team
+
+  """An array relationship"""
+  user_notificationUsers(
+    """distinct select on columns"""
+    distinct_on: [notificationUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [notificationUser_order_by!]
+
+    """filter the rows returned"""
+    where: notificationUser_bool_exp
+  ): [notificationUser!]!
+
+  """An aggregate relationship"""
+  user_notificationUsers_aggregate(
+    """distinct select on columns"""
+    distinct_on: [notificationUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [notificationUser_order_by!]
+
+    """filter the rows returned"""
+    where: notificationUser_bool_exp
+  ): notificationUser_aggregate!
+
+  """An array relationship"""
+  user_teamInvitation(
+    """distinct select on columns"""
+    distinct_on: [teamInvitation_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [teamInvitation_order_by!]
+
+    """filter the rows returned"""
+    where: teamInvitation_bool_exp
+  ): [teamInvitation!]!
+
+  """An aggregate relationship"""
+  user_teamInvitation_aggregate(
+    """distinct select on columns"""
+    distinct_on: [teamInvitation_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [teamInvitation_order_by!]
+
+    """filter the rows returned"""
+    where: teamInvitation_bool_exp
+  ): teamInvitation_aggregate!
 }
 
 """
@@ -12181,6 +12390,7 @@ type userSecret {
     where: integrationInstallationUserSecret_bool_exp
   ): integrationInstallationUserSecret_aggregate!
   name: String!
+  note: String!
   slug: String!
 
   """An object relationship"""
@@ -12574,6 +12784,7 @@ input userSecret_bool_exp {
   installations: integrationInstallationUserSecret_bool_exp
   installations_aggregate: integrationInstallationUserSecret_aggregate_bool_exp
   name: String_comparison_exp
+  note: String_comparison_exp
   slug: String_comparison_exp
   token: token_bool_exp
   tokenId: uuid_comparison_exp
@@ -12603,6 +12814,7 @@ input userSecret_insert_input {
   id: uuid
   installations: integrationInstallationUserSecret_arr_rel_insert_input
   name: String
+  note: String
   slug: String
   token: token_obj_rel_insert_input
   tokenId: uuid
@@ -12617,6 +12829,7 @@ type userSecret_max_fields {
   createdAt: timestamptz
   id: uuid
   name: String
+  note: String
   slug: String
   tokenId: uuid
   updatedAt: timestamptz
@@ -12629,6 +12842,7 @@ input userSecret_max_order_by {
   createdAt: order_by
   id: order_by
   name: order_by
+  note: order_by
   slug: order_by
   tokenId: order_by
   updatedAt: order_by
@@ -12639,6 +12853,7 @@ type userSecret_min_fields {
   createdAt: timestamptz
   id: uuid
   name: String
+  note: String
   slug: String
   tokenId: uuid
   updatedAt: timestamptz
@@ -12651,6 +12866,7 @@ input userSecret_min_order_by {
   createdAt: order_by
   id: order_by
   name: order_by
+  note: order_by
   slug: order_by
   tokenId: order_by
   updatedAt: order_by
@@ -12693,6 +12909,7 @@ input userSecret_order_by {
   id: order_by
   installations_aggregate: integrationInstallationUserSecret_aggregate_order_by
   name: order_by
+  note: order_by
   slug: order_by
   token: token_order_by
   tokenId: order_by
@@ -12721,6 +12938,9 @@ enum userSecret_select_column {
   name
 
   """column name"""
+  note
+
+  """column name"""
   slug
 
   """column name"""
@@ -12740,6 +12960,7 @@ input userSecret_set_input {
   createdAt: timestamptz
   id: uuid
   name: String
+  note: String
   slug: String
   tokenId: uuid
   updatedAt: timestamptz
@@ -12762,6 +12983,7 @@ input userSecret_stream_cursor_value_input {
   createdAt: timestamptz
   id: uuid
   name: String
+  note: String
   slug: String
   tokenId: uuid
   updatedAt: timestamptz
@@ -12780,6 +13002,9 @@ enum userSecret_update_column {
 
   """column name"""
   name
+
+  """column name"""
+  note
 
   """column name"""
   slug
@@ -12817,6 +13042,9 @@ type userSubscription {
   subscriptionPlan: subscriptionPlanEnum_enum!
   subscriptionUpdatedAt: timestamptz
   updatedAt: timestamptz!
+
+  """An object relationship"""
+  user: user!
   userId: uuid!
 }
 
@@ -12871,6 +13099,7 @@ input userSubscription_bool_exp {
   subscriptionPlan: subscriptionPlanEnum_enum_comparison_exp
   subscriptionUpdatedAt: timestamptz_comparison_exp
   updatedAt: timestamptz_comparison_exp
+  user: user_bool_exp
   userId: uuid_comparison_exp
 }
 
@@ -12924,6 +13153,7 @@ input userSubscription_insert_input {
   subscriptionPlan: subscriptionPlanEnum_enum
   subscriptionUpdatedAt: timestamptz
   updatedAt: timestamptz
+  user: user_obj_rel_insert_input
   userId: uuid
 }
 
@@ -13002,6 +13232,7 @@ input userSubscription_order_by {
   subscriptionPlan: order_by
   subscriptionUpdatedAt: order_by
   updatedAt: order_by
+  user: user_order_by
   userId: order_by
 }
 
@@ -13248,8 +13479,12 @@ input user_bool_exp {
   googleId: String_comparison_exp
   hasPassword: Boolean_comparison_exp
   id: uuid_comparison_exp
+  invitation: teamInvitation_bool_exp
+  invitation_aggregate: teamInvitation_aggregate_bool_exp
   isMarketingEmailsRequested: Boolean_comparison_exp
   name: String_comparison_exp
+  notifications: notificationUser_bool_exp
+  notifications_aggregate: notificationUser_aggregate_bool_exp
   password: String_comparison_exp
   registrationStep: registrationStep_enum_comparison_exp
   teams: teamUser_bool_exp
@@ -13258,6 +13493,11 @@ input user_bool_exp {
   tokens_aggregate: token_aggregate_bool_exp
   updatedAt: timestamptz_comparison_exp
   userSubscription: userSubscription_bool_exp
+  user_activeTeam: team_bool_exp
+  user_notificationUsers: notificationUser_bool_exp
+  user_notificationUsers_aggregate: notificationUser_aggregate_bool_exp
+  user_teamInvitation: teamInvitation_bool_exp
+  user_teamInvitation_aggregate: teamInvitation_aggregate_bool_exp
 }
 
 """
@@ -13298,14 +13538,19 @@ input user_insert_input {
   githubId: Int
   googleId: String
   id: uuid
+  invitation: teamInvitation_arr_rel_insert_input
   isMarketingEmailsRequested: Boolean
   name: String
+  notifications: notificationUser_arr_rel_insert_input
   password: String
   registrationStep: registrationStep_enum
   teams: teamUser_arr_rel_insert_input
   tokens: token_arr_rel_insert_input
   updatedAt: timestamptz
   userSubscription: userSubscription_obj_rel_insert_input
+  user_activeTeam: team_obj_rel_insert_input
+  user_notificationUsers: notificationUser_arr_rel_insert_input
+  user_teamInvitation: teamInvitation_arr_rel_insert_input
 }
 
 """aggregate max on columns"""
@@ -13376,14 +13621,19 @@ input user_order_by {
   googleId: order_by
   hasPassword: order_by
   id: order_by
+  invitation_aggregate: teamInvitation_aggregate_order_by
   isMarketingEmailsRequested: order_by
   name: order_by
+  notifications_aggregate: notificationUser_aggregate_order_by
   password: order_by
   registrationStep: order_by
   teams_aggregate: teamUser_aggregate_order_by
   tokens_aggregate: token_aggregate_order_by
   updatedAt: order_by
   userSubscription: userSubscription_order_by
+  user_activeTeam: team_order_by
+  user_notificationUsers_aggregate: notificationUser_aggregate_order_by
+  user_teamInvitation_aggregate: teamInvitation_aggregate_order_by
 }
 
 """primary key columns input for table: user"""

@@ -108,7 +108,7 @@ pub fn view(args: &SecretViewArgs) {
     let markdown_text = format!(
         "**URL**: {} \n**Name**: {} \n**Vendor**: {}\n**Last used**: {}\n**Fields**:\n{}",
         style(format!(
-            "{}/projects/{}/{}",
+            "{}/projects/{}/secrets/{}",
             Config::new().webapp_url,
             user_secret_details.token_id.to_string().replace("-", ""),
             user_secret_details.id.to_string().replace("-", "")

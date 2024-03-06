@@ -153,7 +153,7 @@ pub fn usage_details(args: &ProjectsUsageDetailsArgs) {
                 "  * {} ({})",
                 name_string,
                 style(format!(
-                    "{}/projects/{}/{}",
+                    "{}/projects/{}/secrets/{}",
                     webapp_url,
                     usage_details_response.token.id.to_string().replace("-", ""),
                     secret.id.to_string().replace("-", "")

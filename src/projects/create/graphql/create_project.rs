@@ -17,6 +17,7 @@ pub mod create_project {
     pub struct CreateProjectInput {
         #[serde(rename = "activeTeamId")]
         pub active_team_id: uuid::Uuid,
+        pub icon: String,
         pub name: String,
     }
     #[derive(Serialize)]

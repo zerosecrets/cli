@@ -2631,7 +2631,7 @@ dependencies = [
 
 [[package]]
 name = "zero-cli"
-version = "2.0.1"
+version = "2.0.2"
 dependencies = [
  "chrono",
  "clap",

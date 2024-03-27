@@ -131,6 +131,7 @@ pub fn create(args: &ProjectsCreateArgs) {
                 object: create_project::CreateProjectInput {
                     name: project_name.clone(),
                     active_team_id: team_id,
+                    icon: "star".to_string(), // Default icon
                 },
             },
         )

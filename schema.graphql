@@ -104,13 +104,12 @@ type CheckPaymentMethodOutput {
   lastUpdated: Int
 }
 
-input CheckUserEmailInput {
+input CheckUserEmailExistInput {
   email: String!
-  isCheckExistPassword: Boolean
 }
 
-type CheckUserEmailOutput {
-  success: Boolean!
+type CheckUserEmailExistOutput {
+  isExist: Boolean!
 }
 
 input CliAccessTokensInput {
@@ -126,7 +125,7 @@ input ConfirmEmailChangeInput {
 }
 
 type ConfirmEmailChangeOutput {
-  success: Boolean
+  accessToken: String!
 }
 
 input CreateCustomerInput {
@@ -140,6 +139,7 @@ type CreateCustomerOutput {
 
 input CreateProjectInput {
   activeTeamId: uuid
+  icon: String!
   name: String!
 }
 
@@ -151,13 +151,11 @@ type CreateProjectOutput {
 
 input CreateSecretFieldInput {
   name: String!
-  slug: String!
   value: String!
 }
 
 input CreateSecretInput {
   name: String!
-  slug: String!
   tokenId: String!
   vendor: String!
 }
@@ -324,6 +322,7 @@ input IntegrationDownloadSecretsInputIntegration {
 
 input IntegrationDownloadSecretsInputZero {
   projectId: String!
+  userId: String!
 }
 
 type IntegrationDownloadSecretsOutput {
@@ -496,11 +495,6 @@ type RequestResetPasswordOutput {
   success: Boolean
 }
 
-input ResendSignUpEmailInput {
-  email: String!
-  userId: String!
-}
-
 type ResendSignUpEmailOutput {
   success: Boolean
 }
@@ -574,7 +568,7 @@ input SignUpInput {
 }
 
 type SignUpOutput {
-  success: Boolean
+  accessToken: String!
 }
 
 """
@@ -640,6 +634,7 @@ type UpdatePaymentMethodOutput {
 
 input UpdateProjectSettingsInput {
   addedTeamsIds: [AddedTeamsIdsType]!
+  icon: String!
   projectDescription: String
   projectId: String!
   projectName: String!
@@ -659,22 +654,12 @@ input UpdateUserSecretFieldsInput {
   decryptedValue: String
   encryptedValue: String
   name: String!
-  slug: String!
   userSecretId: String!
 }
 
 input UpdateUserSecretInput {
   id: String!
   name: String!
-  slug: String!
-}
-
-input ViewSecretFieldInput {
-  secretFieldId: String!
-}
-
-type ViewSecretFieldOutput {
-  value: String!
 }
 
 input ViewSecretFieldsInput {
@@ -682,7 +667,7 @@ input ViewSecretFieldsInput {
 }
 
 type ViewSecretFieldsOutput {
-  secretFields: [DecryptedSecretField]!
+  secretFields: [DecryptedSecretField!]!
 }
 
 """The table for the CLI login"""
@@ -2272,7 +2257,7 @@ type mutation_root {
   creates new project with unique auto generated token and optimally link the project to existed user team
   """
   createProject(object: CreateProjectInput!): CreateProjectOutput
-  createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!): CreateSecretOutput!
+  createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!, userId: String!): CreateSecretOutput!
   createTeam(object: CreateTeamInput!): CreateTeamOutput!
 
   """Release (represent and erase) shared secrets"""
@@ -3318,7 +3303,7 @@ type mutation_root {
   removeUserFromTeam(object: RemoveUserFromTeamInput!): RemoveUserFromTeamOutput!
   requestEmailChange(object: RequestEmailChangeInput!): RequestEmailChangeOutput!
   requestResetPassword(object: RequestResetPasswordInput!): RequestResetPasswordOutput!
-  resendSignUpEmail(object: ResendSignUpEmailInput!): ResendSignUpEmailOutput!
+  resendSignUpEmail: ResendSignUpEmailOutput!
   resetPassword(object: ResetPasswordInput!): ResetPasswordOutput!
 
   """rotate new token for project"""
@@ -4789,7 +4774,7 @@ type query_root {
   _emptyQuery: String
   checkIntegrationDeploy(integration: CheckIntegrationDeployInput!): CheckIntegrationDeployOutput!
   checkPaymentMethod(where: CheckPaymentMethodInput!): CheckPaymentMethodOutput!
-  checkUserEmail(object: CheckUserEmailInput!): CheckUserEmailOutput!
+  checkUserEmailExist(object: CheckUserEmailExistInput!): CheckUserEmailExistOutput!
 
   """
   fetch data from the table: "cli"
@@ -6312,7 +6297,6 @@ type query_root {
 
   """fetch data from the table: "verification" using primary key columns"""
   verification_by_pk(id: uuid!): verification
-  viewSecretField(secretField: ViewSecretFieldInput!): ViewSecretFieldOutput!
   viewSecretFields(secretField: ViewSecretFieldsInput!): ViewSecretFieldsOutput!
 }
 
@@ -10204,6 +10188,7 @@ columns and relationships of "token"
 type token {
   createdAt: timestamptz!
   description: String
+  icon: String!
   id: uuid!
 
   """An array relationship"""
@@ -10984,6 +10969,7 @@ input token_bool_exp {
   _or: [token_bool_exp!]
   createdAt: timestamptz_comparison_exp
   description: String_comparison_exp
+  icon: String_comparison_exp
   id: uuid_comparison_exp
   integrationInstallations: integrationInstallation_bool_exp
   integrationInstallations_aggregate: integrationInstallation_aggregate_bool_exp
@@ -11027,6 +11013,7 @@ input type for inserting data into table "token"
 input token_insert_input {
   createdAt: timestamptz
   description: String
+  icon: String
   id: uuid
   integrationInstallations: integrationInstallation_arr_rel_insert_input
   lastUpdatedAt: timestamptz
@@ -11047,6 +11034,7 @@ input token_insert_input {
 type token_max_fields {
   createdAt: timestamptz
   description: String
+  icon: String
   id: uuid
   lastUpdatedAt: timestamptz
 
@@ -11068,6 +11056,7 @@ order by max() on columns of table "token"
 input token_max_order_by {
   createdAt: order_by
   description: order_by
+  icon: order_by
   id: order_by
   lastUpdatedAt: order_by
   name: order_by
@@ -11082,6 +11071,7 @@ input token_max_order_by {
 type token_min_fields {
   createdAt: timestamptz
   description: String
+  icon: String
   id: uuid
   lastUpdatedAt: timestamptz
 
@@ -11103,6 +11093,7 @@ order by min() on columns of table "token"
 input token_min_order_by {
   createdAt: order_by
   description: order_by
+  icon: order_by
   id: order_by
   lastUpdatedAt: order_by
   name: order_by
@@ -11147,6 +11138,7 @@ input token_on_conflict {
 input token_order_by {
   createdAt: order_by
   description: order_by
+  icon: order_by
   id: order_by
   integrationInstallations_aggregate: integrationInstallation_aggregate_order_by
   lastUpdatedAt: order_by
@@ -11180,6 +11172,9 @@ enum token_select_column {
   description
 
   """column name"""
+  icon
+
+  """column name"""
   id
 
   """column name"""
@@ -11210,6 +11205,7 @@ input type for updating data in table "token"
 input token_set_input {
   createdAt: timestamptz
   description: String
+  icon: String
   id: uuid
   lastUpdatedAt: timestamptz
   name: String
@@ -11235,6 +11231,7 @@ input token_stream_cursor_input {
 input token_stream_cursor_value_input {
   createdAt: timestamptz
   description: String
+  icon: String
   id: uuid
   lastUpdatedAt: timestamptz
   name: String
@@ -11254,6 +11251,9 @@ enum token_update_column {
 
   """column name"""
   description
+
+  """column name"""
+  icon
 
   """column name"""
   id

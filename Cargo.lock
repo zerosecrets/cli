@@ -2631,7 +2631,7 @@ dependencies = [
 
 [[package]]
 name = "zero-cli"
-version = "2.0.2"
+version = "2.1.0"
 dependencies = [
  "chrono",
  "clap",
@@ -2639,6 +2639,7 @@ dependencies = [
  "graphql_client",
  "keyring",
  "open",
+ "rand",
  "regex",
  "reqwest",
  "serde",

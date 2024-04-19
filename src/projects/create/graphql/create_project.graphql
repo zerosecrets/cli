@@ -1,6 +1,6 @@
 mutation CreateProject($object: CreateProjectInput!) {
     createProject(object: $object) {
-        id
-        token
+        projectId
+        tokenValue
     }
 }

@@ -3,7 +3,7 @@ pub struct CreateProject;
 pub mod create_project {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "CreateProject";
-    pub const QUERY : & str = "mutation CreateProject($object: CreateProjectInput!) {\n    createProject(object: $object) {\n        id\n        token\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation CreateProject($object: CreateProjectInput!) {\n    createProject(object: $object) {\n        projectId\n        tokenValue\n    }\n}\n" ;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -15,10 +15,18 @@ pub mod create_project {
     type ID = String;
     #[derive(Serialize)]
     pub struct CreateProjectInput {
-        #[serde(rename = "activeTeamId")]
-        pub active_team_id: uuid::Uuid,
-        pub icon: String,
-        pub name: String,
+        #[serde(rename = "projectIcon")]
+        pub project_icon: String,
+        #[serde(rename = "projectName")]
+        pub project_name: String,
+        pub token: Option<TokenObject>,
+    }
+    #[derive(Serialize)]
+    pub struct TokenObject {
+        #[serde(rename = "tokenExpiresIn")]
+        pub token_expires_in: Option<String>,
+        #[serde(rename = "tokenName")]
+        pub token_name: Option<String>,
     }
     #[derive(Serialize)]
     pub struct Variables {
@@ -28,12 +36,14 @@ pub mod create_project {
     #[derive(Deserialize)]
     pub struct ResponseData {
         #[serde(rename = "createProject")]
-        pub create_project: Option<CreateProjectCreateProject>,
+        pub create_project: CreateProjectCreateProject,
     }
     #[derive(Deserialize)]
     pub struct CreateProjectCreateProject {
-        pub id: uuid::Uuid,
-        pub token: String,
+        #[serde(rename = "projectId")]
+        pub project_id: Option<String>,
+        #[serde(rename = "tokenValue")]
+        pub token_value: Option<String>,
     }
 }
 impl graphql_client::GraphQLQuery for CreateProject {

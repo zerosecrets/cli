@@ -138,15 +138,26 @@ type CreateCustomerOutput {
 }
 
 input CreateProjectInput {
-  activeTeamId: uuid
-  icon: String!
-  name: String!
+  projectIcon: String!
+  projectName: String!
+  token: TokenObject
 }
 
 type CreateProjectOutput {
-  id: uuid!
-  project: token
-  token: String!
+  errorCode: String
+  projectId: String
+  tokenValue: String
+}
+
+input CreateProjectTokenInput {
+  expiresIn: String
+  name: String!
+  projectId: String!
+}
+
+type CreateProjectTokenOutput {
+  errorCode: String
+  tokenValue: String
 }
 
 input CreateSecretFieldInput {
@@ -406,6 +417,7 @@ type Payment {
   description: String
   id: ID!
   paymentMethod: String
+  status: String!
   url: String
 }
 
@@ -435,6 +447,16 @@ input RefreshAccessTokenInput {
 
 type RefreshAccessTokenOutput {
   accessToken: String!
+}
+
+input RegenerateProjectTokenInput {
+  expiresIn: String
+  tokenId: String!
+}
+
+type RegenerateProjectTokenOutput {
+  errorCode: String
+  tokenValue: String
 }
 
 input RejectTeamInviteInput {
@@ -506,16 +528,6 @@ input ResetPasswordInput {
 
 type ResetPasswordOutput {
   success: Boolean
-}
-
-input RotateTokenInput {
-  projectId: uuid!
-}
-
-type RotateTokenOutput {
-  id: uuid!
-  project: token
-  token: String!
 }
 
 type SecretOutput {
@@ -622,6 +634,11 @@ input String_comparison_exp {
 
   """does the column match the given SQL regular expression"""
   _similar: String
+}
+
+input TokenObject {
+  tokenExpiresIn: String
+  tokenName: String
 }
 
 input UpdatePaymentMethodInput {
@@ -2252,11 +2269,8 @@ type mutation_root {
   cliAccessTokens(object: CliAccessTokensInput!): CliAccessTokensOutput!
   confirmEmailChange(object: ConfirmEmailChangeInput!): ConfirmEmailChangeOutput!
   createCustomer(object: CreateCustomerInput!): CreateCustomerOutput!
-
-  """
-  creates new project with unique auto generated token and optimally link the project to existed user team
-  """
-  createProject(object: CreateProjectInput!): CreateProjectOutput
+  createProject(object: CreateProjectInput!): CreateProjectOutput!
+  createProjectToken(object: CreateProjectTokenInput!): CreateProjectTokenOutput!
   createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!, userId: String!): CreateSecretOutput!
   createTeam(object: CreateTeamInput!): CreateTeamOutput!
 
@@ -2371,6 +2385,19 @@ type mutation_root {
   delete single row from the table: "notification"
   """
   delete_notification_by_pk(id: uuid!): notification
+
+  """
+  delete data from the table: "projectToken"
+  """
+  delete_projectToken(
+    """filter the rows which have to be deleted"""
+    where: projectToken_bool_exp!
+  ): projectToken_mutation_response
+
+  """
+  delete single row from the table: "projectToken"
+  """
+  delete_projectToken_by_pk(id: uuid!): projectToken
 
   """
   delete data from the table: "registrationStep"
@@ -2826,6 +2853,28 @@ type mutation_root {
     """upsert condition"""
     on_conflict: notification_on_conflict
   ): notification
+
+  """
+  insert data into the table: "projectToken"
+  """
+  insert_projectToken(
+    """the rows to be inserted"""
+    objects: [projectToken_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: projectToken_on_conflict
+  ): projectToken_mutation_response
+
+  """
+  insert a single row into the table: "projectToken"
+  """
+  insert_projectToken_one(
+    """the row to be inserted"""
+    object: projectToken_insert_input!
+
+    """upsert condition"""
+    on_conflict: projectToken_on_conflict
+  ): projectToken
 
   """
   insert data into the table: "registrationStep"
@@ -3297,6 +3346,7 @@ type mutation_root {
   integrationUploadSecrets(integration: IntegrationUploadSecretsInputIntegration!, zero: IntegrationUploadSecretsInputZero!): IntegrationUploadSecretsOutput!
   recalculateTeamSeatsSubscription(object: RecalculateTeamSeatsSubscriptionInput!): RecalculateTeamSeatsSubscriptionOutput!
   refreshAccessToken(object: RefreshAccessTokenInput!): RefreshAccessTokenOutput!
+  regenerateProjectToken(object: RegenerateProjectTokenInput!): RegenerateProjectTokenOutput!
   rejectTeamInvite(object: RejectTeamInviteInput!): RejectTeamInviteOutput!
   removePaidFeatures(object: RemovePaidFeaturesInput!): RemovePaidFeaturesOutput!
   removeTeam(object: RemoveTeamInput!): RemoveTeamOutput!
@@ -3305,9 +3355,6 @@ type mutation_root {
   requestResetPassword(object: RequestResetPasswordInput!): RequestResetPasswordOutput!
   resendSignUpEmail: ResendSignUpEmailOutput!
   resetPassword(object: ResetPasswordInput!): ResetPasswordOutput!
-
-  """rotate new token for project"""
-  rotateToken(object: RotateTokenInput!): RotateTokenOutput
   sendEmailToContactUs(object: SendEmailToContactUsInput!): SendEmailToContactUsOutput!
   sendInviteUserTeam(object: SendInviteUserTeamInput!): SendInviteUserTeamOutput!
 
@@ -3626,6 +3673,34 @@ type mutation_root {
     """updates to execute, in order"""
     updates: [notification_updates!]!
   ): [notification_mutation_response]
+
+  """
+  update data of the table: "projectToken"
+  """
+  update_projectToken(
+    """sets the columns of the filtered rows to the given values"""
+    _set: projectToken_set_input
+
+    """filter the rows which have to be updated"""
+    where: projectToken_bool_exp!
+  ): projectToken_mutation_response
+
+  """
+  update single row of the table: "projectToken"
+  """
+  update_projectToken_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: projectToken_set_input
+    pk_columns: projectToken_pk_columns_input!
+  ): projectToken
+
+  """
+  update multiples rows of table: "projectToken"
+  """
+  update_projectToken_many(
+    """updates to execute, in order"""
+    updates: [projectToken_updates!]!
+  ): [projectToken_mutation_response]
 
   """
   update data of the table: "registrationStep"
@@ -4769,6 +4844,298 @@ enum order_by {
   desc_nulls_last
 }
 
+"""Table for storing user project tokens."""
+type projectToken {
+  created_at: timestamptz!
+  expiresIn: timestamptz
+  id: uuid!
+  name: String!
+  projectId: uuid!
+
+  """An object relationship"""
+  projectToken_project: token!
+  updated_at: timestamptz!
+  valueHash: String!
+}
+
+"""
+aggregated selection of "projectToken"
+"""
+type projectToken_aggregate {
+  aggregate: projectToken_aggregate_fields
+  nodes: [projectToken!]!
+}
+
+input projectToken_aggregate_bool_exp {
+  count: projectToken_aggregate_bool_exp_count
+}
+
+input projectToken_aggregate_bool_exp_count {
+  arguments: [projectToken_select_column!]
+  distinct: Boolean
+  filter: projectToken_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "projectToken"
+"""
+type projectToken_aggregate_fields {
+  count(columns: [projectToken_select_column!], distinct: Boolean): Int!
+  max: projectToken_max_fields
+  min: projectToken_min_fields
+}
+
+"""
+order by aggregate values of table "projectToken"
+"""
+input projectToken_aggregate_order_by {
+  count: order_by
+  max: projectToken_max_order_by
+  min: projectToken_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "projectToken"
+"""
+input projectToken_arr_rel_insert_input {
+  data: [projectToken_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: projectToken_on_conflict
+}
+
+"""
+Boolean expression to filter rows from the table "projectToken". All fields are combined with a logical 'AND'.
+"""
+input projectToken_bool_exp {
+  _and: [projectToken_bool_exp!]
+  _not: projectToken_bool_exp
+  _or: [projectToken_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  expiresIn: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  name: String_comparison_exp
+  projectId: uuid_comparison_exp
+  projectToken_project: token_bool_exp
+  updated_at: timestamptz_comparison_exp
+  valueHash: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "projectToken"
+"""
+enum projectToken_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  projectToken_id_key
+
+  """
+  unique or primary key constraint on columns "id"
+  """
+  projectToken_pkey
+
+  """
+  unique or primary key constraint on columns "value"
+  """
+  projectToken_value_key
+}
+
+"""
+input type for inserting data into table "projectToken"
+"""
+input projectToken_insert_input {
+  created_at: timestamptz
+  expiresIn: timestamptz
+  id: uuid
+  name: String
+  projectId: uuid
+  projectToken_project: token_obj_rel_insert_input
+  updated_at: timestamptz
+  valueHash: String
+}
+
+"""aggregate max on columns"""
+type projectToken_max_fields {
+  created_at: timestamptz
+  expiresIn: timestamptz
+  id: uuid
+  name: String
+  projectId: uuid
+  updated_at: timestamptz
+  valueHash: String
+}
+
+"""
+order by max() on columns of table "projectToken"
+"""
+input projectToken_max_order_by {
+  created_at: order_by
+  expiresIn: order_by
+  id: order_by
+  name: order_by
+  projectId: order_by
+  updated_at: order_by
+  valueHash: order_by
+}
+
+"""aggregate min on columns"""
+type projectToken_min_fields {
+  created_at: timestamptz
+  expiresIn: timestamptz
+  id: uuid
+  name: String
+  projectId: uuid
+  updated_at: timestamptz
+  valueHash: String
+}
+
+"""
+order by min() on columns of table "projectToken"
+"""
+input projectToken_min_order_by {
+  created_at: order_by
+  expiresIn: order_by
+  id: order_by
+  name: order_by
+  projectId: order_by
+  updated_at: order_by
+  valueHash: order_by
+}
+
+"""
+response of any mutation on the table "projectToken"
+"""
+type projectToken_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [projectToken!]!
+}
+
+"""
+on_conflict condition type for table "projectToken"
+"""
+input projectToken_on_conflict {
+  constraint: projectToken_constraint!
+  update_columns: [projectToken_update_column!]! = []
+  where: projectToken_bool_exp
+}
+
+"""Ordering options when selecting data from "projectToken"."""
+input projectToken_order_by {
+  created_at: order_by
+  expiresIn: order_by
+  id: order_by
+  name: order_by
+  projectId: order_by
+  projectToken_project: token_order_by
+  updated_at: order_by
+  valueHash: order_by
+}
+
+"""primary key columns input for table: projectToken"""
+input projectToken_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "projectToken"
+"""
+enum projectToken_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  expiresIn
+
+  """column name"""
+  id
+
+  """column name"""
+  name
+
+  """column name"""
+  projectId
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  valueHash
+}
+
+"""
+input type for updating data in table "projectToken"
+"""
+input projectToken_set_input {
+  created_at: timestamptz
+  expiresIn: timestamptz
+  id: uuid
+  name: String
+  projectId: uuid
+  updated_at: timestamptz
+  valueHash: String
+}
+
+"""
+Streaming cursor of the table "projectToken"
+"""
+input projectToken_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: projectToken_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input projectToken_stream_cursor_value_input {
+  created_at: timestamptz
+  expiresIn: timestamptz
+  id: uuid
+  name: String
+  projectId: uuid
+  updated_at: timestamptz
+  valueHash: String
+}
+
+"""
+update columns of table "projectToken"
+"""
+enum projectToken_update_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  expiresIn
+
+  """column name"""
+  id
+
+  """column name"""
+  name
+
+  """column name"""
+  projectId
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  valueHash
+}
+
+input projectToken_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: projectToken_set_input
+
+  """filter the rows which have to be updated"""
+  where: projectToken_bool_exp!
+}
+
 type query_root {
   IntegrationProjects(where: IntegrationProjectsInput!): IntegrationProjectsOutput!
   _emptyQuery: String
@@ -5132,6 +5499,49 @@ type query_root {
   """fetch data from the table: "notification" using primary key columns"""
   notification_by_pk(id: uuid!): notification
   paymentList(where: PaymentListInput!): PaymentListOutput!
+
+  """
+  fetch data from the table: "projectToken"
+  """
+  projectToken(
+    """distinct select on columns"""
+    distinct_on: [projectToken_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projectToken_order_by!]
+
+    """filter the rows returned"""
+    where: projectToken_bool_exp
+  ): [projectToken!]!
+
+  """
+  fetch aggregated fields from the table: "projectToken"
+  """
+  projectToken_aggregate(
+    """distinct select on columns"""
+    distinct_on: [projectToken_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projectToken_order_by!]
+
+    """filter the rows returned"""
+    where: projectToken_bool_exp
+  ): projectToken_aggregate!
+
+  """fetch data from the table: "projectToken" using primary key columns"""
+  projectToken_by_pk(id: uuid!): projectToken
 
   """
   fetch data from the table: "registrationStep"
@@ -7516,6 +7926,63 @@ type subscription_root {
     """filter the rows returned"""
     where: notification_bool_exp
   ): [notification!]!
+
+  """
+  fetch data from the table: "projectToken"
+  """
+  projectToken(
+    """distinct select on columns"""
+    distinct_on: [projectToken_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projectToken_order_by!]
+
+    """filter the rows returned"""
+    where: projectToken_bool_exp
+  ): [projectToken!]!
+
+  """
+  fetch aggregated fields from the table: "projectToken"
+  """
+  projectToken_aggregate(
+    """distinct select on columns"""
+    distinct_on: [projectToken_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projectToken_order_by!]
+
+    """filter the rows returned"""
+    where: projectToken_bool_exp
+  ): projectToken_aggregate!
+
+  """fetch data from the table: "projectToken" using primary key columns"""
+  projectToken_by_pk(id: uuid!): projectToken
+
+  """
+  fetch data from the table in a streaming manner: "projectToken"
+  """
+  projectToken_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [projectToken_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: projectToken_bool_exp
+  ): [projectToken!]!
 
   """
   fetch data from the table: "registrationStep"
@@ -10237,7 +10704,43 @@ type token {
   """An object relationship"""
   owner: user!
   ownerUserId: uuid!
-  publicId: String!
+
+  """An array relationship"""
+  project_projectTokens(
+    """distinct select on columns"""
+    distinct_on: [projectToken_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projectToken_order_by!]
+
+    """filter the rows returned"""
+    where: projectToken_bool_exp
+  ): [projectToken!]!
+
+  """An aggregate relationship"""
+  project_projectTokens_aggregate(
+    """distinct select on columns"""
+    distinct_on: [projectToken_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projectToken_order_by!]
+
+    """filter the rows returned"""
+    where: projectToken_bool_exp
+  ): projectToken_aggregate!
+  publicId: String
   slug: String!
 
   """An array relationship"""
@@ -10311,7 +10814,7 @@ type token {
     """filter the rows returned"""
     where: tokenTeam_bool_exp
   ): tokenTeam_aggregate!
-  tokenHash: String!
+  tokenHash: String
   updatedAt: timestamptz!
 
   """An array relationship"""
@@ -10978,6 +11481,8 @@ input token_bool_exp {
   name: String_comparison_exp
   owner: user_bool_exp
   ownerUserId: uuid_comparison_exp
+  project_projectTokens: projectToken_bool_exp
+  project_projectTokens_aggregate: projectToken_aggregate_bool_exp
   publicId: String_comparison_exp
   slug: String_comparison_exp
   tags: tokenTag_bool_exp
@@ -11020,6 +11525,7 @@ input token_insert_input {
   name: String
   owner: user_obj_rel_insert_input
   ownerUserId: uuid
+  project_projectTokens: projectToken_arr_rel_insert_input
   publicId: String
   slug: String
   tags: tokenTag_arr_rel_insert_input
@@ -11146,6 +11652,7 @@ input token_order_by {
   name: order_by
   owner: user_order_by
   ownerUserId: order_by
+  project_projectTokens_aggregate: projectToken_aggregate_order_by
   publicId: order_by
   slug: order_by
   tags_aggregate: tokenTag_aggregate_order_by

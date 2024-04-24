@@ -42,11 +42,18 @@ mod usage;
 ///  Name, owner, number of secrets, and link to view the project page in the Zero web application.
 ///
 mod view;
+/// ## Projects tokens
+///
+///  The `tokens` function displays all project tokens.
+///  Id, name and expires date.
+///
+mod tokens;
 use self::create::ProjectsCreateArgs;
 use self::delete::ProjectsDeleteArgs;
 use self::edit::ProjectsEditArgs;
 use self::list::ProjectsListArgs;
 use self::share::ProjectsShareArgs;
+use self::tokens::ProjectsTokenCommands;
 use self::usage::ProjectsUsageCommands;
 use self::view::ProjectsViewArgs;
 use clap::{Parser, Subcommand};
@@ -74,6 +81,8 @@ enum ProjectsCommands {
     Usage(ProjectsUsageCommands),
     #[clap(about = "View a project details")]
     View(ProjectsViewArgs),
+    #[clap(about = "View a project tokens")]
+    Tokens(ProjectsTokenCommands),
 }
 
 pub fn match_command(input: &ProjectsCli) {
@@ -85,5 +94,6 @@ pub fn match_command(input: &ProjectsCli) {
         ProjectsCommands::Share(args) => share::share(&args),
         ProjectsCommands::Usage(args) => usage::usage_commands(&args),
         ProjectsCommands::View(args) => view::view(&args),
+        ProjectsCommands::Tokens(args) => tokens::token_commands(&args),
     }
 }

@@ -1,0 +1,12 @@
+query TokenList($id: uuid!) {
+  token(where: {id: {_eq: $id}}) {
+    id
+    name
+
+    project_projectTokens {
+      id
+      name
+      expiresAt
+    }
+  }
+}

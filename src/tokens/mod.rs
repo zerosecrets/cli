@@ -1,6 +1,6 @@
 /// ## Tokens List
 ///
-///  The `Tokens list` function displays information about the project tokens without hash value
+///  The `Tokens list` function displays information about the project tokens
 ///
 mod list;
 use crate::tokens::list::{list, TokenListArgs};

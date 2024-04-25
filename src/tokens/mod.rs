@@ -3,24 +3,24 @@
 ///  The `Tokens list` function displays information about the project tokens without hash value
 ///
 mod list;
-use crate::tokens::list::{list, ProjectsTokenListArgs};
+use crate::tokens::list::{list, TokenListArgs};
 use clap::{Parser, Subcommand};
 
 #[derive(Parser, Debug)]
 pub struct TokenCli {
     #[clap(subcommand)]
-    commands: ProjectsTokenCommands,
+    commands: TokenCommands,
 }
 
 #[derive(Subcommand, Debug)]
 #[clap(about = "View a project token list")]
-pub enum ProjectsTokenCommands {
+pub enum TokenCommands {
     #[clap(about = "List all project token")]
-    List(ProjectsTokenListArgs),
+    List(TokenListArgs),
 }
 
 pub fn match_command(input: &TokenCli) {
     match &input.commands {
-        ProjectsTokenCommands::List(args) => list(&args),
+        TokenCommands::List(args) => list(&args),
     }
 }

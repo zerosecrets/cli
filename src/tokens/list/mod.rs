@@ -16,7 +16,7 @@ use reqwest::Client;
 use termimad::crossterm::style::Stylize;
 
 #[derive(Args, Debug)]
-pub struct ProjectsTokenListArgs {
+pub struct TokenListArgs {
     #[clap(
         short,
         long,
@@ -32,7 +32,7 @@ pub struct ProjectsTokenListArgs {
     access_token: Option<String>,
 }
 
-pub fn list(args: &ProjectsTokenListArgs) {
+pub fn list(args: &TokenListArgs) {
     let access_token = match &args.access_token {
         Some(token) => token.clone(),
         None => keyring::get("access_token"),

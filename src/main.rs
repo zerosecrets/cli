@@ -3,6 +3,7 @@ mod common;
 mod projects;
 mod secrets;
 mod teams;
+mod tokens;
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
@@ -23,6 +24,8 @@ enum Commands {
     Secrets(secrets::SecretsCli),
     #[clap(about = "Manage teams")]
     Teams(teams::TeamsCli),
+    #[clap(about = "Manage tokens")]
+    Tokens(tokens::TokenCli),
 }
 
 fn main() {
@@ -33,5 +36,6 @@ fn main() {
         Commands::Projects(input) => projects::match_command(input),
         Commands::Secrets(input) => secrets::match_command(input),
         Commands::Teams(input) => teams::match_command(input),
+        Commands::Tokens(input) => tokens::match_command(input),
     }
 }

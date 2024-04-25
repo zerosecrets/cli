@@ -150,7 +150,7 @@ type CreateProjectOutput {
 }
 
 input CreateProjectTokenInput {
-  expiresIn: String
+  expiresAt: String
   name: String!
   projectId: String!
 }
@@ -450,7 +450,7 @@ type RefreshAccessTokenOutput {
 }
 
 input RegenerateProjectTokenInput {
-  expiresIn: String
+  expiresAt: String
   tokenId: String!
 }
 
@@ -538,6 +538,7 @@ input SendEmailToContactUsInput {
   email: String!
   message: String!
   name: String!
+  tokenResponseCaptcha: String!
 }
 
 type SendEmailToContactUsOutput {
@@ -637,7 +638,7 @@ input String_comparison_exp {
 }
 
 input TokenObject {
-  tokenExpiresIn: String
+  tokenExpiresAt: String
   tokenName: String
 }
 
@@ -2258,6 +2259,163 @@ input jsonb_comparison_exp {
   _nin: [jsonb!]
 }
 
+"""
+columns and relationships of "listIdEnum"
+"""
+type listIdEnum {
+  value: String!
+}
+
+"""
+aggregated selection of "listIdEnum"
+"""
+type listIdEnum_aggregate {
+  aggregate: listIdEnum_aggregate_fields
+  nodes: [listIdEnum!]!
+}
+
+"""
+aggregate fields of "listIdEnum"
+"""
+type listIdEnum_aggregate_fields {
+  count(columns: [listIdEnum_select_column!], distinct: Boolean): Int!
+  max: listIdEnum_max_fields
+  min: listIdEnum_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "listIdEnum". All fields are combined with a logical 'AND'.
+"""
+input listIdEnum_bool_exp {
+  _and: [listIdEnum_bool_exp!]
+  _not: listIdEnum_bool_exp
+  _or: [listIdEnum_bool_exp!]
+  value: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "listIdEnum"
+"""
+enum listIdEnum_constraint {
+  """
+  unique or primary key constraint on columns "value"
+  """
+  listId_pkey
+}
+
+enum listIdEnum_enum {
+  integrations
+  projects
+  secrets
+  teams
+  users
+}
+
+"""
+Boolean expression to compare columns of type "listIdEnum_enum". All fields are combined with logical 'AND'.
+"""
+input listIdEnum_enum_comparison_exp {
+  _eq: listIdEnum_enum
+  _in: [listIdEnum_enum!]
+  _is_null: Boolean
+  _neq: listIdEnum_enum
+  _nin: [listIdEnum_enum!]
+}
+
+"""
+input type for inserting data into table "listIdEnum"
+"""
+input listIdEnum_insert_input {
+  value: String
+}
+
+"""aggregate max on columns"""
+type listIdEnum_max_fields {
+  value: String
+}
+
+"""aggregate min on columns"""
+type listIdEnum_min_fields {
+  value: String
+}
+
+"""
+response of any mutation on the table "listIdEnum"
+"""
+type listIdEnum_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [listIdEnum!]!
+}
+
+"""
+on_conflict condition type for table "listIdEnum"
+"""
+input listIdEnum_on_conflict {
+  constraint: listIdEnum_constraint!
+  update_columns: [listIdEnum_update_column!]! = []
+  where: listIdEnum_bool_exp
+}
+
+"""Ordering options when selecting data from "listIdEnum"."""
+input listIdEnum_order_by {
+  value: order_by
+}
+
+"""primary key columns input for table: listIdEnum"""
+input listIdEnum_pk_columns_input {
+  value: String!
+}
+
+"""
+select columns of table "listIdEnum"
+"""
+enum listIdEnum_select_column {
+  """column name"""
+  value
+}
+
+"""
+input type for updating data in table "listIdEnum"
+"""
+input listIdEnum_set_input {
+  value: String
+}
+
+"""
+Streaming cursor of the table "listIdEnum"
+"""
+input listIdEnum_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: listIdEnum_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input listIdEnum_stream_cursor_value_input {
+  value: String
+}
+
+"""
+update columns of table "listIdEnum"
+"""
+enum listIdEnum_update_column {
+  """column name"""
+  value
+}
+
+input listIdEnum_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: listIdEnum_set_input
+
+  """filter the rows which have to be updated"""
+  where: listIdEnum_bool_exp!
+}
+
 """mutation root"""
 type mutation_root {
   """Accept team invitation"""
@@ -2359,6 +2517,19 @@ type mutation_root {
   delete single row from the table: "invitationStatusEnum"
   """
   delete_invitationStatusEnum_by_pk(value: String!): invitationStatusEnum
+
+  """
+  delete data from the table: "listIdEnum"
+  """
+  delete_listIdEnum(
+    """filter the rows which have to be deleted"""
+    where: listIdEnum_bool_exp!
+  ): listIdEnum_mutation_response
+
+  """
+  delete single row from the table: "listIdEnum"
+  """
+  delete_listIdEnum_by_pk(value: String!): listIdEnum
 
   """
   delete data from the table: "notification"
@@ -2671,6 +2842,19 @@ type mutation_root {
   delete single row from the table: "verification"
   """
   delete_verification_by_pk(id: uuid!): verification
+
+  """
+  delete data from the table: "viewPreferences"
+  """
+  delete_viewPreferences(
+    """filter the rows which have to be deleted"""
+    where: viewPreferences_bool_exp!
+  ): viewPreferences_mutation_response
+
+  """
+  delete single row from the table: "viewPreferences"
+  """
+  delete_viewPreferences_by_pk(id: uuid!): viewPreferences
   emailVerify(object: EmailVerifyInput!): EmailVerifyOutput!
 
   """Share secrets by URL"""
@@ -2809,6 +2993,28 @@ type mutation_root {
     """upsert condition"""
     on_conflict: invitationStatusEnum_on_conflict
   ): invitationStatusEnum
+
+  """
+  insert data into the table: "listIdEnum"
+  """
+  insert_listIdEnum(
+    """the rows to be inserted"""
+    objects: [listIdEnum_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: listIdEnum_on_conflict
+  ): listIdEnum_mutation_response
+
+  """
+  insert a single row into the table: "listIdEnum"
+  """
+  insert_listIdEnum_one(
+    """the row to be inserted"""
+    object: listIdEnum_insert_input!
+
+    """upsert condition"""
+    on_conflict: listIdEnum_on_conflict
+  ): listIdEnum
 
   """
   insert data into the table: "notification"
@@ -3337,6 +3543,28 @@ type mutation_root {
     """upsert condition"""
     on_conflict: verification_on_conflict
   ): verification
+
+  """
+  insert data into the table: "viewPreferences"
+  """
+  insert_viewPreferences(
+    """the rows to be inserted"""
+    objects: [viewPreferences_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: viewPreferences_on_conflict
+  ): viewPreferences_mutation_response
+
+  """
+  insert a single row into the table: "viewPreferences"
+  """
+  insert_viewPreferences_one(
+    """the row to be inserted"""
+    object: viewPreferences_insert_input!
+
+    """upsert condition"""
+    on_conflict: viewPreferences_on_conflict
+  ): viewPreferences
   integrationAWSInstall(zero: IntegrationAWSInstallInputZero!): IntegrationAWSInstallOutput!
   integrationAuth(integration: IntegrationAuthInputIntegration!, oauth: IntegrationAuthOAuthInput!, zero: IntegrationAuthInputZero!): IntegrationAuthOutput!
   integrationDelete(integration: IntegrationDeleteInput!): IntegrationDeleteOutput!
@@ -3617,6 +3845,34 @@ type mutation_root {
     """updates to execute, in order"""
     updates: [invitationStatusEnum_updates!]!
   ): [invitationStatusEnum_mutation_response]
+
+  """
+  update data of the table: "listIdEnum"
+  """
+  update_listIdEnum(
+    """sets the columns of the filtered rows to the given values"""
+    _set: listIdEnum_set_input
+
+    """filter the rows which have to be updated"""
+    where: listIdEnum_bool_exp!
+  ): listIdEnum_mutation_response
+
+  """
+  update single row of the table: "listIdEnum"
+  """
+  update_listIdEnum_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: listIdEnum_set_input
+    pk_columns: listIdEnum_pk_columns_input!
+  ): listIdEnum
+
+  """
+  update multiples rows of table: "listIdEnum"
+  """
+  update_listIdEnum_many(
+    """updates to execute, in order"""
+    updates: [listIdEnum_updates!]!
+  ): [listIdEnum_mutation_response]
 
   """
   update data of the table: "notification"
@@ -4301,6 +4557,34 @@ type mutation_root {
     """updates to execute, in order"""
     updates: [verification_updates!]!
   ): [verification_mutation_response]
+
+  """
+  update data of the table: "viewPreferences"
+  """
+  update_viewPreferences(
+    """sets the columns of the filtered rows to the given values"""
+    _set: viewPreferences_set_input
+
+    """filter the rows which have to be updated"""
+    where: viewPreferences_bool_exp!
+  ): viewPreferences_mutation_response
+
+  """
+  update single row of the table: "viewPreferences"
+  """
+  update_viewPreferences_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: viewPreferences_set_input
+    pk_columns: viewPreferences_pk_columns_input!
+  ): viewPreferences
+
+  """
+  update multiples rows of table: "viewPreferences"
+  """
+  update_viewPreferences_many(
+    """updates to execute, in order"""
+    updates: [viewPreferences_updates!]!
+  ): [viewPreferences_mutation_response]
 }
 
 """
@@ -4847,7 +5131,7 @@ enum order_by {
 """Table for storing user project tokens."""
 type projectToken {
   created_at: timestamptz!
-  expiresIn: timestamptz
+  expiresAt: timestamptz
   id: uuid!
   name: String!
   projectId: uuid!
@@ -4913,7 +5197,7 @@ input projectToken_bool_exp {
   _not: projectToken_bool_exp
   _or: [projectToken_bool_exp!]
   created_at: timestamptz_comparison_exp
-  expiresIn: timestamptz_comparison_exp
+  expiresAt: timestamptz_comparison_exp
   id: uuid_comparison_exp
   name: String_comparison_exp
   projectId: uuid_comparison_exp
@@ -4947,7 +5231,7 @@ input type for inserting data into table "projectToken"
 """
 input projectToken_insert_input {
   created_at: timestamptz
-  expiresIn: timestamptz
+  expiresAt: timestamptz
   id: uuid
   name: String
   projectId: uuid
@@ -4959,7 +5243,7 @@ input projectToken_insert_input {
 """aggregate max on columns"""
 type projectToken_max_fields {
   created_at: timestamptz
-  expiresIn: timestamptz
+  expiresAt: timestamptz
   id: uuid
   name: String
   projectId: uuid
@@ -4972,7 +5256,7 @@ order by max() on columns of table "projectToken"
 """
 input projectToken_max_order_by {
   created_at: order_by
-  expiresIn: order_by
+  expiresAt: order_by
   id: order_by
   name: order_by
   projectId: order_by
@@ -4983,7 +5267,7 @@ input projectToken_max_order_by {
 """aggregate min on columns"""
 type projectToken_min_fields {
   created_at: timestamptz
-  expiresIn: timestamptz
+  expiresAt: timestamptz
   id: uuid
   name: String
   projectId: uuid
@@ -4996,7 +5280,7 @@ order by min() on columns of table "projectToken"
 """
 input projectToken_min_order_by {
   created_at: order_by
-  expiresIn: order_by
+  expiresAt: order_by
   id: order_by
   name: order_by
   projectId: order_by
@@ -5027,7 +5311,7 @@ input projectToken_on_conflict {
 """Ordering options when selecting data from "projectToken"."""
 input projectToken_order_by {
   created_at: order_by
-  expiresIn: order_by
+  expiresAt: order_by
   id: order_by
   name: order_by
   projectId: order_by
@@ -5049,7 +5333,7 @@ enum projectToken_select_column {
   created_at
 
   """column name"""
-  expiresIn
+  expiresAt
 
   """column name"""
   id
@@ -5072,7 +5356,7 @@ input type for updating data in table "projectToken"
 """
 input projectToken_set_input {
   created_at: timestamptz
-  expiresIn: timestamptz
+  expiresAt: timestamptz
   id: uuid
   name: String
   projectId: uuid
@@ -5094,7 +5378,7 @@ input projectToken_stream_cursor_input {
 """Initial value of the column from where the streaming should start"""
 input projectToken_stream_cursor_value_input {
   created_at: timestamptz
-  expiresIn: timestamptz
+  expiresAt: timestamptz
   id: uuid
   name: String
   projectId: uuid
@@ -5110,7 +5394,7 @@ enum projectToken_update_column {
   created_at
 
   """column name"""
-  expiresIn
+  expiresAt
 
   """column name"""
   id
@@ -5409,6 +5693,49 @@ type query_root {
   fetch data from the table: "invitationStatusEnum" using primary key columns
   """
   invitationStatusEnum_by_pk(value: String!): invitationStatusEnum
+
+  """
+  fetch data from the table: "listIdEnum"
+  """
+  listIdEnum(
+    """distinct select on columns"""
+    distinct_on: [listIdEnum_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [listIdEnum_order_by!]
+
+    """filter the rows returned"""
+    where: listIdEnum_bool_exp
+  ): [listIdEnum!]!
+
+  """
+  fetch aggregated fields from the table: "listIdEnum"
+  """
+  listIdEnum_aggregate(
+    """distinct select on columns"""
+    distinct_on: [listIdEnum_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [listIdEnum_order_by!]
+
+    """filter the rows returned"""
+    where: listIdEnum_bool_exp
+  ): listIdEnum_aggregate!
+
+  """fetch data from the table: "listIdEnum" using primary key columns"""
+  listIdEnum_by_pk(value: String!): listIdEnum
   me: MeOutput!
 
   """
@@ -6707,6 +7034,45 @@ type query_root {
 
   """fetch data from the table: "verification" using primary key columns"""
   verification_by_pk(id: uuid!): verification
+
+  """An array relationship"""
+  viewPreferences(
+    """distinct select on columns"""
+    distinct_on: [viewPreferences_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [viewPreferences_order_by!]
+
+    """filter the rows returned"""
+    where: viewPreferences_bool_exp
+  ): [viewPreferences!]!
+
+  """An aggregate relationship"""
+  viewPreferences_aggregate(
+    """distinct select on columns"""
+    distinct_on: [viewPreferences_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [viewPreferences_order_by!]
+
+    """filter the rows returned"""
+    where: viewPreferences_bool_exp
+  ): viewPreferences_aggregate!
+
+  """fetch data from the table: "viewPreferences" using primary key columns"""
+  viewPreferences_by_pk(id: uuid!): viewPreferences
   viewSecretFields(secretField: ViewSecretFieldsInput!): ViewSecretFieldsOutput!
 }
 
@@ -7810,6 +8176,63 @@ type subscription_root {
     """filter the rows returned"""
     where: invitationStatusEnum_bool_exp
   ): [invitationStatusEnum!]!
+
+  """
+  fetch data from the table: "listIdEnum"
+  """
+  listIdEnum(
+    """distinct select on columns"""
+    distinct_on: [listIdEnum_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [listIdEnum_order_by!]
+
+    """filter the rows returned"""
+    where: listIdEnum_bool_exp
+  ): [listIdEnum!]!
+
+  """
+  fetch aggregated fields from the table: "listIdEnum"
+  """
+  listIdEnum_aggregate(
+    """distinct select on columns"""
+    distinct_on: [listIdEnum_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [listIdEnum_order_by!]
+
+    """filter the rows returned"""
+    where: listIdEnum_bool_exp
+  ): listIdEnum_aggregate!
+
+  """fetch data from the table: "listIdEnum" using primary key columns"""
+  listIdEnum_by_pk(value: String!): listIdEnum
+
+  """
+  fetch data from the table in a streaming manner: "listIdEnum"
+  """
+  listIdEnum_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [listIdEnum_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: listIdEnum_bool_exp
+  ): [listIdEnum!]!
 
   """
   fetch data from the table: "notification"
@@ -9442,6 +9865,59 @@ type subscription_root {
     """filter the rows returned"""
     where: verification_bool_exp
   ): [verification!]!
+
+  """An array relationship"""
+  viewPreferences(
+    """distinct select on columns"""
+    distinct_on: [viewPreferences_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [viewPreferences_order_by!]
+
+    """filter the rows returned"""
+    where: viewPreferences_bool_exp
+  ): [viewPreferences!]!
+
+  """An aggregate relationship"""
+  viewPreferences_aggregate(
+    """distinct select on columns"""
+    distinct_on: [viewPreferences_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [viewPreferences_order_by!]
+
+    """filter the rows returned"""
+    where: viewPreferences_bool_exp
+  ): viewPreferences_aggregate!
+
+  """fetch data from the table: "viewPreferences" using primary key columns"""
+  viewPreferences_by_pk(id: uuid!): viewPreferences
+
+  """
+  fetch data from the table in a streaming manner: "viewPreferences"
+  """
+  viewPreferences_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [viewPreferences_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: viewPreferences_bool_exp
+  ): [viewPreferences!]!
 }
 
 """
@@ -10814,7 +11290,7 @@ type token {
     """filter the rows returned"""
     where: tokenTeam_bool_exp
   ): tokenTeam_aggregate!
-  tokenHash: String
+  token: String
   updatedAt: timestamptz!
 
   """An array relationship"""
@@ -11489,7 +11965,7 @@ input token_bool_exp {
   tags_aggregate: tokenTag_aggregate_bool_exp
   teams: tokenTeam_bool_exp
   teams_aggregate: tokenTeam_aggregate_bool_exp
-  tokenHash: String_comparison_exp
+  token: String_comparison_exp
   updatedAt: timestamptz_comparison_exp
   usageHistory: usageHistory_bool_exp
   usageHistory_aggregate: usageHistory_aggregate_bool_exp
@@ -11530,7 +12006,7 @@ input token_insert_input {
   slug: String
   tags: tokenTag_arr_rel_insert_input
   teams: tokenTeam_arr_rel_insert_input
-  tokenHash: String
+  token: String
   updatedAt: timestamptz
   usageHistory: usageHistory_arr_rel_insert_input
   userSecret: userSecret_arr_rel_insert_input
@@ -11552,7 +12028,7 @@ type token_max_fields {
   ownerUserId: uuid
   publicId: String
   slug: String
-  tokenHash: String
+  token: String
   updatedAt: timestamptz
 }
 
@@ -11569,7 +12045,7 @@ input token_max_order_by {
   ownerUserId: order_by
   publicId: order_by
   slug: order_by
-  tokenHash: order_by
+  token: order_by
   updatedAt: order_by
 }
 
@@ -11589,7 +12065,7 @@ type token_min_fields {
   ownerUserId: uuid
   publicId: String
   slug: String
-  tokenHash: String
+  token: String
   updatedAt: timestamptz
 }
 
@@ -11606,7 +12082,7 @@ input token_min_order_by {
   ownerUserId: order_by
   publicId: order_by
   slug: order_by
-  tokenHash: order_by
+  token: order_by
   updatedAt: order_by
 }
 
@@ -11657,7 +12133,7 @@ input token_order_by {
   slug: order_by
   tags_aggregate: tokenTag_aggregate_order_by
   teams_aggregate: tokenTeam_aggregate_order_by
-  tokenHash: order_by
+  token: order_by
   updatedAt: order_by
   usageHistory_aggregate: usageHistory_aggregate_order_by
   userSecret_aggregate: userSecret_aggregate_order_by
@@ -11700,7 +12176,7 @@ enum token_select_column {
   slug
 
   """column name"""
-  tokenHash
+  token
 
   """column name"""
   updatedAt
@@ -11719,7 +12195,7 @@ input token_set_input {
   ownerUserId: uuid
   publicId: String
   slug: String
-  tokenHash: String
+  token: String
   updatedAt: timestamptz
 }
 
@@ -11745,7 +12221,7 @@ input token_stream_cursor_value_input {
   ownerUserId: uuid
   publicId: String
   slug: String
-  tokenHash: String
+  token: String
   updatedAt: timestamptz
 }
 
@@ -11781,7 +12257,7 @@ enum token_update_column {
   slug
 
   """column name"""
-  tokenHash
+  token
 
   """column name"""
   updatedAt
@@ -12608,6 +13084,42 @@ type user {
     """filter the rows returned"""
     where: teamInvitation_bool_exp
   ): teamInvitation_aggregate!
+
+  """An array relationship"""
+  viewPreferences(
+    """distinct select on columns"""
+    distinct_on: [viewPreferences_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [viewPreferences_order_by!]
+
+    """filter the rows returned"""
+    where: viewPreferences_bool_exp
+  ): [viewPreferences!]!
+
+  """An aggregate relationship"""
+  viewPreferences_aggregate(
+    """distinct select on columns"""
+    distinct_on: [viewPreferences_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [viewPreferences_order_by!]
+
+    """filter the rows returned"""
+    where: viewPreferences_bool_exp
+  ): viewPreferences_aggregate!
 }
 
 """
@@ -14005,6 +14517,8 @@ input user_bool_exp {
   user_notificationUsers_aggregate: notificationUser_aggregate_bool_exp
   user_teamInvitation: teamInvitation_bool_exp
   user_teamInvitation_aggregate: teamInvitation_aggregate_bool_exp
+  viewPreferences: viewPreferences_bool_exp
+  viewPreferences_aggregate: viewPreferences_aggregate_bool_exp
 }
 
 """
@@ -14058,6 +14572,7 @@ input user_insert_input {
   user_activeTeam: team_obj_rel_insert_input
   user_notificationUsers: notificationUser_arr_rel_insert_input
   user_teamInvitation: teamInvitation_arr_rel_insert_input
+  viewPreferences: viewPreferences_arr_rel_insert_input
 }
 
 """aggregate max on columns"""
@@ -14141,6 +14656,7 @@ input user_order_by {
   user_activeTeam: team_order_by
   user_notificationUsers_aggregate: notificationUser_aggregate_order_by
   user_teamInvitation_aggregate: teamInvitation_aggregate_order_by
+  viewPreferences_aggregate: viewPreferences_aggregate_order_by
 }
 
 """primary key columns input for table: user"""
@@ -14918,3 +15434,325 @@ input verification_updates {
   where: verification_bool_exp!
 }
 
+"""
+columns and relationships of "viewPreferences"
+"""
+type viewPreferences {
+  createdAt: timestamptz!
+  id: uuid!
+  isSortingReversed: Boolean!
+  layout: String
+  listId: listIdEnum_enum!
+  sortedBy: String
+  updatedAt: timestamptz!
+  userId: uuid!
+}
+
+"""
+aggregated selection of "viewPreferences"
+"""
+type viewPreferences_aggregate {
+  aggregate: viewPreferences_aggregate_fields
+  nodes: [viewPreferences!]!
+}
+
+input viewPreferences_aggregate_bool_exp {
+  bool_and: viewPreferences_aggregate_bool_exp_bool_and
+  bool_or: viewPreferences_aggregate_bool_exp_bool_or
+  count: viewPreferences_aggregate_bool_exp_count
+}
+
+input viewPreferences_aggregate_bool_exp_bool_and {
+  arguments: viewPreferences_select_column_viewPreferences_aggregate_bool_exp_bool_and_arguments_columns!
+  distinct: Boolean
+  filter: viewPreferences_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input viewPreferences_aggregate_bool_exp_bool_or {
+  arguments: viewPreferences_select_column_viewPreferences_aggregate_bool_exp_bool_or_arguments_columns!
+  distinct: Boolean
+  filter: viewPreferences_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input viewPreferences_aggregate_bool_exp_count {
+  arguments: [viewPreferences_select_column!]
+  distinct: Boolean
+  filter: viewPreferences_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "viewPreferences"
+"""
+type viewPreferences_aggregate_fields {
+  count(columns: [viewPreferences_select_column!], distinct: Boolean): Int!
+  max: viewPreferences_max_fields
+  min: viewPreferences_min_fields
+}
+
+"""
+order by aggregate values of table "viewPreferences"
+"""
+input viewPreferences_aggregate_order_by {
+  count: order_by
+  max: viewPreferences_max_order_by
+  min: viewPreferences_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "viewPreferences"
+"""
+input viewPreferences_arr_rel_insert_input {
+  data: [viewPreferences_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: viewPreferences_on_conflict
+}
+
+"""
+Boolean expression to filter rows from the table "viewPreferences". All fields are combined with a logical 'AND'.
+"""
+input viewPreferences_bool_exp {
+  _and: [viewPreferences_bool_exp!]
+  _not: viewPreferences_bool_exp
+  _or: [viewPreferences_bool_exp!]
+  createdAt: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  isSortingReversed: Boolean_comparison_exp
+  layout: String_comparison_exp
+  listId: listIdEnum_enum_comparison_exp
+  sortedBy: String_comparison_exp
+  updatedAt: timestamptz_comparison_exp
+  userId: uuid_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "viewPreferences"
+"""
+enum viewPreferences_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  viewPreferences_pkey
+
+  """
+  unique or primary key constraint on columns "userId", "listId"
+  """
+  viewPreferences_userId_listId_key
+}
+
+"""
+input type for inserting data into table "viewPreferences"
+"""
+input viewPreferences_insert_input {
+  createdAt: timestamptz
+  id: uuid
+  isSortingReversed: Boolean
+  layout: String
+  listId: listIdEnum_enum
+  sortedBy: String
+  updatedAt: timestamptz
+  userId: uuid
+}
+
+"""aggregate max on columns"""
+type viewPreferences_max_fields {
+  createdAt: timestamptz
+  id: uuid
+  layout: String
+  sortedBy: String
+  updatedAt: timestamptz
+  userId: uuid
+}
+
+"""
+order by max() on columns of table "viewPreferences"
+"""
+input viewPreferences_max_order_by {
+  createdAt: order_by
+  id: order_by
+  layout: order_by
+  sortedBy: order_by
+  updatedAt: order_by
+  userId: order_by
+}
+
+"""aggregate min on columns"""
+type viewPreferences_min_fields {
+  createdAt: timestamptz
+  id: uuid
+  layout: String
+  sortedBy: String
+  updatedAt: timestamptz
+  userId: uuid
+}
+
+"""
+order by min() on columns of table "viewPreferences"
+"""
+input viewPreferences_min_order_by {
+  createdAt: order_by
+  id: order_by
+  layout: order_by
+  sortedBy: order_by
+  updatedAt: order_by
+  userId: order_by
+}
+
+"""
+response of any mutation on the table "viewPreferences"
+"""
+type viewPreferences_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [viewPreferences!]!
+}
+
+"""
+on_conflict condition type for table "viewPreferences"
+"""
+input viewPreferences_on_conflict {
+  constraint: viewPreferences_constraint!
+  update_columns: [viewPreferences_update_column!]! = []
+  where: viewPreferences_bool_exp
+}
+
+"""Ordering options when selecting data from "viewPreferences"."""
+input viewPreferences_order_by {
+  createdAt: order_by
+  id: order_by
+  isSortingReversed: order_by
+  layout: order_by
+  listId: order_by
+  sortedBy: order_by
+  updatedAt: order_by
+  userId: order_by
+}
+
+"""primary key columns input for table: viewPreferences"""
+input viewPreferences_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "viewPreferences"
+"""
+enum viewPreferences_select_column {
+  """column name"""
+  createdAt
+
+  """column name"""
+  id
+
+  """column name"""
+  isSortingReversed
+
+  """column name"""
+  layout
+
+  """column name"""
+  listId
+
+  """column name"""
+  sortedBy
+
+  """column name"""
+  updatedAt
+
+  """column name"""
+  userId
+}
+
+"""
+select "viewPreferences_aggregate_bool_exp_bool_and_arguments_columns" columns of table "viewPreferences"
+"""
+enum viewPreferences_select_column_viewPreferences_aggregate_bool_exp_bool_and_arguments_columns {
+  """column name"""
+  isSortingReversed
+}
+
+"""
+select "viewPreferences_aggregate_bool_exp_bool_or_arguments_columns" columns of table "viewPreferences"
+"""
+enum viewPreferences_select_column_viewPreferences_aggregate_bool_exp_bool_or_arguments_columns {
+  """column name"""
+  isSortingReversed
+}
+
+"""
+input type for updating data in table "viewPreferences"
+"""
+input viewPreferences_set_input {
+  createdAt: timestamptz
+  id: uuid
+  isSortingReversed: Boolean
+  layout: String
+  listId: listIdEnum_enum
+  sortedBy: String
+  updatedAt: timestamptz
+  userId: uuid
+}
+
+"""
+Streaming cursor of the table "viewPreferences"
+"""
+input viewPreferences_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: viewPreferences_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input viewPreferences_stream_cursor_value_input {
+  createdAt: timestamptz
+  id: uuid
+  isSortingReversed: Boolean
+  layout: String
+  listId: listIdEnum_enum
+  sortedBy: String
+  updatedAt: timestamptz
+  userId: uuid
+}
+
+"""
+update columns of table "viewPreferences"
+"""
+enum viewPreferences_update_column {
+  """column name"""
+  createdAt
+
+  """column name"""
+  id
+
+  """column name"""
+  isSortingReversed
+
+  """column name"""
+  layout
+
+  """column name"""
+  listId
+
+  """column name"""
+  sortedBy
+
+  """column name"""
+  updatedAt
+
+  """column name"""
+  userId
+}
+
+input viewPreferences_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: viewPreferences_set_input
+
+  """filter the rows which have to be updated"""
+  where: viewPreferences_bool_exp!
+}

@@ -111,7 +111,7 @@ pub fn list(args: &TokenListArgs) {
 
     table(
         list,
-        format!("Tokens of the project named '{}'", project_token_list.name),
+        format!("Tokens of the project named '{}'.", project_token_list.name),
         "You don't have tokens for this project.",
         format!(
             "{}{}{}",

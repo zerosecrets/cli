@@ -112,7 +112,7 @@ pub fn list(args: &TokenListArgs) {
     table(
         list,
         format!("Tokens of project named '{}'", project_token_list.name),
-        "You don't have any token for this project.",
+        "You don't have tokens for this project.",
         format!(
             "{}{}{}",
             pad_to_column_width("ID".to_string(), column_width_size.id + indentation),

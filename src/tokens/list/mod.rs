@@ -9,7 +9,7 @@ use crate::common::{
     query_full_id::{query_full_id, QueryType},
     table::table,
 };
-use crate::projects::tokens::list::graphql::token_list::{token_list, TokenList};
+use crate::tokens::list::graphql::token_list::{token_list, TokenList};
 use clap::Args;
 use graphql_client::GraphQLQuery;
 use reqwest::Client;

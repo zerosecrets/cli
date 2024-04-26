@@ -5,7 +5,7 @@
 mod list;
 /// ## Create Tokens
 ///
-///  The `Create list` function create new token for project
+///  The `Create token` function creates a new token for the project
 ///
 mod create;
 use crate::tokens::list::{list, TokenListArgs};

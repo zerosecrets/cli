@@ -156,8 +156,8 @@ input CreateProjectTokenInput {
 }
 
 type CreateProjectTokenOutput {
-  errorCode: String
-  tokenValue: String
+  tokenId: ID!
+  tokenValue: String!
 }
 
 input CreateSecretFieldInput {
@@ -478,8 +478,6 @@ type RemovePaidFeaturesOutput {
 
 input RemoveTeamInput {
   teamId: String!
-  teamMemberIds: [String!]!
-  teamName: String!
 }
 
 type RemoveTeamOutput {
@@ -15756,3 +15754,4 @@ input viewPreferences_updates {
   """filter the rows which have to be updated"""
   where: viewPreferences_bool_exp!
 }
+

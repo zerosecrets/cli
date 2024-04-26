@@ -14,8 +14,10 @@ use clap::Args;
 use dialoguer::{Input, Select};
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
-use termimad::crossterm::style::Stylize;
-use termimad::{crossterm::style::Color, minimad, MadSkin};
+use termimad::{
+    crossterm::style::{style, Color, Stylize},
+    minimad, MadSkin,
+};
 
 #[derive(Args, Debug)]
 pub struct TokenCreateArgs {
@@ -107,15 +109,6 @@ pub fn create(args: &TokenCreateArgs) {
         }
     };
 
-    let token_expires_at = match &token_expires_at_value {
-        Some(value) => value,
-
-        None => {
-            print_formatted_error(read_expires_time_error);
-            std::process::exit(1);
-        }
-    };
-
     let create_token_response =
         execute_graphql_request::<generate_token::Variables, generate_token::ResponseData>(
             authorization_headers(&access_token),
@@ -130,18 +123,10 @@ pub fn create(args: &TokenCreateArgs) {
         )
         .create_project_token;
 
-    let token_value = match create_token_response.token_value {
-        Some(token) => token,
-
-        None => {
-            print_formatted_error(&project_tokens_error_message);
-            std::process::exit(1);
-        }
-    };
-
     let success_message_template = minimad::TextTemplate::from(
         r#"
     ##### ✔ Token successfully created
+    ID: **${id}**
     Name: **${name}**
     Expires at: **${expires}**
     Token: **${token}**
@@ -153,12 +138,22 @@ pub fn create(args: &TokenCreateArgs) {
     "#,
     );
 
-    let mut expander = success_message_template.expander();s
+    let mut expander = success_message_template.expander();
+
+    let styled_short_id = format!(
+        "{}",
+        &create_token_response.token_id[..4].with(Color::Green)
+    );
+    let styled_token = format!(
+        "{}",
+        &create_token_response.token_value.with(Color::DarkYellow)
+    );
 
     expander
+        .set("id", &styled_short_id)
         .set("name", &token_name)
         .set("expires", &options[expires_at_selections])
-        .set("token", &token_value);
+        .set("token", &styled_token);
 
     let mut skin = MadSkin::default();
     skin.headers[4].set_fg(Color::Green);

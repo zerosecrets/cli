@@ -156,8 +156,8 @@ input CreateProjectTokenInput {
 }
 
 type CreateProjectTokenOutput {
-  errorCode: String
-  tokenValue: String
+  tokenId: ID!
+  tokenValue: String!
 }
 
 input CreateSecretFieldInput {

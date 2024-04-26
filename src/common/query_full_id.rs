@@ -4,6 +4,7 @@ use crate::common::graphql::{
     search_usage_history_by_id::{search_usage_history_by_id, SearchUsageHistoryById},
     search_user_by_id::{search_user_by_id, SearchUserById},
     search_user_secret_by_id::{search_user_secret_by_id, SearchUserSecretById},
+    search_token_by_id::{search_token_by_id, SearchTokenById},
 };
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
@@ -17,10 +18,11 @@ use uuid::Uuid;
 
 pub enum QueryType {
     Project,
-    UserSecret,
-    UsageHistory,
     Teams,
+    Tokens,
     User,
+    UsageHistory,
+    UserSecret,
 }
 
 struct SelectItem {
@@ -204,6 +206,32 @@ pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str
                 })
                 .collect()
         }
+
+        QueryType::Tokens => {
+            let token_error_message = format!("Failed to retrieve token with ID '{}'.", &short_id);
+
+            let tokens = execute_graphql_request::<
+                search_token_by_id::Variables,
+                search_token_by_id::ResponseData,
+            >(
+                authorization_headers.clone(),
+                SearchTokenById::build_query,
+                &client,
+                &token_error_message,
+                search_token_by_id::Variables {
+                    id: short_id.clone(),
+                },
+            )
+                .search_token_by_id;
+
+            tokens
+                .iter()
+                .map(|element| SelectItem {
+                    id: element.id,
+                    description: element.name.clone(),
+                })
+                .collect()
+        }
     };
 
     match all_matches.len() {
@@ -240,6 +268,13 @@ pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str
                 QueryType::Teams => {
                     print_formatted_error(&format!(
                         "The team with short ID '{}' does not exist.",
+                        &short_id
+                    ));
+                }
+
+                QueryType::Tokens => {
+                    print_formatted_error(&format!(
+                        "The token with short ID '{}' does not exist.",
                         &short_id
                     ));
                 }

@@ -23,8 +23,8 @@ pub mod create_project {
     }
     #[derive(Serialize)]
     pub struct TokenObject {
-        #[serde(rename = "tokenExpiresIn")]
-        pub token_expires_in: Option<String>,
+        #[serde(rename = "tokenExpiresAt")]
+        pub token_expires_at: Option<String>,
         #[serde(rename = "tokenName")]
         pub token_name: Option<String>,
     }

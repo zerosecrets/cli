@@ -8,12 +8,12 @@ use crate::common::{
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
 };
-use crate::tokens::create::graphql::generate_token::{generate_token, GenerateToken};
+use crate::tokens::regenerate::graphql::regenerate_token::{regenerate_token, RegenerateToken};
 use chrono::{Duration, Utc};
 use clap::Args;
 use dialoguer::console::Style;
 use dialoguer::theme::ColorfulTheme;
-use dialoguer::{Input, Select, Sort};
+use dialoguer::{Select, Sort};
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
 use termimad::crossterm::style::style;
@@ -23,11 +23,11 @@ use termimad::{
 };
 
 #[derive(Args, Debug)]
-pub struct TokenCreateArgs {
+pub struct TokenRegenerateArgs {
     #[clap(
         short,
         long,
-        help = "Project ID (First 4 characters or more are allowed)"
+        help = "Token ID (First 4 characters or more are allowed)"
     )]
     id: String,
 
@@ -39,7 +39,7 @@ pub struct TokenCreateArgs {
     access_token: Option<String>,
 }
 
-pub fn create(args: &TokenCreateArgs) {
+pub fn regenerate(args: &TokenRegenerateArgs) {
     let items_per_page = Config::new().items_per_page;
 
     let access_token = match &args.access_token {
@@ -47,31 +47,12 @@ pub fn create(args: &TokenCreateArgs) {
         None => keyring::get("access_token"),
     };
 
-    let project_id = query_full_id(QueryType::Project, args.id.clone(), &access_token);
+    let token_id = query_full_id(QueryType::Tokens, args.id.clone(), &access_token);
 
-    let project_tokens_error_message = format!(
-        "Failed to create token for the project with ID '{}'.",
+    let regenerate_token_error_message = format!(
+        "Failed to regenerate a token for the project with ID '{}'.",
         &args.id
     );
-
-    let token_name = match Input::<String>::with_theme(&theme())
-        .with_prompt("Type a name for the token:")
-        .validate_with(|name: &String| -> Result<(), &str> {
-            if name.trim().chars().count() == 0 {
-                return Err("The token name must contain at least 1 character.");
-            } else {
-                Ok(())
-            }
-        })
-        .interact()
-    {
-        Ok(name) => name.trim().to_owned(),
-
-        Err(_) => {
-            print_formatted_error(&project_tokens_error_message);
-            std::process::exit(1);
-        }
-    };
 
     let options = ["Endless", "7 days", "30 days", "60 days", "90 days"];
     let read_expires_time_error = "Creating failed. Failed to read expiration time.";
@@ -112,25 +93,31 @@ pub fn create(args: &TokenCreateArgs) {
         }
     };
 
-    let create_token_response =
-        execute_graphql_request::<generate_token::Variables, generate_token::ResponseData>(
+    let regenerate_token_response =
+        execute_graphql_request::<regenerate_token::Variables, regenerate_token::ResponseData>(
             authorization_headers(&access_token),
-            GenerateToken::build_query,
+            RegenerateToken::build_query,
             &Client::new(),
-            &project_tokens_error_message,
-            generate_token::Variables {
-                id: project_id.to_string(),
-                name: token_name.to_owned(),
+            &regenerate_token_error_message,
+            regenerate_token::Variables {
+                id: token_id.to_string(),
                 expires_at: token_expires_at_value.clone(),
             },
         )
-        .create_project_token;
+        .regenerate_project_token;
+
+    let new_token_value = match regenerate_token_response.token_value {
+        Some(token) => token,
+        None => {
+            print_formatted_error("Failed to regenerate a token.");
+            std::process::exit(1);
+        }
+    };
 
     let success_message_template = minimad::TextTemplate::from(
         r#"
-    ##### ✔ Token successfully created
+    ##### ✔ Token successfully regenerated!
     ID: **${id}**
-    Name: **${name}**
     Expires at: **${expires}**
 
     > *Please make sure to store this token in a safe place.*
@@ -142,14 +129,10 @@ pub fn create(args: &TokenCreateArgs) {
 
     let mut expander = success_message_template.expander();
 
-    let styled_short_id = format!(
-        "{}",
-        &create_token_response.token_id[..4].with(Color::Green)
-    );
+    let styled_short_id = format!("{}", &token_id.to_string()[..4].with(Color::Green));
 
     expander
         .set("id", &styled_short_id)
-        .set("name", &token_name)
         .set("expires", &options[expires_at_selections]);
 
     let mut skin = MadSkin::default();
@@ -168,7 +151,7 @@ pub fn create(args: &TokenCreateArgs) {
         .item(format!(
             "{} '{}'. {}",
             "Your token:",
-            style(format!("{}", &create_token_response.token_value)).with(Color::Green),
+            style(format!("{}", &new_token_value)).with(Color::Green),
             "Copy this token and press 'Enter' to remove it from the screen."
         ))
         .clear(true)

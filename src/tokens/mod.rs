@@ -13,9 +13,15 @@ mod delete;
 ///  The `Tokens list` function displays information about the project tokens
 ///
 mod list;
+/// ## Regenerate Tokens
+///
+///  The `Regenerate token` function regenerates the token for the project
+///
+mod regenerate;
 use crate::tokens::create::{create, TokenCreateArgs};
 use crate::tokens::delete::{delete, TokensDeleteArgs};
 use crate::tokens::list::{list, TokenListArgs};
+use crate::tokens::regenerate::{regenerate, TokenRegenerateArgs};
 use clap::{Parser, Subcommand};
 
 #[derive(Parser, Debug)]
@@ -33,6 +39,8 @@ pub enum TokenCommands {
     Delete(TokensDeleteArgs),
     #[clap(about = "List all project token")]
     List(TokenListArgs),
+    #[clap(about = "Regenerate a project token")]
+    Regenerate(TokenRegenerateArgs),
 }
 
 pub fn match_command(input: &TokenCli) {
@@ -40,5 +48,6 @@ pub fn match_command(input: &TokenCli) {
         TokenCommands::Create(args) => create(&args),
         TokenCommands::Delete(args) => delete(&args),
         TokenCommands::List(args) => list(&args),
+        TokenCommands::Regenerate(args) => regenerate(&args),
     }
 }

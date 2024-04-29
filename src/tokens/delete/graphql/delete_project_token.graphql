@@ -1,0 +1,5 @@
+mutation DeleteToken($tokenId: uuid!) {
+    delete_projectToken_by_pk(id: $tokenId) {
+        id
+    }
+}

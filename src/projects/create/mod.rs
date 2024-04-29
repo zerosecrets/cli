@@ -1,14 +1,14 @@
 mod graphql;
 
-use chrono::{Duration, Utc};
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
-    execute_graphql_request::execute_graphql_request,
-    keyring::keyring, print_formatted_error::print_formatted_error,
+    execute_graphql_request::execute_graphql_request, keyring::keyring,
+    print_formatted_error::print_formatted_error,
 };
 use crate::projects::create::graphql::create_project::{create_project, CreateProject};
+use chrono::{Duration, Utc};
 use clap::Args;
-use dialoguer::{console::Style, theme::ColorfulTheme, Input, Sort, Confirm, Select};
+use dialoguer::{console::Style, theme::ColorfulTheme, Confirm, Input, Select, Sort};
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
 use termimad::{
@@ -19,15 +19,15 @@ use termimad::{
 #[derive(Args, Debug)]
 pub struct ProjectsCreateArgs {
     #[clap(
-    short,
-    long,
-    help = "Project name, if not specified, the user will be prompted to enter the name"
+        short,
+        long,
+        help = "Project name, if not specified, the user will be prompted to enter the name"
     )]
     name: Option<String>,
     #[clap(
-    short,
-    long,
-    help = "Access token, if not specified, the token will be taken from the keychain"
+        short,
+        long,
+        help = "Access token, if not specified, the token will be taken from the keychain"
     )]
     access_token: Option<String>,
 }
@@ -96,8 +96,8 @@ pub fn create(args: &ProjectsCreateArgs) {
         let token_name = match Input::with_theme(&theme())
             .with_prompt("Enter the token name:")
             .validate_with(|input: &String| -> Result<(), &str> {
-                if input.trim().chars().count() < 2 {
-                    return Err("The token name must be at least 2 characters long.");
+                if input.trim().chars().count() == 0 {
+                    return Err("The token name must contain at least 1 character.");
                 } else {
                     Ok(())
                 }
@@ -132,12 +132,12 @@ pub fn create(args: &ProjectsCreateArgs) {
             Ok(expires_at_selections) => expires_at_selections,
 
             Err(_) => {
-                print_formatted_error("Sharing failed. Failed to read expiration time.");
+                print_formatted_error("Creation failed. Failed to read expiration time.");
                 std::process::exit(1);
             }
         };
 
-        let token_expires_in = match options[expires_at_selections] {
+        let token_expires_at = match options[expires_at_selections] {
             "Endless" => None,
             "7 days" => Some((Utc::now() + Duration::days(7)).to_string()),
             "30 days" => Some((Utc::now() + Duration::days(30)).to_string()),
@@ -151,7 +151,7 @@ pub fn create(args: &ProjectsCreateArgs) {
         };
 
         token = Some(create_project::TokenObject {
-            token_expires_in: token_expires_in,
+            token_expires_at,
             token_name: Some(token_name),
         });
     } else {
@@ -163,7 +163,8 @@ pub fn create(args: &ProjectsCreateArgs) {
         project_name.clone()
     );
 
-    let first_letters: String = project_name.chars()
+    let first_letters: String = project_name
+        .chars()
         .filter(|c| c.is_ascii_alphabetic())
         .take(2)
         .flat_map(|c| c.to_uppercase())
@@ -178,13 +179,19 @@ pub fn create(args: &ProjectsCreateArgs) {
             &create_project_error_message,
             create_project::Variables {
                 object: create_project::CreateProjectInput {
-                    project_icon: format!(">{}#{:02x}{:02x}{:02x}", first_letters, rand::random::<u8>(), rand::random::<u8>(), rand::random::<u8>()),
+                    project_icon: format!(
+                        ">{}#{:02x}{:02x}{:02x}",
+                        first_letters,
+                        rand::random::<u8>(),
+                        rand::random::<u8>(),
+                        rand::random::<u8>()
+                    ),
                     project_name: project_name.clone(),
                     token,
                 },
             },
         )
-            .create_project;
+        .create_project;
 
     // MD template for the project creation message
     let text_template = if is_token_needed {
@@ -229,12 +236,12 @@ pub fn create(args: &ProjectsCreateArgs) {
         Config::new().webapp_url,
         &project_id.to_string().replace("-", "")
     ))
-        .with(Color::Rgb {
-            r: 0,
-            g: 135,
-            b: 255,
-        })
-        .to_string();
+    .with(Color::Rgb {
+        r: 0,
+        g: 135,
+        b: 255,
+    })
+    .to_string();
 
     let styled_short_id = format!("{}", &project_id[..4].with(Color::Green));
     let styled_project_id = format!("{}", &project_id.with(Color::Green));
@@ -272,10 +279,7 @@ pub fn create(args: &ProjectsCreateArgs) {
             Ok(confirmation) => confirmation,
 
             Err(_) => {
-                print_formatted_error(
-                    &format!("Creation failed. Failed to display information about the created project with the name '{}'.", &project_name),
-                );
-
+                print_formatted_error("Failed to display the project on the screen. You can see it in the web application or try creating it again.");
                 std::process::exit(1);
             }
         };

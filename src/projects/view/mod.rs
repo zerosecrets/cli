@@ -54,7 +54,7 @@ pub fn view(args: &ProjectsViewArgs) {
             &project_details_error_message,
             project_details::Variables { id: project_id },
         )
-        .token;
+        .project;
 
     let current_project_info = match project_details.first() {
         Some(data) => data,
@@ -65,7 +65,7 @@ pub fn view(args: &ProjectsViewArgs) {
         }
     };
 
-    let last_usage = if let Some(usage_history) = &current_project_info.usage_history.first() {
+    let last_usage = if let Some(usage_history) = &current_project_info.usage_histories.first() {
         match format_relative_time(&usage_history.created_at.to_string()) {
             Ok(relative_time) => relative_time,
 
@@ -88,7 +88,7 @@ pub fn view(args: &ProjectsViewArgs) {
         &current_project_info.id,
         &current_project_info.owner.name,
         &current_project_info.owner.email,
-        if let Some(secret_count) = &current_project_info.user_secret_aggregate.aggregate {
+        if let Some(secret_count) = &current_project_info.user_secrets_aggregate.aggregate {
             secret_count.count
         } else {
             0

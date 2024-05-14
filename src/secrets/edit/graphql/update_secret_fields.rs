@@ -20,7 +20,6 @@ pub mod update_secret_fields {
         #[serde(rename = "encryptedValue")]
         pub encrypted_value: Option<String>,
         pub name: String,
-        pub slug: String,
         #[serde(rename = "userSecretId")]
         pub user_secret_id: String,
     }
@@ -28,7 +27,6 @@ pub mod update_secret_fields {
     pub struct UpdateUserSecretInput {
         pub id: String,
         pub name: String,
-        pub slug: String,
     }
     #[derive(Serialize)]
     pub struct Variables {

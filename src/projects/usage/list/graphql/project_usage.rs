@@ -3,7 +3,7 @@ pub struct ProjectUsage;
 pub mod project_usage {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "ProjectUsage";
-    pub const QUERY : & str = "query ProjectUsage($id: uuid!) {\n  token(where: {id: {_eq: $id}}, limit: 1000) {\n    id\n    name\n\n    usageHistory(order_by: {createdAt: desc}) {\n      id\n      createdAt\n      callerName\n      remoteIp\n\n      secrets_aggregate {\n        aggregate {\n          count\n        }\n      }\n    }\n\n    usageHistory_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query ProjectUsage($id: uuid!) {\n  project(where: {id: {_eq: $id}}, limit: 1000) {\n    id\n    name\n\n    usageHistories(order_by: {createdAt: desc}) {\n      id\n      createdAt\n      callerName\n      remoteIp\n\n      secrets_aggregate {\n        aggregate {\n          count\n        }\n      }\n    }\n\n    usageHistories_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
     use chrono::offset::Utc;
     use chrono::DateTime;
     use serde::{Deserialize, Serialize};
@@ -22,42 +22,42 @@ pub mod project_usage {
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        pub token: Vec<ProjectUsageToken>,
+        pub project: Vec<ProjectUsageProject>,
     }
     #[derive(Deserialize)]
-    pub struct ProjectUsageToken {
+    pub struct ProjectUsageProject {
         pub id: uuid::Uuid,
         pub name: String,
-        #[serde(rename = "usageHistory")]
-        pub usage_history: Vec<ProjectUsageTokenUsageHistory>,
-        #[serde(rename = "usageHistory_aggregate")]
-        pub usage_history_aggregate: ProjectUsageTokenUsageHistoryAggregate,
+        #[serde(rename = "usageHistories")]
+        pub usage_histories: Vec<ProjectUsageProjectUsageHistories>,
+        #[serde(rename = "usageHistories_aggregate")]
+        pub usage_histories_aggregate: ProjectUsageProjectUsageHistoriesAggregate,
     }
     #[derive(Deserialize)]
-    pub struct ProjectUsageTokenUsageHistory {
+    pub struct ProjectUsageProjectUsageHistories {
         pub id: uuid::Uuid,
         #[serde(rename = "createdAt")]
         pub created_at: DateTime<Utc>,
         #[serde(rename = "callerName")]
         pub caller_name: Option<String>,
         #[serde(rename = "remoteIp")]
-        pub remote_ip: String,
-        pub secrets_aggregate: ProjectUsageTokenUsageHistorySecretsAggregate,
+        pub remote_ip: Option<String>,
+        pub secrets_aggregate: ProjectUsageProjectUsageHistoriesSecretsAggregate,
     }
     #[derive(Deserialize)]
-    pub struct ProjectUsageTokenUsageHistorySecretsAggregate {
-        pub aggregate: Option<ProjectUsageTokenUsageHistorySecretsAggregateAggregate>,
+    pub struct ProjectUsageProjectUsageHistoriesSecretsAggregate {
+        pub aggregate: Option<ProjectUsageProjectUsageHistoriesSecretsAggregateAggregate>,
     }
     #[derive(Deserialize)]
-    pub struct ProjectUsageTokenUsageHistorySecretsAggregateAggregate {
+    pub struct ProjectUsageProjectUsageHistoriesSecretsAggregateAggregate {
         pub count: Int,
     }
     #[derive(Deserialize)]
-    pub struct ProjectUsageTokenUsageHistoryAggregate {
-        pub aggregate: Option<ProjectUsageTokenUsageHistoryAggregateAggregate>,
+    pub struct ProjectUsageProjectUsageHistoriesAggregate {
+        pub aggregate: Option<ProjectUsageProjectUsageHistoriesAggregateAggregate>,
     }
     #[derive(Deserialize)]
-    pub struct ProjectUsageTokenUsageHistoryAggregateAggregate {
+    pub struct ProjectUsageProjectUsageHistoriesAggregateAggregate {
         pub count: Int,
     }
 }

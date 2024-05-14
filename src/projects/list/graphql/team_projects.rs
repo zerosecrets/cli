@@ -3,7 +3,7 @@ pub struct TeamProjects;
 pub mod team_projects {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "TeamProjects";
-    pub const QUERY : & str = "query TeamProjects($id: uuid!, $userId: uuid!) {\n  token(where: {_and: [\n    {teams: {team: {id: {_eq: $id}}}},\n    {teams: {team: {members: {member: {id: {_eq: $userId}}}}}}\n  ]}, limit: 1000) {\n    id\n    name\n\n    owner {\n      name\n      email\n    }\n\n    usageHistory(order_by: {updatedAt: desc}, limit: 1) {\n      updatedAt\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query TeamProjects($id: uuid!, $userId: uuid!) {\n  project(where: {_and: [\n    {teams: {team: {id: {_eq: $id}}}},\n    {teams: {team: {members: {member: {id: {_eq: $userId}}}}}}\n  ]}, limit: 1000) {\n    id\n    name\n\n    owner {\n      name\n      email\n    }\n\n    usageHistories(order_by: {updatedAt: desc}, limit: 1) {\n      updatedAt\n    }\n  }\n}\n" ;
     use chrono::offset::Utc;
     use chrono::DateTime;
     use serde::{Deserialize, Serialize};
@@ -26,23 +26,23 @@ pub mod team_projects {
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        pub token: Vec<TeamProjectsToken>,
+        pub project: Vec<TeamProjectsProject>,
     }
     #[derive(Deserialize)]
-    pub struct TeamProjectsToken {
+    pub struct TeamProjectsProject {
         pub id: uuid,
         pub name: String,
-        pub owner: TeamProjectsTokenOwner,
-        #[serde(rename = "usageHistory")]
-        pub usage_history: Vec<TeamProjectsTokenUsageHistory>,
+        pub owner: TeamProjectsProjectOwner,
+        #[serde(rename = "usageHistories")]
+        pub usage_histories: Vec<TeamProjectsProjectUsageHistories>,
     }
     #[derive(Deserialize)]
-    pub struct TeamProjectsTokenOwner {
+    pub struct TeamProjectsProjectOwner {
         pub name: String,
         pub email: String,
     }
     #[derive(Deserialize)]
-    pub struct TeamProjectsTokenUsageHistory {
+    pub struct TeamProjectsProjectUsageHistories {
         #[serde(rename = "updatedAt")]
         pub updated_at: timestamptz,
     }

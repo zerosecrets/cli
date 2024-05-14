@@ -5,7 +5,7 @@ query UsageDetails($id: uuid!) {
     createdAt
     remoteIp
 
-    token {
+    project {
       id
       name
     }

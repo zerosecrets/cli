@@ -84,6 +84,26 @@ pub fn view(args: &SecretViewArgs) {
         user_secret_details::vendorEnum_enum::stripe => "Stripe",
         user_secret_details::vendorEnum_enum::terraform => "Terraform",
         user_secret_details::vendorEnum_enum::twilio => "Twilio",
+        user_secret_details::vendorEnum_enum::zoom => "Zoom",
+        user_secret_details::vendorEnum_enum::claude => "Claude",
+        user_secret_details::vendorEnum_enum::datadog => "Datadog",
+        user_secret_details::vendorEnum_enum::docker => "Docker",
+        user_secret_details::vendorEnum_enum::facebook => "Facebook",
+        user_secret_details::vendorEnum_enum::gemini => "Gemini",
+        user_secret_details::vendorEnum_enum::gitHub => "GitHub",
+        user_secret_details::vendorEnum_enum::gitLab => "GitLab",
+        user_secret_details::vendorEnum_enum::google => "Google",
+        user_secret_details::vendorEnum_enum::jenkins => "Jenkins",
+        user_secret_details::vendorEnum_enum::jira => "Jira",
+        user_secret_details::vendorEnum_enum::kubernetes => "Kubernetes",
+        user_secret_details::vendorEnum_enum::linear => "Linear",
+        user_secret_details::vendorEnum_enum::shopify => "Shopify",
+        user_secret_details::vendorEnum_enum::slack => "Slack",
+        user_secret_details::vendorEnum_enum::trello => "Trello",
+        user_secret_details::vendorEnum_enum::ansible => "Ansible",
+        user_secret_details::vendorEnum_enum::bitbucket => "Bitbucket",
+        user_secret_details::vendorEnum_enum::openAI => "OpenAI",
+        user_secret_details::vendorEnum_enum::salesforce => "Salesforce",
     };
 
     let last_usage = match format_relative_time(&user_secret_details.updated_at.to_string()) {
@@ -110,7 +130,7 @@ pub fn view(args: &SecretViewArgs) {
         style(format!(
             "{}/projects/{}/secrets/{}",
             Config::new().webapp_url,
-            user_secret_details.token_id.to_string().replace("-", ""),
+            user_secret_details.project_id.to_string().replace("-", ""),
             user_secret_details.id.to_string().replace("-", "")
         ))
         .with(Color::Rgb {

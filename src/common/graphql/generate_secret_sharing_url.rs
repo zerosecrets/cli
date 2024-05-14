@@ -21,10 +21,10 @@ pub mod generate_secret_sharing_url {
         pub expires_at: DateTime<Utc>,
         #[serde(rename = "passPhrase")]
         pub pass_phrase: Option<String>,
+        #[serde(rename = "projectId")]
+        pub project_id: uuid::Uuid,
         #[serde(rename = "secretsFieldsIds")]
         pub secrets_fields_ids: Vec<String>,
-        #[serde(rename = "tokenId")]
-        pub token_id: uuid::Uuid,
     }
     #[derive(Serialize)]
     pub struct Variables {
@@ -35,13 +35,13 @@ pub mod generate_secret_sharing_url {
             expires_at: DateTime<Utc>,
             pass_phrase: Option<String>,
             secrets_fields_ids: Vec<String>,
-            token_id: uuid::Uuid,
+            project_id: uuid::Uuid,
         ) -> Self {
             let object = GenerateSecretSharingUrlInput {
                 expires_at,
                 pass_phrase,
                 secrets_fields_ids,
-                token_id,
+                project_id,
             };
             Self { object }
         }

@@ -3,7 +3,7 @@ pub struct ProjectDetails;
 pub mod project_details {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "ProjectDetails";
-    pub const QUERY : & str = "query ProjectDetails($id: uuid!) {\n  token(where: {id: {_eq: $id}}) {\n    id\n    name\n    description\n\n    owner {\n      id\n      name\n      email\n    }\n\n    usageHistory(limit: 1, order_by: {createdAt: desc}) {\n      createdAt\n    }\n\n    teams_aggregate {\n      aggregate {\n        count\n      }\n    }\n\n    integrationInstallations_aggregate {\n      aggregate {\n        count\n      }\n    }\n\n    userSecret_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query ProjectDetails($id: uuid!) {\n  project(where: {id: {_eq: $id}}) {\n    id\n    name\n    description\n\n    owner {\n      id\n      name\n      email\n    }\n\n    usageHistories(limit: 1, order_by: {createdAt: desc}) {\n      createdAt\n    }\n\n    teams_aggregate {\n      aggregate {\n        count\n      }\n    }\n\n    integrationInstallations_aggregate {\n      aggregate {\n        count\n      }\n    }\n\n    userSecrets_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
     use ::uuid::Uuid;
     use chrono::offset::Utc;
     use chrono::DateTime;
@@ -25,56 +25,56 @@ pub mod project_details {
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        pub token: Vec<ProjectDetailsToken>,
+        pub project: Vec<ProjectDetailsProject>,
     }
     #[derive(Deserialize)]
-    pub struct ProjectDetailsToken {
+    pub struct ProjectDetailsProject {
         pub id: uuid,
         pub name: String,
         pub description: Option<String>,
-        pub owner: ProjectDetailsTokenOwner,
-        #[serde(rename = "usageHistory")]
-        pub usage_history: Vec<ProjectDetailsTokenUsageHistory>,
-        pub teams_aggregate: ProjectDetailsTokenTeamsAggregate,
+        pub owner: ProjectDetailsProjectOwner,
+        #[serde(rename = "usageHistories")]
+        pub usage_histories: Vec<ProjectDetailsProjectUsageHistories>,
+        pub teams_aggregate: ProjectDetailsProjectTeamsAggregate,
         #[serde(rename = "integrationInstallations_aggregate")]
         pub integration_installations_aggregate:
-            ProjectDetailsTokenIntegrationInstallationsAggregate,
-        #[serde(rename = "userSecret_aggregate")]
-        pub user_secret_aggregate: ProjectDetailsTokenUserSecretAggregate,
+            ProjectDetailsProjectIntegrationInstallationsAggregate,
+        #[serde(rename = "userSecrets_aggregate")]
+        pub user_secrets_aggregate: ProjectDetailsProjectUserSecretsAggregate,
     }
     #[derive(Deserialize)]
-    pub struct ProjectDetailsTokenOwner {
+    pub struct ProjectDetailsProjectOwner {
         pub id: uuid,
         pub name: String,
         pub email: String,
     }
     #[derive(Deserialize)]
-    pub struct ProjectDetailsTokenUsageHistory {
+    pub struct ProjectDetailsProjectUsageHistories {
         #[serde(rename = "createdAt")]
         pub created_at: timestamptz,
     }
     #[derive(Deserialize)]
-    pub struct ProjectDetailsTokenTeamsAggregate {
-        pub aggregate: Option<ProjectDetailsTokenTeamsAggregateAggregate>,
+    pub struct ProjectDetailsProjectTeamsAggregate {
+        pub aggregate: Option<ProjectDetailsProjectTeamsAggregateAggregate>,
     }
     #[derive(Deserialize)]
-    pub struct ProjectDetailsTokenTeamsAggregateAggregate {
+    pub struct ProjectDetailsProjectTeamsAggregateAggregate {
         pub count: Int,
     }
     #[derive(Deserialize)]
-    pub struct ProjectDetailsTokenIntegrationInstallationsAggregate {
-        pub aggregate: Option<ProjectDetailsTokenIntegrationInstallationsAggregateAggregate>,
+    pub struct ProjectDetailsProjectIntegrationInstallationsAggregate {
+        pub aggregate: Option<ProjectDetailsProjectIntegrationInstallationsAggregateAggregate>,
     }
     #[derive(Deserialize)]
-    pub struct ProjectDetailsTokenIntegrationInstallationsAggregateAggregate {
+    pub struct ProjectDetailsProjectIntegrationInstallationsAggregateAggregate {
         pub count: Int,
     }
     #[derive(Deserialize)]
-    pub struct ProjectDetailsTokenUserSecretAggregate {
-        pub aggregate: Option<ProjectDetailsTokenUserSecretAggregateAggregate>,
+    pub struct ProjectDetailsProjectUserSecretsAggregate {
+        pub aggregate: Option<ProjectDetailsProjectUserSecretsAggregateAggregate>,
     }
     #[derive(Deserialize)]
-    pub struct ProjectDetailsTokenUserSecretAggregateAggregate {
+    pub struct ProjectDetailsProjectUserSecretsAggregateAggregate {
         pub count: Int,
     }
 }

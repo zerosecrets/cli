@@ -1,5 +1,5 @@
 query ProjectDetails($id: uuid!) {
-  token(where: {id: {_eq: $id}}) {
+  project(where: {id: {_eq: $id}}) {
     id
     name
     description
@@ -10,7 +10,7 @@ query ProjectDetails($id: uuid!) {
       email
     }
 
-    usageHistory(limit: 1, order_by: {createdAt: desc}) {
+    usageHistories(limit: 1, order_by: {createdAt: desc}) {
       createdAt
     }
 
@@ -26,7 +26,7 @@ query ProjectDetails($id: uuid!) {
       }
     }
 
-    userSecret_aggregate {
+    userSecrets_aggregate {
       aggregate {
         count
       }

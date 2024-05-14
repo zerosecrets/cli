@@ -54,7 +54,7 @@ pub fn list(args: &SecretsListArgs) {
             &project_secrets_error_message,
             project_secrets::Variables { id: project_id },
         )
-        .token_by_pk
+        .project_by_pk
         {
             Some(user_secrets) => user_secrets,
 
@@ -81,7 +81,7 @@ pub fn list(args: &SecretsListArgs) {
     let indentation = 2;
 
     // save the length of the longest column element
-    for secret in &project_secrets_response.user_secret {
+    for secret in &project_secrets_response.user_secrets {
         column_width_size.vendor = column_width_size
             .vendor
             .max(secret.vendor.to_string().len());
@@ -91,7 +91,7 @@ pub fn list(args: &SecretsListArgs) {
             .max(secret.updated_at.format(date_format).to_string().len());
     }
 
-    for secret in project_secrets_response.user_secret {
+    for secret in project_secrets_response.user_secrets {
         secrets_list.push(format!(
             "{}{}{}{}",
             pad_to_column_width(

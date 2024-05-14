@@ -51,8 +51,3 @@ as example
 ```
 graphql-client generate src/auth/graphql/me.graphql --schema-path schema.graphql
 ```
-
-Download schema
-```bash
-gq http://localhost:8080/v1/graphql -H 'X-Hasura-Admin-Secret:111' --introspect > schema.graphql
-```

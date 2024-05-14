@@ -64,12 +64,12 @@ pub fn share(args: &SecretShareArgs) {
         };
 
     let passphrase = match Password::with_theme(&theme())
-        .with_prompt("Type a passphrase of at least 1 character:")
+        .with_prompt("Type a passphrase of at least 6 character:")
         .validate_with(|input: &String| -> Result<(), &str> {
-            if input.trim().chars().count() > 0 {
+            if input.trim().chars().count() >= 6 {
                 Ok(())
             } else {
-                print_formatted_error("Passphrase must be at least 1 character long.");
+                print_formatted_error("Passphrase must be at least 6 character long.");
                 std::process::exit(1);
             }
         })
@@ -166,13 +166,13 @@ pub fn share(args: &SecretShareArgs) {
         &Client::new(),
         &format!(
             "Sharing error. Failed to generate secret sharing url for project '{}'.",
-            &secret_details.token_id
+            &secret_details.project_id
         ),
         generate_secret_sharing_url::Variables::new(
             Utc::now() + Duration::minutes(expires_at_minutes),
             Some(passphrase),
             selected_secrets,
-            secret_details.token_id,
+            secret_details.project_id,
         ),
     )
     .generate_secret_sharing_url

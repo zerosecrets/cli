@@ -18,6 +18,7 @@ pub mod user_info_and_team_names {
     pub enum subscriptionPlanEnum_enum {
         enterprise,
         free,
+        lifetime,
         professional,
         Other(String),
     }
@@ -26,6 +27,7 @@ pub mod user_info_and_team_names {
             ser.serialize_str(match *self {
                 subscriptionPlanEnum_enum::enterprise => "enterprise",
                 subscriptionPlanEnum_enum::free => "free",
+                subscriptionPlanEnum_enum::lifetime => "lifetime",
                 subscriptionPlanEnum_enum::professional => "professional",
                 subscriptionPlanEnum_enum::Other(ref s) => &s,
             })
@@ -37,6 +39,7 @@ pub mod user_info_and_team_names {
             match s.as_str() {
                 "enterprise" => Ok(subscriptionPlanEnum_enum::enterprise),
                 "free" => Ok(subscriptionPlanEnum_enum::free),
+                "lifetime" => Ok(subscriptionPlanEnum_enum::lifetime),
                 "professional" => Ok(subscriptionPlanEnum_enum::professional),
                 _ => Ok(subscriptionPlanEnum_enum::Other(s)),
             }
@@ -74,7 +77,7 @@ pub mod user_info_and_team_names {
 impl graphql_client::GraphQLQuery for UserInfoAndTeamNames {
     type Variables = user_info_and_team_names::Variables;
     type ResponseData = user_info_and_team_names::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: user_info_and_team_names::QUERY,

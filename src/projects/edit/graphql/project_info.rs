@@ -3,7 +3,7 @@ pub struct ProjectInfo;
 pub mod project_info {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "ProjectInfo";
-    pub const QUERY : & str = "query ProjectInfo($projectId: uuid!) {\n    token_by_pk(id: $projectId) {\n        id\n        name\n        ownerUserId\n    }\n}\n" ;
+    pub const QUERY : & str = "query ProjectInfo($projectId: uuid!) {\n    project_by_pk(id: $projectId) {\n        id\n        name\n        ownerUserId\n    }\n}\n" ;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -21,10 +21,10 @@ pub mod project_info {
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        pub token_by_pk: Option<ProjectInfoTokenByPk>,
+        pub project_by_pk: Option<ProjectInfoProjectByPk>,
     }
     #[derive(Deserialize)]
-    pub struct ProjectInfoTokenByPk {
+    pub struct ProjectInfoProjectByPk {
         pub id: uuid::Uuid,
         pub name: String,
         #[serde(rename = "ownerUserId")]

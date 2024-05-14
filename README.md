@@ -23,7 +23,7 @@ The CLI offers various subcommands:
 
 - auth: Authentication and authorization functionalities.
 - projects: Manage projects, including creation, deletion, editing, listing, sharing, usage overview, and viewing details.
-- secrets: Handle secrets, allowing users to create, delete, edit, list, share, and view details.
+- secrets: Handle secrets, allowing users to create, delete, edit, list, share, drop, and view details.
 - teams: Operations related to teams, such as creation, deletion, editing, leaving, listing, managing users, and viewing details.
 - tokens: Token management including creation, deletion, list view and regeneration.
 - help: Display help information about the CLI or a specific subcommand.

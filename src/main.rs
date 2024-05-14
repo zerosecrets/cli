@@ -7,7 +7,7 @@ mod tokens;
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
-#[command(author="Ottofeller", version="1.0.4", about="CLI for the Zero service", long_about = None)]
+#[command(author="Ottofeller", version="2.3.0", about="CLI for the Zero service", long_about = None)]
 struct Cli {
     #[command(subcommand)]
     commands: Commands,

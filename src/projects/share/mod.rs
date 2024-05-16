@@ -17,7 +17,7 @@ use clap::Args;
 use dialoguer::{MultiSelect, Password, Select};
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
-use termimad::crossterm::style::Stylize;
+use termimad::crossterm::style::{Color, Stylize};
 
 #[derive(Args, Debug)]
 pub struct ProjectsShareArgs {
@@ -205,5 +205,14 @@ pub fn share(args: &ProjectsShareArgs) {
         &project_id.to_string()[..4].dark_cyan()
     );
 
-    println!("{}", &secrets_sharing_url);
+    println!(
+        "{}",
+        secrets_sharing_url
+            .with(Color::Rgb {
+                r: 0,
+                g: 135,
+                b: 255,
+            })
+            .to_string()
+    );
 }

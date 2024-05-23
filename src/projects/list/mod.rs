@@ -80,7 +80,7 @@ pub fn list(args: &ProjectsListArgs) {
         }
     }
 
-    let projects: Vec<team_projects::TeamProjectsToken> =
+    let projects: Vec<team_projects::TeamProjectsProject> =
         execute_graphql_request::<team_projects::Variables, team_projects::ResponseData>(
             authorization_headers.clone(),
             TeamProjects::build_query,
@@ -91,7 +91,7 @@ pub fn list(args: &ProjectsListArgs) {
                 user_id,
             },
         )
-        .token;
+        .project;
 
     struct ColumnWidthSize {
         id: usize,
@@ -113,7 +113,7 @@ pub fn list(args: &ProjectsListArgs) {
                 .max(project.owner.name.len() + project.owner.email.len() + 3);
         }
 
-        if let Some(usage_history) = project.usage_history.first() {
+        if let Some(usage_history) = project.usage_histories.first() {
             column_width_size.last_usage = column_width_size.last_usage.max(
                 format_relative_time(&usage_history.updated_at.to_string())
                     .unwrap()
@@ -127,7 +127,7 @@ pub fn list(args: &ProjectsListArgs) {
     let indentation = 2;
 
     for project in projects {
-        let last_usage_time = if let Some(usage_history) = project.usage_history.first() {
+        let last_usage_time = if let Some(usage_history) = project.usage_histories.first() {
             match format_relative_time(&usage_history.updated_at.to_string()) {
                 Ok(relative_time) => relative_time,
 

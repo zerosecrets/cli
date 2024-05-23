@@ -1,9 +1,9 @@
 query ProjectUsage($id: uuid!) {
-  token(where: {id: {_eq: $id}}, limit: 1000) {
+  project(where: {id: {_eq: $id}}, limit: 1000) {
     id
     name
 
-    usageHistory(order_by: {createdAt: desc}) {
+    usageHistories(order_by: {createdAt: desc}) {
       id
       createdAt
       callerName
@@ -16,7 +16,7 @@ query ProjectUsage($id: uuid!) {
       }
     }
 
-    usageHistory_aggregate {
+    usageHistories_aggregate {
       aggregate {
         count
       }

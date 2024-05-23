@@ -17,7 +17,7 @@ use clap::Args;
 use dialoguer::{MultiSelect, Password, Select};
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
-use termimad::crossterm::style::Stylize;
+use termimad::crossterm::style::{Color, Stylize};
 
 #[derive(Args, Debug)]
 pub struct ProjectsShareArgs {
@@ -62,7 +62,7 @@ pub fn share(args: &ProjectsShareArgs) {
             project_id: project_id,
         },
     )
-    .token_by_pk
+    .project_by_pk
     {
         Some(project) => project,
 
@@ -72,8 +72,8 @@ pub fn share(args: &ProjectsShareArgs) {
         }
     };
 
-    let user_secrets = match project.user_secret.len() {
-        1.. => &project.user_secret,
+    let user_secrets = match project.user_secrets.len() {
+        1.. => &project.user_secrets,
 
         _ => {
             print_formatted_error(&user_secrets_error_message);
@@ -82,13 +82,13 @@ pub fn share(args: &ProjectsShareArgs) {
     };
 
     let passphrase = match Password::with_theme(&theme())
-        .with_prompt("Type a passphrase of at least 1 character:")
+        .with_prompt("Type a passphrase of at least 6 character:")
         .validate_with(|input: &String| -> Result<(), &str> {
-            if input.trim().chars().count() > 0 {
+            if input.trim().chars().count() >= 6 {
                 Ok(())
             } else {
                 print_formatted_error(
-                    "Sharing failed. Passphrase must be at least 1 character long.",
+                    "Sharing failed. Passphrase must be at least 6 character long.",
                 );
 
                 std::process::exit(1);
@@ -205,5 +205,14 @@ pub fn share(args: &ProjectsShareArgs) {
         &project_id.to_string()[..4].dark_cyan()
     );
 
-    println!("{}", &secrets_sharing_url);
+    println!(
+        "{}",
+        secrets_sharing_url
+            .with(Color::Rgb {
+                r: 0,
+                g: 135,
+                b: 255,
+            })
+            .to_string()
+    );
 }

@@ -3,7 +3,7 @@ pub struct SecretNames;
 pub mod secret_names {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "SecretNames";
-    pub const QUERY : & str = "query SecretNames($projectId: uuid!) {\n    token_by_pk(id: $projectId) {\n        userSecret {\n            id\n            name\n        }\n    }\n}\n" ;
+    pub const QUERY : & str = "query SecretNames($projectId: uuid!) {\n    project_by_pk(id: $projectId) {\n        userSecrets {\n            id\n            name\n        }\n    }\n}\n" ;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -21,15 +21,15 @@ pub mod secret_names {
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        pub token_by_pk: Option<SecretNamesTokenByPk>,
+        pub project_by_pk: Option<SecretNamesProjectByPk>,
     }
     #[derive(Deserialize)]
-    pub struct SecretNamesTokenByPk {
-        #[serde(rename = "userSecret")]
-        pub user_secret: Vec<SecretNamesTokenByPkUserSecret>,
+    pub struct SecretNamesProjectByPk {
+        #[serde(rename = "userSecrets")]
+        pub user_secrets: Vec<SecretNamesProjectByPkUserSecrets>,
     }
     #[derive(Deserialize)]
-    pub struct SecretNamesTokenByPkUserSecret {
+    pub struct SecretNamesProjectByPkUserSecrets {
         pub id: uuid::Uuid,
         pub name: String,
     }

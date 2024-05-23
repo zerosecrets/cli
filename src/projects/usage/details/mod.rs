@@ -83,12 +83,9 @@ pub fn usage_details(args: &ProjectsUsageDetailsArgs) {
         ),
         format!(
             "**Caller**   : {}",
-            match usage_details_response.caller_name {
-                Some(name) => name,
-                None => "N\\A".to_string(),
-            }
+            usage_details_response.caller_name.unwrap_or_else(|| "N\\A".to_string())
         ),
-        format!("**Caller IP**: {}", usage_details_response.remote_ip),
+        format!("**Caller IP**: {}", usage_details_response.remote_ip.unwrap_or_else(|| "N\\A".to_string())),
         format!(
             "**Date**     : {}",
             format!(
@@ -101,13 +98,13 @@ pub fn usage_details(args: &ProjectsUsageDetailsArgs) {
         ),
         format!(
             "**Project**  : {} ({})",
-            usage_details_response.token.name,
+            usage_details_response.project.name,
             format!(
                 "{}",
                 style(format!(
                     "{}/projects/{}",
                     webapp_url,
-                    usage_details_response.token.id.to_string().replace("-", "")
+                    usage_details_response.project.id.to_string().replace("-", "")
                 ))
                 .with(Color::Rgb {
                     r: 0,
@@ -145,6 +142,26 @@ pub fn usage_details(args: &ProjectsUsageDetailsArgs) {
                 usage_details::vendorEnum_enum::stripe => "Stripe",
                 usage_details::vendorEnum_enum::terraform => "Terraform",
                 usage_details::vendorEnum_enum::twilio => "Twilio",
+                usage_details::vendorEnum_enum::ansible => "Ansible",
+                usage_details::vendorEnum_enum::bitbucket => "Bitbucket",
+                usage_details::vendorEnum_enum::claude => "Claude",
+                usage_details::vendorEnum_enum::datadog => "Datadog",
+                usage_details::vendorEnum_enum::docker => "Docker",
+                usage_details::vendorEnum_enum::facebook => "Facebook",
+                usage_details::vendorEnum_enum::gemini => "Gemini",
+                usage_details::vendorEnum_enum::gitHub => "GitHub",
+                usage_details::vendorEnum_enum::gitLab => "GitLab",
+                usage_details::vendorEnum_enum::google => "Google",
+                usage_details::vendorEnum_enum::jenkins => "Jenkins",
+                usage_details::vendorEnum_enum::jira => "Jira",
+                usage_details::vendorEnum_enum::kubernetes => "Kubernetes",
+                usage_details::vendorEnum_enum::linear => "Linear",
+                usage_details::vendorEnum_enum::openAI => "OpenAI",
+                usage_details::vendorEnum_enum::salesforce => "Salesforce",
+                usage_details::vendorEnum_enum::shopify => "Shopify",
+                usage_details::vendorEnum_enum::slack => "Slack",
+                usage_details::vendorEnum_enum::trello => "Trello",
+                usage_details::vendorEnum_enum::zoom => "Zoom",
                 usage_details::vendorEnum_enum::other => "Other",
                 usage_details::vendorEnum_enum::Other(ref string) => string,
             };
@@ -155,7 +172,7 @@ pub fn usage_details(args: &ProjectsUsageDetailsArgs) {
                 style(format!(
                     "{}/projects/{}/secrets/{}",
                     webapp_url,
-                    usage_details_response.token.id.to_string().replace("-", ""),
+                    usage_details_response.project.id.to_string().replace("-", ""),
                     secret.id.to_string().replace("-", "")
                 ))
                 .with(Color::Rgb {

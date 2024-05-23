@@ -1,5 +1,5 @@
 mutation UpdateProjectName($projectId: uuid!, $userId: uuid!, $projectName: String!) {
-    update_token(where: {id: {_eq: $projectId}, ownerUserId: {_eq: $userId}}, _set: {name: $projectName}) {
+    update_project(where: {id: {_eq: $projectId}, ownerUserId: {_eq: $userId}}, _set: {name: $projectName}) {
         affected_rows
     }
 }

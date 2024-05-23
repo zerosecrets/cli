@@ -4,10 +4,10 @@ use crate::common::{
     colorful_theme::theme,
     config::Config,
     execute_graphql_request::execute_graphql_request,
+    fetch_user_id::fetch_user_id,
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
-    slugify::slugify,
     validate_name::{validate_name, Entity},
     vendors::Vendors,
 };
@@ -55,6 +55,7 @@ pub fn create(args: &SecretsCreateArgs) {
     let client = Client::new();
     let headers = authorization_headers(&access_token);
     let project_id = query_full_id(QueryType::Project, args.id.clone(), &access_token);
+    let user_id = fetch_user_id(&access_token).to_string();
 
     let secret_names =
         match execute_graphql_request::<secret_names::Variables, secret_names::ResponseData>(
@@ -64,10 +65,10 @@ pub fn create(args: &SecretsCreateArgs) {
             "Failed to retrieve secret names",
             secret_names::Variables { project_id },
         )
-        .token_by_pk
+        .project_by_pk
         {
             Some(token_by_pk) => token_by_pk
-                .user_secret
+                .user_secrets
                 .iter()
                 .map(|secret| secret.name.clone())
                 .collect(),
@@ -165,7 +166,6 @@ pub fn create(args: &SecretsCreateArgs) {
 
         secret_fields.push(create_secret::CreateSecretFieldInput {
             name: field_name.clone(),
-            slug: slugify(&field_name),
             value: field_value,
         });
 
@@ -193,10 +193,10 @@ pub fn create(args: &SecretsCreateArgs) {
             "Failed to create a secret",
             create_secret::Variables::new(
                 secret_name.clone(),
-                slugify(&secret_name),
                 project_id.to_string(),
                 selected_vendor.to_string(),
                 secret_fields,
+                user_id
             ),
         )
         .create_secret

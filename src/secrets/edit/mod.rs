@@ -153,7 +153,6 @@ pub fn edit(args: &SecretsEditArgs) {
                         decrypted_value: Some(new_field_value.to_string()),
                         encrypted_value: Some(field.value.to_string()),
                         name: new_field_key_name.to_string(),
-                        slug: slugify(&new_field_key_name.to_string()),
                         user_secret_id: field.id.to_string(),
                     }
                 } else {
@@ -161,7 +160,6 @@ pub fn edit(args: &SecretsEditArgs) {
                         decrypted_value: None,
                         encrypted_value: Some(field.value.to_string()),
                         name: field.name.to_string(),
-                        slug: field.slug.to_string(),
                         user_secret_id: field.id.to_string(),
                     }
                 }
@@ -183,7 +181,6 @@ pub fn edit(args: &SecretsEditArgs) {
                 user_secret: update_secret_fields::UpdateUserSecretInput {
                     id: secret_info.id.to_string(),
                     name: secret_info.name,
-                    slug: secret_info.slug,
                 },
                 user_secret_fields: updated_user_secret_fields,
             },
@@ -198,7 +195,7 @@ pub fn edit(args: &SecretsEditArgs) {
 
     // otherwise update the secret information
     } else {
-        let existed_secret_names: Vec<String> = match secret_info.token {
+        let existed_secret_names: Vec<String> = match secret_info.project {
             Some(project) => project,
 
             None => {
@@ -206,7 +203,7 @@ pub fn edit(args: &SecretsEditArgs) {
                 std::process::exit(1);
             }
         }
-        .user_secret
+        .user_secrets
         .iter()
         .map(|secret| secret.name.to_string())
         .collect();
@@ -279,10 +276,6 @@ pub fn edit(args: &SecretsEditArgs) {
                 set: update_secret_info::userSecret_set_input {
                     name: Some(new_secret_name.to_owned()),
                     vendor: Some(new_secret_vendor),
-                    created_at: None,
-                    updated_at: None,
-                    id: None,
-                    token_id: None,
                     slug: Some(slugify(&new_secret_name)),
                 },
             },
@@ -301,7 +294,7 @@ pub fn edit(args: &SecretsEditArgs) {
         style(format!(
             "{}/projects/{}/secrets/{}",
             config.webapp_url,
-            secret_info.token_id.to_string().replace("-", ""),
+            secret_info.project_id.to_string().replace("-", ""),
             secret_info.id.to_string().replace("-", "")
         ))
         .with(Color::Rgb {

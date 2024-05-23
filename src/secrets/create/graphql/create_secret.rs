@@ -3,7 +3,7 @@ pub struct CreateSecret;
 pub mod create_secret {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "CreateSecret";
-    pub const QUERY : & str = "mutation CreateSecret($fields: [CreateSecretFieldInput!]!, $secret: CreateSecretInput!) {\n    createSecret(fields: $fields, secret: $secret) {\n        secretId\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation CreateSecret($fields: [CreateSecretFieldInput!]!, $secret: CreateSecretInput!, $userId: String!) {\n    createSecret(fields: $fields, secret: $secret, userId: $userId) {\n        secretId\n    }\n}\n" ;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -16,40 +16,40 @@ pub mod create_secret {
     #[derive(Serialize)]
     pub struct CreateSecretFieldInput {
         pub name: String,
-        pub slug: String,
         pub value: String,
     }
     #[derive(Serialize)]
     pub struct CreateSecretInput {
         pub name: String,
-        pub slug: String,
-        #[serde(rename = "tokenId")]
-        pub token_id: String,
+        #[serde(rename = "projectId")]
+        pub project_id: String,
         pub vendor: String,
     }
     #[derive(Serialize)]
     pub struct Variables {
         pub fields: Vec<CreateSecretFieldInput>,
         pub secret: CreateSecretInput,
+        #[serde(rename = "userId")]
+        pub user_id: String,
     }
     impl Variables {
         pub fn new(
             name: String,
-            slug: String,
-            token_id: String,
+            project_id: String,
             vendor: String,
             fields: Vec<CreateSecretFieldInput>,
+            user_id: String,
         ) -> Self {
             let secret = CreateSecretInput {
                 name,
-                slug,
-                token_id,
+                project_id,
                 vendor,
             };
 
-            Self { secret, fields }
+            Self { secret, fields, user_id }
         }
     }
+    impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
         #[serde(rename = "createSecret")]

@@ -1,5 +1,5 @@
 query ProjectInfo($projectId: uuid!) {
-    token_by_pk(id: $projectId) {
+    project_by_pk(id: $projectId) {
         id
         name
         ownerUserId

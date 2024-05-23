@@ -53,7 +53,7 @@ pub fn list(args: &TokenListArgs) {
             &project_tokens_error_message,
             token_list::Variables { id: project_id },
         )
-        .token;
+        .project;
 
     let project_token_list = match project_token_list_response.first() {
         Some(tokens) => tokens,
@@ -78,7 +78,7 @@ pub fn list(args: &TokenListArgs) {
     let date_format = &Config::new().date_format;
 
     // save the length of the longest column element
-    for token in &project_token_list.project_project_tokens {
+    for token in &project_token_list.tokens {
         let expires_at_data = match &token.expires_at {
             Some(date) => date.format(date_format).to_string(),
             None => "Infinity".to_string(),
@@ -91,7 +91,7 @@ pub fn list(args: &TokenListArgs) {
     let mut list = Vec::new();
     let indentation = 2;
 
-    for token in &project_token_list.project_project_tokens {
+    for token in &project_token_list.tokens {
         let expires_at_data = match &token.expires_at {
             Some(date) => date.format(date_format).to_string(),
             None => "Infinity".to_string(),

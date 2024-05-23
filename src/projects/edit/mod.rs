@@ -72,7 +72,7 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
                 project_id: project_id.clone(),
             },
         )
-        .token_by_pk
+        .project_by_pk
         {
             Some(project_info) => project_info,
 
@@ -159,7 +159,7 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
                 project_name: name.clone(),
             },
         )
-        .update_token
+        .update_project
         {
             Some(data) => {
                 if data.affected_rows != 1 {
@@ -195,7 +195,7 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
                 project_description: description.clone(),
             },
         )
-        .update_token
+        .update_project
         {
             Some(data) => {
                 if data.affected_rows != 1 {

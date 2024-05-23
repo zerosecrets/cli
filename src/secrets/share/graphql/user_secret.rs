@@ -3,7 +3,7 @@ pub struct UserSecret;
 pub mod user_secret {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "UserSecret";
-    pub const QUERY : & str = "query UserSecret($id: uuid!) {\n  userSecret_by_pk(id: $id) {\n    id\n    name\n    tokenId\n\n    fields {\n      id\n      name\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query UserSecret($id: uuid!) {\n  userSecret_by_pk(id: $id) {\n    id\n    name\n    projectId\n\n    fields {\n      id\n      name\n    }\n  }\n}\n" ;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -28,8 +28,8 @@ pub mod user_secret {
     pub struct UserSecretUserSecretByPk {
         pub id: uuid,
         pub name: String,
-        #[serde(rename = "tokenId")]
-        pub token_id: uuid,
+        #[serde(rename = "projectId")]
+        pub project_id: uuid,
         pub fields: Vec<UserSecretUserSecretByPkFields>,
     }
     #[derive(Deserialize)]

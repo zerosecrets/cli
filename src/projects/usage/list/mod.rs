@@ -53,7 +53,7 @@ pub fn usage(args: &ProjectsUsageListArgs) {
             &project_usage_error_message,
             project_usage::Variables { id: project_id },
         )
-        .token;
+        .project;
 
     let project_usage_stats = match project_usage_response.first() {
         Some(project_info) => project_info,
@@ -80,12 +80,13 @@ pub fn usage(args: &ProjectsUsageListArgs) {
     };
 
     // save the length of the longest column element
-    for history in &project_usage_stats.usage_history {
+    for history in &project_usage_stats.usage_histories {
         if let Some(name) = &history.caller_name {
             column_width_size.caller_name = column_width_size.caller_name.max(name.len());
         }
-
-        column_width_size.remote_ip = column_width_size.remote_ip.max(history.remote_ip.len());
+        
+        let unwrapped_history = history.remote_ip.clone().unwrap_or("N\\A".to_string());
+        column_width_size.remote_ip = column_width_size.remote_ip.max(unwrapped_history.len());
         let created_at_data = &history.created_at.format(date_format);
 
         column_width_size.date = column_width_size
@@ -101,8 +102,9 @@ pub fn usage(args: &ProjectsUsageListArgs) {
     let indentation = 2;
 
     // output data to the console. If no field contains caller_name then do not include it in the text
-    for history in &project_usage_stats.usage_history {
+    for history in &project_usage_stats.usage_histories {
         let created_at_data = &history.created_at.format(date_format);
+        let unwrapped_history = history.remote_ip.clone().unwrap_or("N\\A".to_string());
 
         list.push(format!(
             "{}{}{}{}{}",
@@ -137,7 +139,7 @@ pub fn usage(args: &ProjectsUsageListArgs) {
                 String::from("")
             },
             pad_to_column_width(
-                history.remote_ip.to_string(),
+                unwrapped_history,
                 column_width_size.remote_ip + indentation,
             )
         ));

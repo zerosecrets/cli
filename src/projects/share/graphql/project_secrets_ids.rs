@@ -3,7 +3,7 @@ pub struct ProjectSecretsIds;
 pub mod project_secrets_ids {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "ProjectSecretsIds";
-    pub const QUERY : & str = "query ProjectSecretsIds($projectId: uuid!) {\n  token_by_pk(id: $projectId) {\n    id\n\n    userSecret{\n      id\n      name\n\n      fields {\n        id\n      }\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query ProjectSecretsIds($projectId: uuid!) {\n  project_by_pk(id: $projectId) {\n    id\n\n    userSecrets{\n      id\n      name\n\n      fields {\n        id\n      }\n    }\n  }\n}\n" ;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -22,29 +22,29 @@ pub mod project_secrets_ids {
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        pub token_by_pk: Option<ProjectSecretsIdsTokenByPk>,
+        pub project_by_pk: Option<ProjectSecretsIdsProjectByPk>,
     }
     #[derive(Deserialize)]
-    pub struct ProjectSecretsIdsTokenByPk {
+    pub struct ProjectSecretsIdsProjectByPk {
         pub id: uuid,
-        #[serde(rename = "userSecret")]
-        pub user_secret: Vec<ProjectSecretsIdsTokenByPkUserSecret>,
+        #[serde(rename = "userSecrets")]
+        pub user_secrets: Vec<ProjectSecretsIdsProjectByPkUserSecrets>,
     }
     #[derive(Deserialize)]
-    pub struct ProjectSecretsIdsTokenByPkUserSecret {
+    pub struct ProjectSecretsIdsProjectByPkUserSecrets {
         pub id: uuid,
         pub name: String,
-        pub fields: Vec<ProjectSecretsIdsTokenByPkUserSecretFields>,
+        pub fields: Vec<ProjectSecretsIdsProjectByPkUserSecretsFields>,
     }
     #[derive(Deserialize)]
-    pub struct ProjectSecretsIdsTokenByPkUserSecretFields {
+    pub struct ProjectSecretsIdsProjectByPkUserSecretsFields {
         pub id: uuid,
     }
 }
 impl graphql_client::GraphQLQuery for ProjectSecretsIds {
     type Variables = project_secrets_ids::Variables;
     type ResponseData = project_secrets_ids::ResponseData;
-    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: project_secrets_ids::QUERY,

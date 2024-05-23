@@ -3,7 +3,7 @@ pub struct ViewSecret;
 pub mod view_secret {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "ViewSecret";
-    pub const QUERY : & str = "query ViewSecret($secretField: String!) {\n    viewSecret(secretField: {secretFieldId: $secretField}) {\n        value\n    }\n}\n" ;
+    pub const QUERY : & str = "query ViewSecret($secretId: String!) {\n    viewSecretFields(secretField: {secretId: $secretId}) {\n        secretFields {\n            key\n            value\n        }\n    }\n}\n" ;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -15,17 +15,23 @@ pub mod view_secret {
     type ID = String;
     #[derive(Serialize)]
     pub struct Variables {
-        #[serde(rename = "secretField")]
-        pub secret_field: String,
+        #[serde(rename = "secretId")]
+        pub secret_id: String,
     }
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        #[serde(rename = "viewSecret")]
-        pub view_secret: ViewSecretViewSecret,
+        #[serde(rename = "viewSecretFields")]
+        pub view_secret_fields: ViewSecretViewSecretFields,
     }
     #[derive(Deserialize)]
-    pub struct ViewSecretViewSecret {
+    pub struct ViewSecretViewSecretFields {
+        #[serde(rename = "secretFields")]
+        pub secret_fields: Vec<ViewSecretViewSecretFieldsSecretFields>,
+    }
+    #[derive(Deserialize)]
+    pub struct ViewSecretViewSecretFieldsSecretFields {
+        pub key: String,
         pub value: String,
     }
 }

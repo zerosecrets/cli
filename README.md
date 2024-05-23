@@ -23,7 +23,7 @@ The CLI offers various subcommands:
 
 - auth: Authentication and authorization functionalities.
 - projects: Manage projects, including creation, deletion, editing, listing, sharing, usage overview, and viewing details.
-- secrets: Handle secrets, allowing users to create, delete, edit, list, share, and view details.
+- secrets: Handle secrets, allowing users to create, delete, edit, list, share, drop, and view details.
 - teams: Operations related to teams, such as creation, deletion, editing, leaving, listing, managing users, and viewing details.
 - tokens: Token management including creation, deletion, list view and regeneration.
 - help: Display help information about the CLI or a specific subcommand.
@@ -50,9 +50,4 @@ graphql-client generate <query_path> --schema-path <schema_path>
 as example
 ```
 graphql-client generate src/auth/graphql/me.graphql --schema-path schema.graphql
-```
-
-Download schema
-```bash
-gq http://localhost:8080/v1/graphql -H 'X-Hasura-Admin-Secret:111' --introspect > schema.graphql
 ```

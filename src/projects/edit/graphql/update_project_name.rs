@@ -3,7 +3,7 @@ pub struct UpdateProjectName;
 pub mod update_project_name {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "UpdateProjectName";
-    pub const QUERY : & str = "mutation UpdateProjectName($projectId: uuid!, $userId: uuid!, $projectName: String!) {\n    update_token(where: {id: {_eq: $projectId}, ownerUserId: {_eq: $userId}}, _set: {name: $projectName}) {\n        affected_rows\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation UpdateProjectName($projectId: uuid!, $userId: uuid!, $projectName: String!) {\n    update_project(where: {id: {_eq: $projectId}, ownerUserId: {_eq: $userId}}, _set: {name: $projectName}) {\n        affected_rows\n    }\n}\n" ;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -25,10 +25,10 @@ pub mod update_project_name {
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        pub update_token: Option<UpdateProjectNameUpdateToken>,
+        pub update_project: Option<UpdateProjectNameUpdateProject>,
     }
     #[derive(Deserialize)]
-    pub struct UpdateProjectNameUpdateToken {
+    pub struct UpdateProjectNameUpdateProject {
         pub affected_rows: Int,
     }
 }

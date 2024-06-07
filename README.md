@@ -1,21 +1,48 @@
 # zero-cli
 A command line tool for Zero Secrets Manager.
 
-
 ## Overview
 This CLI tool allows users to manage secrets and projects within the Zero Secrets Manager. It provides functionalities for authentication, project management, secret management, team handling, and more.
 
+## Prerequisites
+Make sure OpenSSL is installed on your system. Here are the installation instructions for different platforms:
+
+### macOS
+
+```bash
+brew install openssl
+```
+
+### Ubuntu/Debian
+```bash
+sudo apt-get update
+sudo apt-get install libssl-dev
+```
+
+### Fedora
+```bash
+Copy code
+sudo dnf install openssl-devel
+```
 
 ## Installation
 
+### Using Cargo
 To install the `zero-cli` from Crates.io, use the following command:
-
 ```bash
 cargo install zero-cli
 ```
-
 This command will download the crate, compile all the binary targets it contains (in "release" mode), and copy them into the ~/.cargo/bin/ directory. Ensure that your shell knows to look there for binaries!
 
+### Using Homebrew (Only for Apple Silicon)
+First, tap the Zero Secrets CLI repository:
+```bash
+brew tap zerosecrets/cli
+```
+Then, install the zero-cli:
+```bash
+brew install zero-cli
+```
 
 ## Usage
 

@@ -12,6 +12,7 @@ use crate::teams::create::graphql::user_info_and_team_names::{
 use clap::Args;
 use dialoguer::Input;
 use graphql_client::GraphQLQuery;
+use regex::Regex;
 use reqwest::Client;
 use termimad::{
     crossterm::style::{style, Color, Stylize},
@@ -29,6 +30,26 @@ pub struct TeamsCreateArgs {
     )]
     access_token: Option<String>,
 }
+
+fn validate_team_name(name: &String, existing_names: &Vec<String>) -> Result<(), String> {
+    let min_length = 2;
+    let name_regex = Regex::new(r"^[\w -]+$").unwrap();
+
+    if name.trim().len() < min_length {
+        return Err(format!("Team name must be at least {} characters", min_length));
+    }
+
+    if !name_regex.is_match(name.trim()) {
+        return Err("Only a-z, 0-9, ' ', '_', and '-' are allowed".to_string());
+    }
+
+    if existing_names.contains(&name.trim().to_string()) {
+        return Err("Team name is already in use".to_string());
+    }
+
+    Ok(())
+}
+
 
 pub fn create(args: &TeamsCreateArgs) {
     let access_token = match &args.access_token {
@@ -79,47 +100,32 @@ pub fn create(args: &TeamsCreateArgs) {
         }
     };
 
-    let user_team_names = user_info
+    let existing_team_names = user_info
         .team
         .iter()
         .map(|team| team.name.to_owned())
         .collect::<Vec<String>>();
 
-    let team_name_error_message = "Creation failed.";
-    let team_name_unique_error_message = "Creation failed. The team name must be unique.";
-
-    let team_name = if args.name.is_some() {
-        match &args.name {
-            Some(name) => {
-                if user_team_names.contains(&name.trim().to_string()) {
-                    print_formatted_error(team_name_unique_error_message);
-                    std::process::exit(1);
-                } else {
-                    name.trim().to_owned()
-                }
-            }
-
-            None => {
-                print_formatted_error(team_name_error_message);
-                std::process::exit(1);
-            }
+    let team_name = if let Some(name) = &args.name {
+        if let Err(err) = validate_team_name(&name, &existing_team_names) {
+            eprintln!("Validation error: {}", err);
+            print_formatted_error(&format!("Validation error: {}", err));
+            std::process::exit(1);
+        } else {
+            name.trim().to_owned()
         }
     } else {
         match Input::with_theme(&theme())
             .with_prompt("Type a name for the team:")
-            .validate_with(|input: &String| -> Result<(), &str> {
-                if user_team_names.contains(&input.trim().to_string()) {
-                    return Err(team_name_unique_error_message);
-                }
-
-                return Ok(());
+            .validate_with(|input: &String| -> Result<(), String> {
+                validate_team_name(input, &existing_team_names).map_err(|e| e.as_str().to_owned())
             })
             .interact()
         {
             Ok(name) => name.trim().to_owned(),
 
             Err(_) => {
-                print_formatted_error(team_name_error_message);
+                print_formatted_error("Failed to read team name input.");
                 std::process::exit(1);
             }
         }
@@ -148,7 +154,7 @@ pub fn create(args: &TeamsCreateArgs) {
 
     let mut expander = text_template.expander();
 
-    let team_link = style(format!("{}/teams/{}", Config::new().webapp_url, &team_id))
+    let team_link = style(format!("{}/teams/{}", Config::new().webapp_url, &team_id.replace("-", "")))
         .with(Color::Rgb {
             r: 0,
             g: 135,

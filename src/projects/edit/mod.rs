@@ -4,7 +4,6 @@ use crate::common::{
     colorful_theme::theme,
     config::Config,
     execute_graphql_request::execute_graphql_request,
-    fetch_user_id::fetch_user_id,
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
@@ -46,7 +45,6 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
         None => keyring::get("access_token"),
     };
 
-    let user_id = fetch_user_id(&access_token);
     let mut name = args.name.clone();
     let mut description = args.description.clone();
 

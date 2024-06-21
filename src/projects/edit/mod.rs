@@ -85,11 +85,6 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
             }
         };
 
-    if project_info.owner_user_id != user_id {
-        print_formatted_error("Editing failed. You are not the owner of this project.");
-        std::process::exit(1);
-    }
-
     // If no arguments are passed, the user will be prompted to enter a new name and description of the project
     if name.is_none() && description.is_none() {
         name = match Input::with_theme(&theme())
@@ -154,7 +149,6 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
             &client,
             &update_project_name_error_message,
             update_project_name::Variables {
-                user_id: user_id.clone(),
                 project_id: project_id.clone(),
                 project_name: name.clone(),
             },
@@ -190,7 +184,6 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
             &client,
             &update_project_description_error_message,
             update_project_description::Variables {
-                user_id: user_id.clone(),
                 project_id: project_id.clone(),
                 project_description: description.clone(),
             },

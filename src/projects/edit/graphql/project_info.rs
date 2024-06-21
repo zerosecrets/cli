@@ -2,8 +2,10 @@
 pub struct ProjectInfo;
 pub mod project_info {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "ProjectInfo";
-    pub const QUERY : & str = "query ProjectInfo($projectId: uuid!) {\n    project_by_pk(id: $projectId) {\n        id\n        name\n        ownerUserId\n    }\n}\n" ;
+    pub const QUERY : & str = "query ProjectInfo($projectId: uuid!) {\n    project_by_pk(id: $projectId) {\n        id\n        name\n    }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -13,10 +15,11 @@ pub mod project_info {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
+    type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct Variables {
         #[serde(rename = "projectId")]
-        pub project_id: uuid::Uuid,
+        pub project_id: uuid,
     }
     impl Variables {}
     #[derive(Deserialize)]
@@ -25,10 +28,8 @@ pub mod project_info {
     }
     #[derive(Deserialize)]
     pub struct ProjectInfoProjectByPk {
-        pub id: uuid::Uuid,
+        pub id: uuid,
         pub name: String,
-        #[serde(rename = "ownerUserId")]
-        pub owner_user_id: uuid::Uuid,
     }
 }
 impl graphql_client::GraphQLQuery for ProjectInfo {

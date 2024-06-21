@@ -2,8 +2,10 @@
 pub struct UpdateProjectDescription;
 pub mod update_project_description {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "UpdateProjectDescription";
-    pub const QUERY : & str = "mutation UpdateProjectDescription($projectId: uuid!, $userId: uuid!, $projectDescription: String!) {\n    update_project(where: {id: {_eq: $projectId}, ownerUserId: {_eq: $userId}}, _set: {description: $projectDescription}) {\n        affected_rows\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation UpdateProjectDescription($projectId: uuid!, $projectDescription: String!) {\n    update_project(where: {id: {_eq: $projectId}}, _set: {description: $projectDescription}) {\n        affected_rows\n    }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -13,12 +15,11 @@ pub mod update_project_description {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
+    type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct Variables {
         #[serde(rename = "projectId")]
-        pub project_id: uuid::Uuid,
-        #[serde(rename = "userId")]
-        pub user_id: uuid::Uuid,
+        pub project_id: uuid,
         #[serde(rename = "projectDescription")]
         pub project_description: String,
     }
@@ -35,7 +36,7 @@ pub mod update_project_description {
 impl graphql_client::GraphQLQuery for UpdateProjectDescription {
     type Variables = update_project_description::Variables;
     type ResponseData = update_project_description::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: update_project_description::QUERY,

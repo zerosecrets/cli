@@ -2,8 +2,10 @@
 pub struct UpdateProjectName;
 pub mod update_project_name {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "UpdateProjectName";
-    pub const QUERY : & str = "mutation UpdateProjectName($projectId: uuid!, $userId: uuid!, $projectName: String!) {\n    update_project(where: {id: {_eq: $projectId}, ownerUserId: {_eq: $userId}}, _set: {name: $projectName}) {\n        affected_rows\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation UpdateProjectName($projectId: uuid!, $projectName: String!) {\n    update_project(where: {id: {_eq: $projectId}}, _set: {name: $projectName}) {\n        affected_rows\n    }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -13,12 +15,11 @@ pub mod update_project_name {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
+    type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct Variables {
         #[serde(rename = "projectId")]
-        pub project_id: uuid::Uuid,
-        #[serde(rename = "userId")]
-        pub user_id: uuid::Uuid,
+        pub project_id: uuid,
         #[serde(rename = "projectName")]
         pub project_name: String,
     }
@@ -35,7 +36,7 @@ pub mod update_project_name {
 impl graphql_client::GraphQLQuery for UpdateProjectName {
     type Variables = update_project_name::Variables;
     type ResponseData = update_project_name::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: update_project_name::QUERY,

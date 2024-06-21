@@ -71,20 +71,13 @@ pub fn delete(args: &ProjectsDeleteArgs) {
             DeleteProject::build_query,
             &Client::new(),
             &delete_project_error_message,
-            delete_project::Variables {
-                object: delete_project::DeleteProjectsInput {
-                    delete_secrets_on3rd_party: None,
-                    ids: vec![project_id],
-                },
-            },
+            delete_project::Variables { id: project_id },
         )
-        .delete_projects;
+        .delete_project_by_pk;
 
     match delete_project_response {
         Some(project) => {
-            if project.affected_rows > 0 {
-                project.affected_rows
-            } else {
+            if project.id.is_nil() {
                 print_formatted_error(&delete_project_error_message);
                 std::process::exit(1);
             }

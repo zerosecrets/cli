@@ -10,7 +10,7 @@ use crate::common::{
 use crate::teams::common::team_info::team_info;
 use clap::Args;
 use dialoguer::Input;
-use graphql::remove_team::{remove_team, RemoveTeam};
+use graphql::delete_team::{delete_team, DeleteTeam};
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
 use termimad::crossterm::style::Stylize;
@@ -61,28 +61,22 @@ pub fn delete(args: &TeamsDeleteArgs) {
     );
 
     let remove_team_response =
-        execute_graphql_request::<remove_team::Variables, remove_team::ResponseData>(
+        execute_graphql_request::<delete_team::Variables, delete_team::ResponseData>(
             authorization_headers.clone(),
-            RemoveTeam::build_query,
+            DeleteTeam::build_query,
             &client,
             &remove_team_error_message,
-            remove_team::Variables {
-                team_id: team_id.to_string(),
-                team_member_ids: team_details
-                    .members
-                    .iter()
-                    .map(|member| member.member.id.to_string())
-                    .collect::<Vec<String>>(),
-                team_name: team_details.name,
-            },
+            delete_team::Variables { id: team_id },
         )
-        .remove_team
-        .success;
+        .delete_team_by_pk;
 
-    if !remove_team_response {
-        print_formatted_error(&remove_team_error_message);
-        std::process::exit(1);
-    }
+    match remove_team_response {
+        Some(data) => data.id,
+        None => {
+            print_formatted_error(&remove_team_error_message);
+            std::process::exit(1);
+        }
+    };
 
     println!("{} {}", "✔".green(), "Team successfully deleted");
 }

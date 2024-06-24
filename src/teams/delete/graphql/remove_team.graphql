@@ -1,5 +1,0 @@
-mutation RemoveTeam($teamId: String!, $teamMemberIds: [String!]!, $teamName: String!) {
-  removeTeam(object: {teamId: $teamId, teamName: $teamName, teamMemberIds: $teamMemberIds}) {
-    success
-  }
-}

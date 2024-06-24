@@ -4,20 +4,12 @@ query ProjectDetails($id: uuid!) {
     name
     description
 
-    owner {
-      id
-      name
-      email
-    }
-
     usageHistories(limit: 1, order_by: {createdAt: desc}) {
       createdAt
     }
 
-    teams_aggregate {
-      aggregate {
-        count
-      }
+    team {
+      name
     }
 
     integrationInstallations_aggregate {

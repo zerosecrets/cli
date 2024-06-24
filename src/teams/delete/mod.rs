@@ -7,7 +7,6 @@ use crate::common::{
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
 };
-use crate::teams::common::team_info::team_info;
 use clap::Args;
 use dialoguer::Input;
 use graphql::delete_team::{delete_team, DeleteTeam};
@@ -36,7 +35,6 @@ pub fn delete(args: &TeamsDeleteArgs) {
     let team_id = query_full_id(QueryType::Teams, args.id.clone(), &access_token);
     let authorization_headers = authorization_headers(&access_token);
     let client = Client::new();
-    let team_details = team_info(&access_token, team_id);
 
     let input: String = Input::with_theme(&theme())
         .with_prompt(format!(

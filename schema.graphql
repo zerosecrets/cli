@@ -13,17 +13,7 @@ directive @cached(
   refresh: Boolean! = false
 ) on QUERY
 
-input AcceptInvitationInput {
-  invitationId: uuid!
-  userId: uuid!
-}
-
-type AcceptInvitationOutput {
-  invitationId: uuid!
-  invite: teamInvitation
-  teamUser: teamUser
-  teamUserId: uuid!
-}
+scalar AWSJSON
 
 input AcceptTeamInviteInput {
   failureAcceptInviteMessage: String!
@@ -34,11 +24,6 @@ input AcceptTeamInviteInput {
 type AcceptTeamInviteOutput {
   errorCode: String
   success: Boolean!
-}
-
-input AddedTeamsIdsType {
-  projectId: String!
-  teamId: String!
 }
 
 """
@@ -196,25 +181,16 @@ type CurrentPlanOutput {
 
 input DecodeSharingSecretsInput {
   id: String!
-  passPhrase: String
+  passPhrase: String!
 }
 
 type DecodeSharingSecretsOutput {
-  secrets: json!
+  secrets: AWSJSON!
 }
 
 type DecryptedSecretField {
   key: String!
   value: String!
-}
-
-input DeleteProjectsInput {
-  deleteSecretsOn3rdParty: Boolean
-  ids: [uuid!]!
-}
-
-type DeleteProjectsOutput {
-  affected_rows: Int!
 }
 
 enum DeployStatusIntegration {
@@ -229,7 +205,7 @@ type Environment {
 }
 
 input GenerateSecretSharingUrlInput {
-  expiresAt: timestamptz!
+  expiresAt: String!
   passPhrase: String
   projectId: String!
   secretsFieldsIds: [String!]!
@@ -373,11 +349,15 @@ input IntegrationUploadSecretsInputIntegration {
 
 input IntegrationUploadSecretsInputZero {
   secretsIds: [String]
-  userId: String!
 }
 
 type IntegrationUploadSecretsOutput {
   success: Boolean!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }
 
 type MeOutput {
@@ -425,8 +405,15 @@ type RegenerateProjectTokenOutput {
   tokenValue: String
 }
 
+input RegisterInput {
+  email: String!
+  isMarketingEmailsRequested: Boolean
+  password: String!
+}
+
 input RejectTeamInviteInput {
   inviteId: String!
+  rejectInviteMessage: String!
 }
 
 type RejectTeamInviteOutput {
@@ -490,16 +477,6 @@ type SendInviteUserTeamOutput {
   success: Boolean!
 }
 
-input SendNotificationInput {
-  message: String!
-  userId: uuid!
-  users: [uuid!]!
-}
-
-type SendNotificationsOutput {
-  success: Boolean!
-}
-
 """
 Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
 """
@@ -553,6 +530,10 @@ input String_comparison_exp {
   _similar: String
 }
 
+type SuccessOutput {
+  success: Boolean!
+}
+
 input TokenObject {
   tokenExpiresAt: String
   tokenName: String
@@ -567,17 +548,15 @@ type UpdatePaymentMethodOutput {
 }
 
 input UpdateProjectSettingsInput {
-  addedTeamsIds: [AddedTeamsIdsType]!
   icon: String!
   projectDescription: String
   projectId: String!
   projectName: String!
-  removedTeamsIds: [String]!
+  teamId: String!
 }
 
 type UpdateProjectSettingsOutput {
-  errorCode: String
-  success: String
+  success: Boolean
 }
 
 type UpdateSecretOutput {
@@ -1202,25 +1181,6 @@ input integration_stream_cursor_value_input {
   vendorName: integrationVendorNameEnum_enum
 }
 
-enum invitationStatusEnum_enum {
-  ACCEPT
-  PENDING
-  REJECT
-}
-
-"""
-Boolean expression to compare columns of type "invitationStatusEnum_enum". All fields are combined with logical 'AND'.
-"""
-input invitationStatusEnum_enum_comparison_exp {
-  _eq: invitationStatusEnum_enum
-  _in: [invitationStatusEnum_enum!]
-  _is_null: Boolean
-  _neq: invitationStatusEnum_enum
-  _nin: [invitationStatusEnum_enum!]
-}
-
-scalar json
-
 scalar jsonb
 
 input jsonb_cast_exp {
@@ -1279,8 +1239,6 @@ input listIdEnum_enum_comparison_exp {
 
 """mutation root"""
 type mutation_root {
-  """Accept team invitation"""
-  acceptInvitation(object: AcceptInvitationInput!): AcceptInvitationOutput
   acceptTeamInvite(object: AcceptTeamInviteInput!): AcceptTeamInviteOutput!
   cancelSubscription(object: CancelSubscriptionInput!): CancelSubscriptionOutput!
   changePassword(object: ChangePasswordInput!): ChangePasswordOutput!
@@ -1292,14 +1250,7 @@ type mutation_root {
   createProjectToken(object: CreateProjectTokenInput!): CreateProjectTokenOutput!
   createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!, userId: String!): CreateSecretOutput!
   createTeam(object: CreateTeamInput!): CreateTeamOutput!
-
-  """Release (represent and erase) shared secrets"""
   decodeSharingSecrets(object: DecodeSharingSecretsInput!): DecodeSharingSecretsOutput!
-
-  """
-  deletes specified projects, all its relations and optionally deletes 3rd party secrets
-  """
-  deleteProjects(object: DeleteProjectsInput!): DeleteProjectsOutput
 
   """
   delete data from the table: "integrationInstallation"
@@ -1336,61 +1287,9 @@ type mutation_root {
   ): project_mutation_response
 
   """
-  delete data from the table: "projectTag"
-  """
-  delete_projectTag(
-    """filter the rows which have to be deleted"""
-    where: projectTag_bool_exp!
-  ): projectTag_mutation_response
-
-  """
-  delete single row from the table: "projectTag"
-  """
-  delete_projectTag_by_pk(id: uuid!): projectTag
-
-  """
-  delete data from the table: "projectTeam"
-  """
-  delete_projectTeam(
-    """filter the rows which have to be deleted"""
-    where: projectTeam_bool_exp!
-  ): projectTeam_mutation_response
-
-  """
-  delete single row from the table: "projectTeam"
-  """
-  delete_projectTeam_by_pk(id: uuid!): projectTeam
-
-  """
-  delete data from the table: "projectToken"
-  """
-  delete_projectToken(
-    """filter the rows which have to be deleted"""
-    where: projectToken_bool_exp!
-  ): projectToken_mutation_response
-
-  """
-  delete single row from the table: "projectToken"
-  """
-  delete_projectToken_by_pk(id: uuid!): projectToken
-
-  """
   delete single row from the table: "project"
   """
   delete_project_by_pk(id: uuid!): project
-
-  """
-  delete data from the table: "tag"
-  """
-  delete_tag(
-    """filter the rows which have to be deleted"""
-    where: tag_bool_exp!
-  ): tag_mutation_response
-
-  """
-  delete single row from the table: "tag"
-  """
-  delete_tag_by_pk(id: uuid!): tag
 
   """
   delete data from the table: "team"
@@ -1419,6 +1318,19 @@ type mutation_root {
   delete_team_by_pk(id: uuid!): team
 
   """
+  delete data from the table: "token"
+  """
+  delete_token(
+    """filter the rows which have to be deleted"""
+    where: token_bool_exp!
+  ): token_mutation_response
+
+  """
+  delete single row from the table: "token"
+  """
+  delete_token_by_pk(id: uuid!): token
+
+  """
   delete data from the table: "userSecret"
   """
   delete_userSecret(
@@ -1443,8 +1355,6 @@ type mutation_root {
   delete single row from the table: "userSecret"
   """
   delete_userSecret_by_pk(id: uuid!): userSecret
-
-  """Share secrets by URL"""
   generateSecretSharingUrl(object: GenerateSecretSharingUrlInput!): GenerateSecretSharingUrlOutput!
 
   """
@@ -1512,72 +1422,6 @@ type mutation_root {
     """upsert condition"""
     on_conflict: notification_on_conflict
   ): notification
-
-  """
-  insert data into the table: "projectTag"
-  """
-  insert_projectTag(
-    """the rows to be inserted"""
-    objects: [projectTag_insert_input!]!
-
-    """upsert condition"""
-    on_conflict: projectTag_on_conflict
-  ): projectTag_mutation_response
-
-  """
-  insert a single row into the table: "projectTag"
-  """
-  insert_projectTag_one(
-    """the row to be inserted"""
-    object: projectTag_insert_input!
-
-    """upsert condition"""
-    on_conflict: projectTag_on_conflict
-  ): projectTag
-
-  """
-  insert data into the table: "projectTeam"
-  """
-  insert_projectTeam(
-    """the rows to be inserted"""
-    objects: [projectTeam_insert_input!]!
-
-    """upsert condition"""
-    on_conflict: projectTeam_on_conflict
-  ): projectTeam_mutation_response
-
-  """
-  insert a single row into the table: "projectTeam"
-  """
-  insert_projectTeam_one(
-    """the row to be inserted"""
-    object: projectTeam_insert_input!
-
-    """upsert condition"""
-    on_conflict: projectTeam_on_conflict
-  ): projectTeam
-
-  """
-  insert data into the table: "tag"
-  """
-  insert_tag(
-    """the rows to be inserted"""
-    objects: [tag_insert_input!]!
-
-    """upsert condition"""
-    on_conflict: tag_on_conflict
-  ): tag_mutation_response
-
-  """
-  insert a single row into the table: "tag"
-  """
-  insert_tag_one(
-    """the row to be inserted"""
-    object: tag_insert_input!
-
-    """upsert condition"""
-    on_conflict: tag_on_conflict
-  ): tag
 
   """
   insert data into the table: "teamInvitation"
@@ -1695,8 +1539,17 @@ type mutation_root {
   integrationInstall(integration: IntegrationInstallInputIntegration!, zero: IntegrationInstallInputZero!): IntegrationInstallOutput!
   integrationUpdate(integration: IntegrationUpdateInputIntegration!, zero: IntegrationUpdateInputZero!): IntegrationUpdateOutput!
   integrationUploadSecrets(integration: IntegrationUploadSecretsInputIntegration!, zero: IntegrationUploadSecretsInputZero!): IntegrationUploadSecretsOutput!
+
+  """Login api action"""
+  login(object: LoginInput!): SuccessOutput!
+
+  """Logout action from the webapp"""
+  logout: SuccessOutput!
   recalculateTeamSeatsSubscription(object: RecalculateTeamSeatsSubscriptionInput!): RecalculateTeamSeatsSubscriptionOutput!
   regenerateProjectToken(object: RegenerateProjectTokenInput!): RegenerateProjectTokenOutput!
+
+  """Register api action"""
+  register(object: RegisterInput!): SuccessOutput!
   rejectTeamInvite(object: RejectTeamInviteInput!): RejectTeamInviteOutput!
   removeTeam(object: RemoveTeamInput!): RemoveTeamOutput!
   removeUserFromTeam(object: RemoveUserFromTeamInput!): RemoveUserFromTeamOutput!
@@ -1704,9 +1557,6 @@ type mutation_root {
   requestResetPassword(object: RequestResetPasswordInput!): RequestResetPasswordOutput!
   resendSignUpEmail: ResendSignUpEmailOutput!
   sendInviteUserTeam(object: SendInviteUserTeamInput!): SendInviteUserTeamOutput!
-
-  """Send notifications"""
-  sendNotifications(objects: [SendNotificationInput!]!): uuid!
   updatePaymentMethod(object: UpdatePaymentMethodInput!): UpdatePaymentMethodOutput!
   updateProjectSettings(object: UpdateProjectSettingsInput!): UpdateProjectSettingsOutput!
   updateSecret(userSecret: UpdateUserSecretInput!, userSecretFields: [UpdateUserSecretFieldsInput!]!): UpdateSecretOutput!
@@ -1821,90 +1671,6 @@ type mutation_root {
   ): project_mutation_response
 
   """
-  update data of the table: "projectTag"
-  """
-  update_projectTag(
-    """sets the columns of the filtered rows to the given values"""
-    _set: projectTag_set_input
-
-    """filter the rows which have to be updated"""
-    where: projectTag_bool_exp!
-  ): projectTag_mutation_response
-
-  """
-  update single row of the table: "projectTag"
-  """
-  update_projectTag_by_pk(
-    """sets the columns of the filtered rows to the given values"""
-    _set: projectTag_set_input
-    pk_columns: projectTag_pk_columns_input!
-  ): projectTag
-
-  """
-  update multiples rows of table: "projectTag"
-  """
-  update_projectTag_many(
-    """updates to execute, in order"""
-    updates: [projectTag_updates!]!
-  ): [projectTag_mutation_response]
-
-  """
-  update data of the table: "projectTeam"
-  """
-  update_projectTeam(
-    """sets the columns of the filtered rows to the given values"""
-    _set: projectTeam_set_input
-
-    """filter the rows which have to be updated"""
-    where: projectTeam_bool_exp!
-  ): projectTeam_mutation_response
-
-  """
-  update single row of the table: "projectTeam"
-  """
-  update_projectTeam_by_pk(
-    """sets the columns of the filtered rows to the given values"""
-    _set: projectTeam_set_input
-    pk_columns: projectTeam_pk_columns_input!
-  ): projectTeam
-
-  """
-  update multiples rows of table: "projectTeam"
-  """
-  update_projectTeam_many(
-    """updates to execute, in order"""
-    updates: [projectTeam_updates!]!
-  ): [projectTeam_mutation_response]
-
-  """
-  update data of the table: "projectToken"
-  """
-  update_projectToken(
-    """sets the columns of the filtered rows to the given values"""
-    _set: projectToken_set_input
-
-    """filter the rows which have to be updated"""
-    where: projectToken_bool_exp!
-  ): projectToken_mutation_response
-
-  """
-  update single row of the table: "projectToken"
-  """
-  update_projectToken_by_pk(
-    """sets the columns of the filtered rows to the given values"""
-    _set: projectToken_set_input
-    pk_columns: projectToken_pk_columns_input!
-  ): projectToken
-
-  """
-  update multiples rows of table: "projectToken"
-  """
-  update_projectToken_many(
-    """updates to execute, in order"""
-    updates: [projectToken_updates!]!
-  ): [projectToken_mutation_response]
-
-  """
   update single row of the table: "project"
   """
   update_project_by_pk(
@@ -1976,6 +1742,34 @@ type mutation_root {
     """updates to execute, in order"""
     updates: [team_updates!]!
   ): [team_mutation_response]
+
+  """
+  update data of the table: "token"
+  """
+  update_token(
+    """sets the columns of the filtered rows to the given values"""
+    _set: token_set_input
+
+    """filter the rows which have to be updated"""
+    where: token_bool_exp!
+  ): token_mutation_response
+
+  """
+  update single row of the table: "token"
+  """
+  update_token_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: token_set_input
+    pk_columns: token_pk_columns_input!
+  ): token
+
+  """
+  update multiples rows of table: "token"
+  """
+  update_token_many(
+    """updates to execute, in order"""
+    updates: [token_updates!]!
+  ): [token_mutation_response]
 
   """
   update data of the table: "user"
@@ -2574,70 +2368,16 @@ type project {
   """
   lastUsedAt: timestamptz
   name: String!
-
-  """An object relationship"""
-  owner: user!
-  ownerUserId: uuid!
   slug: String!
 
-  """An array relationship"""
-  tags(
-    """distinct select on columns"""
-    distinct_on: [projectTag_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectTag_order_by!]
-
-    """filter the rows returned"""
-    where: projectTag_bool_exp
-  ): [projectTag!]!
-
-  """An array relationship"""
-  teams(
-    """distinct select on columns"""
-    distinct_on: [projectTeam_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectTeam_order_by!]
-
-    """filter the rows returned"""
-    where: projectTeam_bool_exp
-  ): [projectTeam!]!
-
-  """An aggregate relationship"""
-  teams_aggregate(
-    """distinct select on columns"""
-    distinct_on: [projectTeam_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectTeam_order_by!]
-
-    """filter the rows returned"""
-    where: projectTeam_bool_exp
-  ): projectTeam_aggregate!
+  """An object relationship"""
+  team: team
+  teamId: uuid
 
   """An array relationship"""
   tokens(
     """distinct select on columns"""
-    distinct_on: [projectToken_select_column!]
+    distinct_on: [token_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -2646,11 +2386,12 @@ type project {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [projectToken_order_by!]
+    order_by: [token_order_by!]
 
     """filter the rows returned"""
-    where: projectToken_bool_exp
-  ): [projectToken!]!
+    where: token_bool_exp
+  ): [token!]!
+  updatedAt: timestamptz!
 
   """An array relationship"""
   usageHistories(
@@ -2725,587 +2466,6 @@ type project {
   ): userSecret_aggregate!
 }
 
-"""Table that links project and tag tables"""
-type projectTag {
-  createdAt: timestamptz!
-  id: uuid!
-
-  """An object relationship"""
-  project: project!
-  projectId: uuid!
-
-  """An object relationship"""
-  tag: tag!
-  tagId: uuid!
-  updatedAt: timestamptz!
-}
-
-"""
-order by aggregate values of table "projectTag"
-"""
-input projectTag_aggregate_order_by {
-  count: order_by
-  max: projectTag_max_order_by
-  min: projectTag_min_order_by
-}
-
-"""
-input type for inserting array relation for remote table "projectTag"
-"""
-input projectTag_arr_rel_insert_input {
-  data: [projectTag_insert_input!]!
-
-  """upsert condition"""
-  on_conflict: projectTag_on_conflict
-}
-
-"""
-Boolean expression to filter rows from the table "projectTag". All fields are combined with a logical 'AND'.
-"""
-input projectTag_bool_exp {
-  _and: [projectTag_bool_exp!]
-  _not: projectTag_bool_exp
-  _or: [projectTag_bool_exp!]
-  createdAt: timestamptz_comparison_exp
-  id: uuid_comparison_exp
-  project: project_bool_exp
-  projectId: uuid_comparison_exp
-  tag: tag_bool_exp
-  tagId: uuid_comparison_exp
-  updatedAt: timestamptz_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "projectTag"
-"""
-enum projectTag_constraint {
-  """
-  unique or primary key constraint on columns "id"
-  """
-  projectTag_pkey
-
-  """
-  unique or primary key constraint on columns "tagId", "projectId"
-  """
-  projectTag_tokenId_tagId_key
-}
-
-"""
-input type for inserting data into table "projectTag"
-"""
-input projectTag_insert_input {
-  projectId: uuid
-  tag: tag_obj_rel_insert_input
-  tagId: uuid
-}
-
-"""
-order by max() on columns of table "projectTag"
-"""
-input projectTag_max_order_by {
-  createdAt: order_by
-  id: order_by
-  projectId: order_by
-  tagId: order_by
-  updatedAt: order_by
-}
-
-"""
-order by min() on columns of table "projectTag"
-"""
-input projectTag_min_order_by {
-  createdAt: order_by
-  id: order_by
-  projectId: order_by
-  tagId: order_by
-  updatedAt: order_by
-}
-
-"""
-response of any mutation on the table "projectTag"
-"""
-type projectTag_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [projectTag!]!
-}
-
-"""
-on_conflict condition type for table "projectTag"
-"""
-input projectTag_on_conflict {
-  constraint: projectTag_constraint!
-  update_columns: [projectTag_update_column!]! = []
-  where: projectTag_bool_exp
-}
-
-"""Ordering options when selecting data from "projectTag"."""
-input projectTag_order_by {
-  createdAt: order_by
-  id: order_by
-  project: project_order_by
-  projectId: order_by
-  tag: tag_order_by
-  tagId: order_by
-  updatedAt: order_by
-}
-
-"""primary key columns input for table: projectTag"""
-input projectTag_pk_columns_input {
-  id: uuid!
-}
-
-"""
-select columns of table "projectTag"
-"""
-enum projectTag_select_column {
-  """column name"""
-  createdAt
-
-  """column name"""
-  id
-
-  """column name"""
-  projectId
-
-  """column name"""
-  tagId
-
-  """column name"""
-  updatedAt
-}
-
-"""
-input type for updating data in table "projectTag"
-"""
-input projectTag_set_input {
-  projectId: uuid
-  tagId: uuid
-}
-
-"""
-Streaming cursor of the table "projectTag"
-"""
-input projectTag_stream_cursor_input {
-  """Stream column input with initial value"""
-  initial_value: projectTag_stream_cursor_value_input!
-
-  """cursor ordering"""
-  ordering: cursor_ordering
-}
-
-"""Initial value of the column from where the streaming should start"""
-input projectTag_stream_cursor_value_input {
-  createdAt: timestamptz
-  id: uuid
-  projectId: uuid
-  tagId: uuid
-  updatedAt: timestamptz
-}
-
-"""
-update columns of table "projectTag"
-"""
-enum projectTag_update_column {
-  """column name"""
-  projectId
-
-  """column name"""
-  tagId
-}
-
-input projectTag_updates {
-  """sets the columns of the filtered rows to the given values"""
-  _set: projectTag_set_input
-
-  """filter the rows which have to be updated"""
-  where: projectTag_bool_exp!
-}
-
-"""Table that links the project and team tables"""
-type projectTeam {
-  createdAt: timestamptz!
-  id: uuid!
-
-  """An object relationship"""
-  project: project!
-  projectId: uuid!
-
-  """An object relationship"""
-  team: team!
-  teamId: uuid!
-  updatedAt: timestamptz!
-}
-
-"""
-aggregated selection of "projectTeam"
-"""
-type projectTeam_aggregate {
-  aggregate: projectTeam_aggregate_fields
-  nodes: [projectTeam!]!
-}
-
-input projectTeam_aggregate_bool_exp {
-  count: projectTeam_aggregate_bool_exp_count
-}
-
-input projectTeam_aggregate_bool_exp_count {
-  arguments: [projectTeam_select_column!]
-  distinct: Boolean
-  filter: projectTeam_bool_exp
-  predicate: Int_comparison_exp!
-}
-
-"""
-aggregate fields of "projectTeam"
-"""
-type projectTeam_aggregate_fields {
-  count(columns: [projectTeam_select_column!], distinct: Boolean): Int!
-  max: projectTeam_max_fields
-  min: projectTeam_min_fields
-}
-
-"""
-order by aggregate values of table "projectTeam"
-"""
-input projectTeam_aggregate_order_by {
-  count: order_by
-  max: projectTeam_max_order_by
-  min: projectTeam_min_order_by
-}
-
-"""
-Boolean expression to filter rows from the table "projectTeam". All fields are combined with a logical 'AND'.
-"""
-input projectTeam_bool_exp {
-  _and: [projectTeam_bool_exp!]
-  _not: projectTeam_bool_exp
-  _or: [projectTeam_bool_exp!]
-  createdAt: timestamptz_comparison_exp
-  id: uuid_comparison_exp
-  project: project_bool_exp
-  projectId: uuid_comparison_exp
-  team: team_bool_exp
-  teamId: uuid_comparison_exp
-  updatedAt: timestamptz_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "projectTeam"
-"""
-enum projectTeam_constraint {
-  """
-  unique or primary key constraint on columns "id"
-  """
-  projectTeam_pkey
-
-  """
-  unique or primary key constraint on columns "teamId", "projectId"
-  """
-  projectTeam_projectId_teamId_key
-}
-
-"""
-input type for inserting data into table "projectTeam"
-"""
-input projectTeam_insert_input {
-  projectId: uuid
-  teamId: uuid
-}
-
-"""aggregate max on columns"""
-type projectTeam_max_fields {
-  createdAt: timestamptz
-  id: uuid
-  projectId: uuid
-  teamId: uuid
-  updatedAt: timestamptz
-}
-
-"""
-order by max() on columns of table "projectTeam"
-"""
-input projectTeam_max_order_by {
-  createdAt: order_by
-  id: order_by
-  projectId: order_by
-  teamId: order_by
-  updatedAt: order_by
-}
-
-"""aggregate min on columns"""
-type projectTeam_min_fields {
-  createdAt: timestamptz
-  id: uuid
-  projectId: uuid
-  teamId: uuid
-  updatedAt: timestamptz
-}
-
-"""
-order by min() on columns of table "projectTeam"
-"""
-input projectTeam_min_order_by {
-  createdAt: order_by
-  id: order_by
-  projectId: order_by
-  teamId: order_by
-  updatedAt: order_by
-}
-
-"""
-response of any mutation on the table "projectTeam"
-"""
-type projectTeam_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [projectTeam!]!
-}
-
-"""
-on_conflict condition type for table "projectTeam"
-"""
-input projectTeam_on_conflict {
-  constraint: projectTeam_constraint!
-  update_columns: [projectTeam_update_column!]! = []
-  where: projectTeam_bool_exp
-}
-
-"""Ordering options when selecting data from "projectTeam"."""
-input projectTeam_order_by {
-  createdAt: order_by
-  id: order_by
-  project: project_order_by
-  projectId: order_by
-  team: team_order_by
-  teamId: order_by
-  updatedAt: order_by
-}
-
-"""primary key columns input for table: projectTeam"""
-input projectTeam_pk_columns_input {
-  id: uuid!
-}
-
-"""
-select columns of table "projectTeam"
-"""
-enum projectTeam_select_column {
-  """column name"""
-  createdAt
-
-  """column name"""
-  id
-
-  """column name"""
-  projectId
-
-  """column name"""
-  teamId
-
-  """column name"""
-  updatedAt
-}
-
-"""
-input type for updating data in table "projectTeam"
-"""
-input projectTeam_set_input {
-  projectId: uuid
-  teamId: uuid
-}
-
-"""
-Streaming cursor of the table "projectTeam"
-"""
-input projectTeam_stream_cursor_input {
-  """Stream column input with initial value"""
-  initial_value: projectTeam_stream_cursor_value_input!
-
-  """cursor ordering"""
-  ordering: cursor_ordering
-}
-
-"""Initial value of the column from where the streaming should start"""
-input projectTeam_stream_cursor_value_input {
-  createdAt: timestamptz
-  id: uuid
-  projectId: uuid
-  teamId: uuid
-  updatedAt: timestamptz
-}
-
-"""
-update columns of table "projectTeam"
-"""
-enum projectTeam_update_column {
-  """column name"""
-  projectId
-
-  """column name"""
-  teamId
-}
-
-input projectTeam_updates {
-  """sets the columns of the filtered rows to the given values"""
-  _set: projectTeam_set_input
-
-  """filter the rows which have to be updated"""
-  where: projectTeam_bool_exp!
-}
-
-"""Table for storing user project tokens."""
-type projectToken {
-  created_at: timestamptz!
-  expiresAt: timestamptz
-  id: uuid!
-  name: String!
-
-  """An object relationship"""
-  project: project!
-  projectId: uuid!
-  updated_at: timestamptz!
-}
-
-"""
-order by aggregate values of table "projectToken"
-"""
-input projectToken_aggregate_order_by {
-  count: order_by
-  max: projectToken_max_order_by
-  min: projectToken_min_order_by
-}
-
-"""
-Boolean expression to filter rows from the table "projectToken". All fields are combined with a logical 'AND'.
-"""
-input projectToken_bool_exp {
-  _and: [projectToken_bool_exp!]
-  _not: projectToken_bool_exp
-  _or: [projectToken_bool_exp!]
-  created_at: timestamptz_comparison_exp
-  expiresAt: timestamptz_comparison_exp
-  id: uuid_comparison_exp
-  name: String_comparison_exp
-  project: project_bool_exp
-  projectId: uuid_comparison_exp
-  updated_at: timestamptz_comparison_exp
-}
-
-"""
-order by max() on columns of table "projectToken"
-"""
-input projectToken_max_order_by {
-  created_at: order_by
-  expiresAt: order_by
-  id: order_by
-  name: order_by
-  projectId: order_by
-  updated_at: order_by
-}
-
-"""
-order by min() on columns of table "projectToken"
-"""
-input projectToken_min_order_by {
-  created_at: order_by
-  expiresAt: order_by
-  id: order_by
-  name: order_by
-  projectId: order_by
-  updated_at: order_by
-}
-
-"""
-response of any mutation on the table "projectToken"
-"""
-type projectToken_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [projectToken!]!
-}
-
-"""Ordering options when selecting data from "projectToken"."""
-input projectToken_order_by {
-  created_at: order_by
-  expiresAt: order_by
-  id: order_by
-  name: order_by
-  project: project_order_by
-  projectId: order_by
-  updated_at: order_by
-}
-
-"""primary key columns input for table: projectToken"""
-input projectToken_pk_columns_input {
-  id: uuid!
-}
-
-"""
-select columns of table "projectToken"
-"""
-enum projectToken_select_column {
-  """column name"""
-  created_at
-
-  """column name"""
-  expiresAt
-
-  """column name"""
-  id
-
-  """column name"""
-  name
-
-  """column name"""
-  projectId
-
-  """column name"""
-  updated_at
-}
-
-"""
-input type for updating data in table "projectToken"
-"""
-input projectToken_set_input {
-  name: String
-}
-
-"""
-Streaming cursor of the table "projectToken"
-"""
-input projectToken_stream_cursor_input {
-  """Stream column input with initial value"""
-  initial_value: projectToken_stream_cursor_value_input!
-
-  """cursor ordering"""
-  ordering: cursor_ordering
-}
-
-"""Initial value of the column from where the streaming should start"""
-input projectToken_stream_cursor_value_input {
-  created_at: timestamptz
-  expiresAt: timestamptz
-  id: uuid
-  name: String
-  projectId: uuid
-  updated_at: timestamptz
-}
-
-input projectToken_updates {
-  """sets the columns of the filtered rows to the given values"""
-  _set: projectToken_set_input
-
-  """filter the rows which have to be updated"""
-  where: projectToken_bool_exp!
-}
-
 """
 order by aggregate values of table "project"
 """
@@ -3331,13 +2491,11 @@ input project_bool_exp {
   lastUpdatedAt: timestamptz_comparison_exp
   lastUsedAt: timestamptz_comparison_exp
   name: String_comparison_exp
-  owner: user_bool_exp
-  ownerUserId: uuid_comparison_exp
   slug: String_comparison_exp
-  tags: projectTag_bool_exp
-  teams: projectTeam_bool_exp
-  teams_aggregate: projectTeam_aggregate_bool_exp
-  tokens: projectToken_bool_exp
+  team: team_bool_exp
+  teamId: uuid_comparison_exp
+  tokens: token_bool_exp
+  updatedAt: timestamptz_comparison_exp
   usageHistories: usageHistory_bool_exp
   usageHistories_aggregate: usageHistory_aggregate_bool_exp
   userSecrets: userSecret_bool_exp
@@ -3354,8 +2512,9 @@ input project_max_order_by {
   id: order_by
   lastUpdatedAt: order_by
   name: order_by
-  ownerUserId: order_by
   slug: order_by
+  teamId: order_by
+  updatedAt: order_by
 }
 
 """
@@ -3368,8 +2527,9 @@ input project_min_order_by {
   id: order_by
   lastUpdatedAt: order_by
   name: order_by
-  ownerUserId: order_by
   slug: order_by
+  teamId: order_by
+  updatedAt: order_by
 }
 
 """
@@ -3393,12 +2553,11 @@ input project_order_by {
   lastUpdatedAt: order_by
   lastUsedAt: order_by
   name: order_by
-  owner: user_order_by
-  ownerUserId: order_by
   slug: order_by
-  tags_aggregate: projectTag_aggregate_order_by
-  teams_aggregate: projectTeam_aggregate_order_by
-  tokens_aggregate: projectToken_aggregate_order_by
+  team: team_order_by
+  teamId: order_by
+  tokens_aggregate: token_aggregate_order_by
+  updatedAt: order_by
   usageHistories_aggregate: usageHistory_aggregate_order_by
   userSecrets_aggregate: userSecret_aggregate_order_by
 }
@@ -3431,10 +2590,13 @@ enum project_select_column {
   name
 
   """column name"""
-  ownerUserId
+  slug
 
   """column name"""
-  slug
+  teamId
+
+  """column name"""
+  updatedAt
 }
 
 """
@@ -3465,8 +2627,9 @@ input project_stream_cursor_value_input {
   id: uuid
   lastUpdatedAt: timestamptz
   name: String
-  ownerUserId: uuid
   slug: String
+  teamId: uuid
+  updatedAt: timestamptz
 }
 
 input project_updates {
@@ -3647,95 +2810,6 @@ type query_root {
     where: project_bool_exp
   ): [project!]!
 
-  """
-  fetch data from the table: "projectTag"
-  """
-  projectTag(
-    """distinct select on columns"""
-    distinct_on: [projectTag_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectTag_order_by!]
-
-    """filter the rows returned"""
-    where: projectTag_bool_exp
-  ): [projectTag!]!
-
-  """fetch data from the table: "projectTag" using primary key columns"""
-  projectTag_by_pk(id: uuid!): projectTag
-
-  """
-  fetch data from the table: "projectTeam"
-  """
-  projectTeam(
-    """distinct select on columns"""
-    distinct_on: [projectTeam_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectTeam_order_by!]
-
-    """filter the rows returned"""
-    where: projectTeam_bool_exp
-  ): [projectTeam!]!
-
-  """
-  fetch aggregated fields from the table: "projectTeam"
-  """
-  projectTeam_aggregate(
-    """distinct select on columns"""
-    distinct_on: [projectTeam_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectTeam_order_by!]
-
-    """filter the rows returned"""
-    where: projectTeam_bool_exp
-  ): projectTeam_aggregate!
-
-  """fetch data from the table: "projectTeam" using primary key columns"""
-  projectTeam_by_pk(id: uuid!): projectTeam
-
-  """
-  fetch data from the table: "projectToken"
-  """
-  projectToken(
-    """distinct select on columns"""
-    distinct_on: [projectToken_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectToken_order_by!]
-
-    """filter the rows returned"""
-    where: projectToken_bool_exp
-  ): [projectToken!]!
-
-  """fetch data from the table: "projectToken" using primary key columns"""
-  projectToken_by_pk(id: uuid!): projectToken
-
   """fetch data from the table: "project" using primary key columns"""
   project_by_pk(id: uuid!): project
 
@@ -3815,7 +2889,7 @@ type query_root {
   ): team_aggregate!
 
   """
-  execute function "search_token_by_id" which returns "projectToken"
+  execute function "search_token_by_id" which returns "token"
   """
   search_token_by_id(
     """
@@ -3824,7 +2898,7 @@ type query_root {
     args: search_token_by_id_args!
 
     """distinct select on columns"""
-    distinct_on: [projectToken_select_column!]
+    distinct_on: [token_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3833,11 +2907,11 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [projectToken_order_by!]
+    order_by: [token_order_by!]
 
     """filter the rows returned"""
-    where: projectToken_bool_exp
-  ): [projectToken!]!
+    where: token_bool_exp
+  ): [token!]!
 
   """
   execute function "search_usage_history_by_id" which returns "usageHistory"
@@ -3964,35 +3038,6 @@ type query_root {
     where: userSecret_bool_exp
   ): userSecret_aggregate!
 
-  """Send notifications"""
-  sendNotifications(
-    """the unique id of an action"""
-    id: uuid!
-  ): sendNotifications
-
-  """
-  fetch data from the table: "tag"
-  """
-  tag(
-    """distinct select on columns"""
-    distinct_on: [tag_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [tag_order_by!]
-
-    """filter the rows returned"""
-    where: tag_bool_exp
-  ): [tag!]!
-
-  """fetch data from the table: "tag" using primary key columns"""
-  tag_by_pk(id: uuid!): tag
-
   """
   fetch data from the table: "team"
   """
@@ -4101,6 +3146,29 @@ type query_root {
 
   """fetch data from the table: "team" using primary key columns"""
   team_by_pk(id: uuid!): team
+
+  """
+  fetch data from the table: "token"
+  """
+  token(
+    """distinct select on columns"""
+    distinct_on: [token_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [token_order_by!]
+
+    """filter the rows returned"""
+    where: token_bool_exp
+  ): [token!]!
+
+  """fetch data from the table: "token" using primary key columns"""
+  token_by_pk(id: uuid!): token
 
   """
   fetch data from the table: "usageHistory"
@@ -4371,23 +3439,6 @@ input search_user_by_id_args {
 
 input search_user_secret_by_id_args {
   match: String
-}
-
-"""
-fields of action: "sendNotifications"
-"""
-type sendNotifications {
-  """the time at which this action was created"""
-  created_at: timestamptz!
-
-  """errors related to the invocation"""
-  errors: json
-
-  """the unique id of an action"""
-  id: uuid!
-
-  """the output fields of this action"""
-  output: SendNotificationsOutput
 }
 
 scalar smallint
@@ -4673,137 +3724,6 @@ type subscription_root {
     where: project_bool_exp
   ): [project!]!
 
-  """
-  fetch data from the table: "projectTag"
-  """
-  projectTag(
-    """distinct select on columns"""
-    distinct_on: [projectTag_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectTag_order_by!]
-
-    """filter the rows returned"""
-    where: projectTag_bool_exp
-  ): [projectTag!]!
-
-  """fetch data from the table: "projectTag" using primary key columns"""
-  projectTag_by_pk(id: uuid!): projectTag
-
-  """
-  fetch data from the table in a streaming manner: "projectTag"
-  """
-  projectTag_stream(
-    """maximum number of rows returned in a single batch"""
-    batch_size: Int!
-
-    """cursor to stream the results returned by the query"""
-    cursor: [projectTag_stream_cursor_input]!
-
-    """filter the rows returned"""
-    where: projectTag_bool_exp
-  ): [projectTag!]!
-
-  """
-  fetch data from the table: "projectTeam"
-  """
-  projectTeam(
-    """distinct select on columns"""
-    distinct_on: [projectTeam_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectTeam_order_by!]
-
-    """filter the rows returned"""
-    where: projectTeam_bool_exp
-  ): [projectTeam!]!
-
-  """
-  fetch aggregated fields from the table: "projectTeam"
-  """
-  projectTeam_aggregate(
-    """distinct select on columns"""
-    distinct_on: [projectTeam_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectTeam_order_by!]
-
-    """filter the rows returned"""
-    where: projectTeam_bool_exp
-  ): projectTeam_aggregate!
-
-  """fetch data from the table: "projectTeam" using primary key columns"""
-  projectTeam_by_pk(id: uuid!): projectTeam
-
-  """
-  fetch data from the table in a streaming manner: "projectTeam"
-  """
-  projectTeam_stream(
-    """maximum number of rows returned in a single batch"""
-    batch_size: Int!
-
-    """cursor to stream the results returned by the query"""
-    cursor: [projectTeam_stream_cursor_input]!
-
-    """filter the rows returned"""
-    where: projectTeam_bool_exp
-  ): [projectTeam!]!
-
-  """
-  fetch data from the table: "projectToken"
-  """
-  projectToken(
-    """distinct select on columns"""
-    distinct_on: [projectToken_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectToken_order_by!]
-
-    """filter the rows returned"""
-    where: projectToken_bool_exp
-  ): [projectToken!]!
-
-  """fetch data from the table: "projectToken" using primary key columns"""
-  projectToken_by_pk(id: uuid!): projectToken
-
-  """
-  fetch data from the table in a streaming manner: "projectToken"
-  """
-  projectToken_stream(
-    """maximum number of rows returned in a single batch"""
-    batch_size: Int!
-
-    """cursor to stream the results returned by the query"""
-    cursor: [projectToken_stream_cursor_input]!
-
-    """filter the rows returned"""
-    where: projectToken_bool_exp
-  ): [projectToken!]!
-
   """fetch data from the table: "project" using primary key columns"""
   project_by_pk(id: uuid!): project
 
@@ -4897,7 +3817,7 @@ type subscription_root {
   ): team_aggregate!
 
   """
-  execute function "search_token_by_id" which returns "projectToken"
+  execute function "search_token_by_id" which returns "token"
   """
   search_token_by_id(
     """
@@ -4906,7 +3826,7 @@ type subscription_root {
     args: search_token_by_id_args!
 
     """distinct select on columns"""
-    distinct_on: [projectToken_select_column!]
+    distinct_on: [token_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -4915,11 +3835,11 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [projectToken_order_by!]
+    order_by: [token_order_by!]
 
     """filter the rows returned"""
-    where: projectToken_bool_exp
-  ): [projectToken!]!
+    where: token_bool_exp
+  ): [token!]!
 
   """
   execute function "search_usage_history_by_id" which returns "usageHistory"
@@ -5045,49 +3965,6 @@ type subscription_root {
     """filter the rows returned"""
     where: userSecret_bool_exp
   ): userSecret_aggregate!
-
-  """Send notifications"""
-  sendNotifications(
-    """the unique id of an action"""
-    id: uuid!
-  ): sendNotifications
-
-  """
-  fetch data from the table: "tag"
-  """
-  tag(
-    """distinct select on columns"""
-    distinct_on: [tag_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [tag_order_by!]
-
-    """filter the rows returned"""
-    where: tag_bool_exp
-  ): [tag!]!
-
-  """fetch data from the table: "tag" using primary key columns"""
-  tag_by_pk(id: uuid!): tag
-
-  """
-  fetch data from the table in a streaming manner: "tag"
-  """
-  tag_stream(
-    """maximum number of rows returned in a single batch"""
-    batch_size: Int!
-
-    """cursor to stream the results returned by the query"""
-    cursor: [tag_stream_cursor_input]!
-
-    """filter the rows returned"""
-    where: tag_bool_exp
-  ): [tag!]!
 
   """
   fetch data from the table: "team"
@@ -5239,6 +4116,43 @@ type subscription_root {
     """filter the rows returned"""
     where: team_bool_exp
   ): [team!]!
+
+  """
+  fetch data from the table: "token"
+  """
+  token(
+    """distinct select on columns"""
+    distinct_on: [token_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [token_order_by!]
+
+    """filter the rows returned"""
+    where: token_bool_exp
+  ): [token!]!
+
+  """fetch data from the table: "token" using primary key columns"""
+  token_by_pk(id: uuid!): token
+
+  """
+  fetch data from the table in a streaming manner: "token"
+  """
+  token_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [token_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: token_bool_exp
+  ): [token!]!
 
   """
   fetch data from the table: "usageHistory"
@@ -5563,153 +4477,6 @@ type subscription_root {
 }
 
 """
-columns and relationships of "tag"
-"""
-type tag {
-  color: String!
-  id: uuid!
-  name: String!
-
-  """An array relationship"""
-  projectTags(
-    """distinct select on columns"""
-    distinct_on: [projectTag_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectTag_order_by!]
-
-    """filter the rows returned"""
-    where: projectTag_bool_exp
-  ): [projectTag!]!
-
-  """An object relationship"""
-  user: user
-}
-
-"""
-Boolean expression to filter rows from the table "tag". All fields are combined with a logical 'AND'.
-"""
-input tag_bool_exp {
-  _and: [tag_bool_exp!]
-  _not: tag_bool_exp
-  _or: [tag_bool_exp!]
-  color: String_comparison_exp
-  id: uuid_comparison_exp
-  name: String_comparison_exp
-  projectTags: projectTag_bool_exp
-  user: user_bool_exp
-}
-
-"""
-unique or primary key constraints on table "tag"
-"""
-enum tag_constraint {
-  """
-  unique or primary key constraint on columns "id"
-  """
-  tag_id_key
-
-  """
-  unique or primary key constraint on columns "id"
-  """
-  tag_pkey
-}
-
-"""
-input type for inserting data into table "tag"
-"""
-input tag_insert_input {
-  color: String
-  name: String
-  projectTags: projectTag_arr_rel_insert_input
-}
-
-"""
-response of any mutation on the table "tag"
-"""
-type tag_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [tag!]!
-}
-
-"""
-input type for inserting object relation for remote table "tag"
-"""
-input tag_obj_rel_insert_input {
-  data: tag_insert_input!
-
-  """upsert condition"""
-  on_conflict: tag_on_conflict
-}
-
-"""
-on_conflict condition type for table "tag"
-"""
-input tag_on_conflict {
-  constraint: tag_constraint!
-  update_columns: [tag_update_column!]! = []
-  where: tag_bool_exp
-}
-
-"""Ordering options when selecting data from "tag"."""
-input tag_order_by {
-  color: order_by
-  id: order_by
-  name: order_by
-  projectTags_aggregate: projectTag_aggregate_order_by
-  user: user_order_by
-}
-
-"""
-select columns of table "tag"
-"""
-enum tag_select_column {
-  """column name"""
-  color
-
-  """column name"""
-  id
-
-  """column name"""
-  name
-}
-
-"""
-Streaming cursor of the table "tag"
-"""
-input tag_stream_cursor_input {
-  """Stream column input with initial value"""
-  initial_value: tag_stream_cursor_value_input!
-
-  """cursor ordering"""
-  ordering: cursor_ordering
-}
-
-"""Initial value of the column from where the streaming should start"""
-input tag_stream_cursor_value_input {
-  color: String
-  id: uuid
-  name: String
-}
-
-"""
-placeholder for update columns of table "tag" (current role has no relevant permissions)
-"""
-enum tag_update_column {
-  """placeholder (do not use)"""
-  _PLACEHOLDER
-}
-
-"""
 columns and relationships of "team"
 """
 type team {
@@ -5780,7 +4547,7 @@ type team {
   """An array relationship"""
   projects(
     """distinct select on columns"""
-    distinct_on: [projectTeam_select_column!]
+    distinct_on: [project_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -5789,29 +4556,11 @@ type team {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [projectTeam_order_by!]
+    order_by: [project_order_by!]
 
     """filter the rows returned"""
-    where: projectTeam_bool_exp
-  ): [projectTeam!]!
-
-  """An aggregate relationship"""
-  projects_aggregate(
-    """distinct select on columns"""
-    distinct_on: [projectTeam_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [projectTeam_order_by!]
-
-    """filter the rows returned"""
-    where: projectTeam_bool_exp
-  ): projectTeam_aggregate!
+    where: project_bool_exp
+  ): [project!]!
   updatedAt: timestamptz!
 }
 
@@ -5830,7 +4579,6 @@ type teamInvitation {
 
   """An object relationship"""
   ownerTeam: user!
-  status: invitationStatusEnum_enum!
 
   """An object relationship"""
   team: team!
@@ -5862,7 +4610,6 @@ input teamInvitation_bool_exp {
   invitedBy: uuid_comparison_exp
   invitedUser: user_bool_exp
   ownerTeam: user_bool_exp
-  status: invitationStatusEnum_enum_comparison_exp
   team: team_bool_exp
   teamId: uuid_comparison_exp
   teamName: String_comparison_exp
@@ -5886,7 +4633,6 @@ input teamInvitation_insert_input {
   email: String
   expiredAt: timestamptz
   invitedBy: uuid
-  status: invitationStatusEnum_enum
   teamId: uuid
   teamName: String
 }
@@ -5948,7 +4694,6 @@ input teamInvitation_order_by {
   invitedBy: order_by
   invitedUser: user_order_by
   ownerTeam: user_order_by
-  status: order_by
   team: team_order_by
   teamId: order_by
   teamName: order_by
@@ -5973,9 +4718,6 @@ enum teamInvitation_select_column {
 
   """column name"""
   invitedBy
-
-  """column name"""
-  status
 
   """column name"""
   teamId
@@ -6005,7 +4747,6 @@ input teamInvitation_stream_cursor_value_input {
   expiredAt: timestamptz
   id: uuid
   invitedBy: uuid
-  status: invitationStatusEnum_enum
   teamId: uuid
   teamName: String
   updatedAt: timestamptz
@@ -6296,8 +5037,7 @@ input team_bool_exp {
   name: String_comparison_exp
   owner: user_bool_exp
   ownerUserId: uuid_comparison_exp
-  projects: projectTeam_bool_exp
-  projects_aggregate: projectTeam_aggregate_bool_exp
+  projects: project_bool_exp
   updatedAt: timestamptz_comparison_exp
 }
 
@@ -6345,7 +5085,7 @@ input team_order_by {
   name: order_by
   owner: user_order_by
   ownerUserId: order_by
-  projects_aggregate: projectTeam_aggregate_order_by
+  projects_aggregate: project_aggregate_order_by
   updatedAt: order_by
 }
 
@@ -6450,6 +5190,154 @@ input timestamptz_comparison_exp {
   _lte: timestamptz
   _neq: timestamptz
   _nin: [timestamptz!]
+}
+
+"""Table for storing user project tokens."""
+type token {
+  created_at: timestamptz!
+  expiresAt: timestamptz
+  id: uuid!
+  name: String!
+
+  """An object relationship"""
+  project: project!
+  projectId: uuid!
+  updated_at: timestamptz!
+}
+
+"""
+order by aggregate values of table "token"
+"""
+input token_aggregate_order_by {
+  count: order_by
+  max: token_max_order_by
+  min: token_min_order_by
+}
+
+"""
+Boolean expression to filter rows from the table "token". All fields are combined with a logical 'AND'.
+"""
+input token_bool_exp {
+  _and: [token_bool_exp!]
+  _not: token_bool_exp
+  _or: [token_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  expiresAt: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  name: String_comparison_exp
+  project: project_bool_exp
+  projectId: uuid_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+order by max() on columns of table "token"
+"""
+input token_max_order_by {
+  created_at: order_by
+  expiresAt: order_by
+  id: order_by
+  name: order_by
+  projectId: order_by
+  updated_at: order_by
+}
+
+"""
+order by min() on columns of table "token"
+"""
+input token_min_order_by {
+  created_at: order_by
+  expiresAt: order_by
+  id: order_by
+  name: order_by
+  projectId: order_by
+  updated_at: order_by
+}
+
+"""
+response of any mutation on the table "token"
+"""
+type token_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [token!]!
+}
+
+"""Ordering options when selecting data from "token"."""
+input token_order_by {
+  created_at: order_by
+  expiresAt: order_by
+  id: order_by
+  name: order_by
+  project: project_order_by
+  projectId: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: token"""
+input token_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "token"
+"""
+enum token_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  expiresAt
+
+  """column name"""
+  id
+
+  """column name"""
+  name
+
+  """column name"""
+  projectId
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "token"
+"""
+input token_set_input {
+  name: String
+}
+
+"""
+Streaming cursor of the table "token"
+"""
+input token_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: token_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input token_stream_cursor_value_input {
+  created_at: timestamptz
+  expiresAt: timestamptz
+  id: uuid
+  name: String
+  projectId: uuid
+  updated_at: timestamptz
+}
+
+input token_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: token_set_input
+
+  """filter the rows which have to be updated"""
+  where: token_bool_exp!
 }
 
 """
@@ -6886,24 +5774,6 @@ type user {
     """filter the rows returned"""
     where: notification_bool_exp
   ): [notification!]!
-
-  """An array relationship"""
-  projects(
-    """distinct select on columns"""
-    distinct_on: [project_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [project_order_by!]
-
-    """filter the rows returned"""
-    where: project_bool_exp
-  ): [project!]!
   registrationStep: registrationStep_enum
 
   """An array relationship"""
@@ -7736,7 +6606,6 @@ input user_bool_exp {
   name: String_comparison_exp
   notificationUsers: notificationUser_bool_exp
   notifications: notification_bool_exp
-  projects: project_bool_exp
   registrationStep: registrationStep_enum_comparison_exp
   teams: teamUser_bool_exp
   teams_aggregate: teamUser_aggregate_bool_exp
@@ -7770,7 +6639,6 @@ input user_order_by {
   name: order_by
   notificationUsers_aggregate: notificationUser_aggregate_order_by
   notifications_aggregate: notification_aggregate_order_by
-  projects_aggregate: project_aggregate_order_by
   registrationStep: order_by
   teams_aggregate: teamUser_aggregate_order_by
   updatedAt: order_by
@@ -8104,4 +6972,3 @@ input viewPreferences_updates {
   """filter the rows which have to be updated"""
   where: viewPreferences_bool_exp!
 }
-

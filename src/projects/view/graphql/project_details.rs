@@ -2,8 +2,10 @@
 pub struct ProjectDetails;
 pub mod project_details {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "ProjectDetails";
-    pub const QUERY : & str = "query ProjectDetails($id: uuid!) {\n  project(where: {id: {_eq: $id}}) {\n    id\n    name\n    description\n\n    owner {\n      id\n      name\n      email\n    }\n\n    usageHistories(limit: 1, order_by: {createdAt: desc}) {\n      createdAt\n    }\n\n    teams_aggregate {\n      aggregate {\n        count\n      }\n    }\n\n    integrationInstallations_aggregate {\n      aggregate {\n        count\n      }\n    }\n\n    userSecrets_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query ProjectDetails($id: uuid!) {\n  project(where: {id: {_eq: $id}}) {\n    id\n    name\n    description\n\n    usageHistories(limit: 1, order_by: {createdAt: desc}) {\n      createdAt\n    }\n\n    team {\n      name\n    }\n\n    integrationInstallations_aggregate {\n      aggregate {\n        count\n      }\n    }\n\n    userSecrets_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
+    use super::*;
     use ::uuid::Uuid;
     use chrono::offset::Utc;
     use chrono::DateTime;
@@ -32,10 +34,9 @@ pub mod project_details {
         pub id: uuid,
         pub name: String,
         pub description: Option<String>,
-        pub owner: ProjectDetailsProjectOwner,
         #[serde(rename = "usageHistories")]
         pub usage_histories: Vec<ProjectDetailsProjectUsageHistories>,
-        pub teams_aggregate: ProjectDetailsProjectTeamsAggregate,
+        pub team: Option<ProjectDetailsProjectTeam>,
         #[serde(rename = "integrationInstallations_aggregate")]
         pub integration_installations_aggregate:
             ProjectDetailsProjectIntegrationInstallationsAggregate,
@@ -43,23 +44,13 @@ pub mod project_details {
         pub user_secrets_aggregate: ProjectDetailsProjectUserSecretsAggregate,
     }
     #[derive(Deserialize)]
-    pub struct ProjectDetailsProjectOwner {
-        pub id: uuid,
-        pub name: String,
-        pub email: String,
-    }
-    #[derive(Deserialize)]
     pub struct ProjectDetailsProjectUsageHistories {
         #[serde(rename = "createdAt")]
         pub created_at: timestamptz,
     }
     #[derive(Deserialize)]
-    pub struct ProjectDetailsProjectTeamsAggregate {
-        pub aggregate: Option<ProjectDetailsProjectTeamsAggregateAggregate>,
-    }
-    #[derive(Deserialize)]
-    pub struct ProjectDetailsProjectTeamsAggregateAggregate {
-        pub count: Int,
+    pub struct ProjectDetailsProjectTeam {
+        pub name: String,
     }
     #[derive(Deserialize)]
     pub struct ProjectDetailsProjectIntegrationInstallationsAggregate {

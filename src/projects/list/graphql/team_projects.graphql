@@ -1,17 +1,17 @@
 query TeamProjects($id: uuid!, $userId: uuid!) {
-  project(where: {_and: [
-    {teams: {team: {id: {_eq: $id}}}},
-    {teams: {team: {members: {member: {id: {_eq: $userId}}}}}}
-  ]}, limit: 1000) {
+  project(
+    where: {
+      _and: [
+        { team: { id: { _eq: $id } } }
+        { team: { members: { member: { id: { _eq: $userId } } } } }
+      ]
+    }
+    limit: 1000
+  ) {
     id
     name
 
-    owner {
-      name
-      email
-    }
-
-    usageHistories(order_by: {updatedAt: desc}, limit: 1) {
+    usageHistories(order_by: { updatedAt: desc }, limit: 1) {
       updatedAt
     }
   }

@@ -1,10 +1,11 @@
 #![allow(clippy::all, warnings)]
-pub struct ProjectInfo;
-pub mod project_info {
+pub struct DeleteTeam;
+pub mod delete_team {
     #![allow(dead_code)]
     use std::result::Result;
-    pub const OPERATION_NAME: &str = "ProjectInfo";
-    pub const QUERY : & str = "query ProjectInfo($projectId: uuid!) {\n    project_by_pk(id: $projectId) {\n        id\n        name\n    }\n}\n" ;
+    pub const OPERATION_NAME: &str = "DeleteTeam";
+    pub const QUERY: &str =
+        "mutation DeleteTeam($id: uuid!) {\n  delete_team_by_pk(id: $id) {\n    id\n  }\n}\n";
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -18,28 +19,26 @@ pub mod project_info {
     type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct Variables {
-        #[serde(rename = "projectId")]
-        pub project_id: uuid,
+        pub id: uuid,
     }
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        pub project_by_pk: Option<ProjectInfoProjectByPk>,
+        pub delete_team_by_pk: Option<DeleteTeamDeleteTeamByPk>,
     }
     #[derive(Deserialize)]
-    pub struct ProjectInfoProjectByPk {
+    pub struct DeleteTeamDeleteTeamByPk {
         pub id: uuid,
-        pub name: String,
     }
 }
-impl graphql_client::GraphQLQuery for ProjectInfo {
-    type Variables = project_info::Variables;
-    type ResponseData = project_info::ResponseData;
+impl graphql_client::GraphQLQuery for DeleteTeam {
+    type Variables = delete_team::Variables;
+    type ResponseData = delete_team::ResponseData;
     fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
-            query: project_info::QUERY,
-            operation_name: project_info::OPERATION_NAME,
+            query: delete_team::QUERY,
+            operation_name: delete_team::OPERATION_NAME,
         }
     }
 }

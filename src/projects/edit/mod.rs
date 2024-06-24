@@ -4,7 +4,6 @@ use crate::common::{
     colorful_theme::theme,
     config::Config,
     execute_graphql_request::execute_graphql_request,
-    fetch_user_id::fetch_user_id,
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
@@ -46,7 +45,6 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
         None => keyring::get("access_token"),
     };
 
-    let user_id = fetch_user_id(&access_token);
     let mut name = args.name.clone();
     let mut description = args.description.clone();
 
@@ -84,11 +82,6 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
                 std::process::exit(1);
             }
         };
-
-    if project_info.owner_user_id != user_id {
-        print_formatted_error("Editing failed. You are not the owner of this project.");
-        std::process::exit(1);
-    }
 
     // If no arguments are passed, the user will be prompted to enter a new name and description of the project
     if name.is_none() && description.is_none() {
@@ -154,7 +147,6 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
             &client,
             &update_project_name_error_message,
             update_project_name::Variables {
-                user_id: user_id.clone(),
                 project_id: project_id.clone(),
                 project_name: name.clone(),
             },
@@ -190,7 +182,6 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
             &client,
             &update_project_description_error_message,
             update_project_description::Variables {
-                user_id: user_id.clone(),
                 project_id: project_id.clone(),
                 project_description: description.clone(),
             },

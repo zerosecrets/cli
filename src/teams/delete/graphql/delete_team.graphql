@@ -1,0 +1,5 @@
+mutation DeleteTeam($id: uuid!) {
+  delete_team_by_pk(id: $id) {
+    id
+  }
+}

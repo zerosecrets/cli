@@ -2,6 +2,5 @@ query ProjectInfo($projectId: uuid!) {
     project_by_pk(id: $projectId) {
         id
         name
-        ownerUserId
     }
 }

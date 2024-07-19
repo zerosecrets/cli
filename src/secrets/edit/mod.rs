@@ -8,7 +8,7 @@ use crate::common::{
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
     slugify::slugify,
-    validate_secret_name::{validate_secret_name, Entity},
+    validate_secret_name::validate_secret_name,
     vendors::Vendors,
 };
 use clap::Args;
@@ -112,7 +112,6 @@ pub fn edit(args: &SecretsEditArgs) {
                     &input,
                     &editable_secret_field.name,
                     &existed_fields_keys,
-                    Entity::Field,
                 );
             })
             .interact()
@@ -213,12 +212,7 @@ pub fn edit(args: &SecretsEditArgs) {
             .with_prompt("Type a new secret name:")
             .default(secret_info.name.clone())
             .validate_with(|input: &String| -> Result<(), &str> {
-                return validate_secret_name(
-                    &input,
-                    &secret_info.name,
-                    &existed_secret_names,
-                    Entity::Secret,
-                );
+                return validate_secret_name(&input, &secret_info.name, &existed_secret_names);
             })
             .interact()
         {

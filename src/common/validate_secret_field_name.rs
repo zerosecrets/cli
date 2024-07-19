@@ -28,19 +28,19 @@ pub fn validate_secret_field_name(
     default_value: &str,
     already_used_values: &Vec<String>,
 ) -> Result<(), &'static str> {
+    let regex_start = Regex::new(r"^[a-zA-Z][\w ]*$").unwrap();
     let regex_name = Regex::new(r"^[\w]*$").unwrap();
-    let regex_start = Regex::new(r"^[a-zA-Z][\w]*$").unwrap();
 
     if new_value.trim().len() < 2 {
         return Err("The field name must be at least 2 character long.");
     }
 
-    if !regex_start.is_match(new_value) {
-        return Err("Field name should start with a letter.");
+    if !regex_name.is_match(new_value) {
+        return Err("For field name only only a-z, 0-9 and '_' are allowed.");
     }
 
-    if !regex_name.is_match(new_value) {
-        return Err("For field name only only a-z, 0-9, ' ', '_', and '-' are allowed.");
+    if !regex_start.is_match(new_value) {
+        return Err("Field name should start with a letter.");
     }
 
     if already_used_values.contains(&new_value.to_string()) && new_value != default_value {

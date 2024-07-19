@@ -1,15 +1,6 @@
 mod graphql;
 use crate::common::{
-    authorization_headers::authorization_headers,
-    colorful_theme::theme,
-    config::Config,
-    execute_graphql_request::execute_graphql_request,
-    keyring::keyring,
-    print_formatted_error::print_formatted_error,
-    query_full_id::{query_full_id, QueryType},
-    slugify::slugify,
-    validate_secret_name::validate_secret_name,
-    vendors::Vendors,
+    authorization_headers::authorization_headers, colorful_theme::theme, config::Config, execute_graphql_request::execute_graphql_request, keyring::keyring, print_formatted_error::print_formatted_error, query_full_id::{query_full_id, QueryType}, slugify::slugify, validate_secret_field_name::validate_secret_field_name, validate_secret_name::validate_secret_name, vendors::Vendors
 };
 use clap::Args;
 use dialoguer::{Input, Password, Select};
@@ -107,8 +98,7 @@ pub fn edit(args: &SecretsEditArgs) {
             .with_prompt("Type a new field key:")
             .default(editable_secret_field.name.to_string())
             .validate_with(|input: &String| -> Result<(), &str> {
-                // FIXME change here
-                return validate_secret_name(
+                return validate_secret_field_name(
                     &input,
                     &editable_secret_field.name,
                     &existed_fields_keys,

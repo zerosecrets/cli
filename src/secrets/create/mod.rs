@@ -132,7 +132,6 @@ pub fn create(args: &SecretsCreateArgs) {
         let field_name = match Input::with_theme(&theme())
             .with_prompt("Type a field name:")
             .validate_with(|input: &String| -> Result<(), &str> {
-                // FIXME change helper here
                 validate_secret_field_name(&input, "", &field_names)
             })
             .interact()

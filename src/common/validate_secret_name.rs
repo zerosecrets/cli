@@ -29,34 +29,33 @@ pub enum Entity {
 ///
 /// Returns a `Result` with an empty tuple `()` if the name is valid. Otherwise, it returns an error message as a static string slice.
 ///
-pub fn validate_name(
+pub fn validate_secret_name(
     new_value: &str,
     default_value: &str,
     already_used_values: &Vec<String>,
-    entity: Entity,
 ) -> Result<(), &'static str> {
     let regex = Regex::new(r"^[\w -]+$").unwrap();
 
-    let blank_error_message = match entity {
-        Entity::Secret => "The secret name must be at least 1 character long.",
-        Entity::Field => "The field name must be at least 1 character long.",
-    };
+    // let blank_error_message = match entity {
+    //     Entity::Secret => "The secret name must be at least 1 character long.",
+    //     // Entity::Field => "The field name must be at least 1 character long.",
+    // };
 
     if new_value.trim().is_empty() {
-        return Err(blank_error_message);
+        return Err("The secret name must be at least 1 character long.");
     }
 
     if !regex.is_match(new_value) {
         return Err("Only a-z, 0-9, ' ', '_', and '-' are allowed.");
     }
 
-    let uniqueness_error_message = match entity {
-        Entity::Secret => "The secret name must be unique.",
-        Entity::Field => "The field name must be unique.",
-    };
+    // let uniqueness_error_message = match entity {
+    //     Entity::Secret => "The secret name must be unique.",
+    //     Entity::Field => "The field name must be unique.",
+    // };
 
     if already_used_values.contains(&new_value.to_string()) && new_value != default_value {
-        return Err(uniqueness_error_message);
+        return Err("The secret name must be unique.");
     }
 
     Ok(())

@@ -8,7 +8,7 @@ use crate::common::{
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
-    validate_name::{validate_name, Entity},
+    validate_secret_name::{validate_secret_name, Entity},
     vendors::Vendors,
 };
 use crate::secrets::create::graphql::create_secret::{create_secret, CreateSecret};
@@ -77,7 +77,7 @@ pub fn create(args: &SecretsCreateArgs) {
         };
 
     let secret_name = match &args.name {
-        Some(name) => match validate_name(&name, "", &secret_names, Entity::Secret) {
+        Some(name) => match validate_secret_name(&name, "", &secret_names, Entity::Secret) {
             Ok(_) => name.clone(),
 
             Err(error) => {
@@ -90,7 +90,7 @@ pub fn create(args: &SecretsCreateArgs) {
             match Input::with_theme(&theme())
                 .with_prompt("Type a name for the secret:")
                 .validate_with(|input: &String| -> Result<(), &str> {
-                    return validate_name(&input, "", &secret_names, Entity::Secret);
+                    return validate_secret_name(&input, "", &secret_names, Entity::Secret);
                 })
                 .interact()
             {
@@ -131,7 +131,8 @@ pub fn create(args: &SecretsCreateArgs) {
         let field_name = match Input::with_theme(&theme())
             .with_prompt("Type a field name:")
             .validate_with(|input: &String| -> Result<(), &str> {
-                validate_name(&input, "", &field_names, Entity::Field)
+                // FIXME change helper here
+                validate_secret_name(&input, "", &field_names, Entity::Field)
             })
             .interact()
         {
@@ -196,7 +197,7 @@ pub fn create(args: &SecretsCreateArgs) {
                 project_id.to_string(),
                 selected_vendor.to_string(),
                 secret_fields,
-                user_id
+                user_id,
             ),
         )
         .create_secret

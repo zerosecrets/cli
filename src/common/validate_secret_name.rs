@@ -10,13 +10,14 @@ use regex::Regex;
 /// ```rust
 /// let used_names = vec!["existing_name".to_string(), "test_secret".to_string()];
 /// let name = "new_secret";
-/// let result = validate_name(name, &used_names);
+/// let result = validate_secret_name(name, "", &used_names);
 /// assert_eq!(result, Ok(()));
 /// ```
 ///
 /// # Arguments
 ///
 /// * `name` - The name to validate.
+/// * `default_value` - Current secret name.
 /// * `already_used_values` - A list of names that have already been used and should not be duplicated.
 ///
 /// # Returns

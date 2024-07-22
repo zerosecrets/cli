@@ -32,8 +32,8 @@ pub fn validate_secret_field_name(
 ) -> Result<(), &'static str> {
     let regex_start_result = Regex::new(r"^[a-zA-Z][\w ]*$");
     let regex_name_result = Regex::new(r"^[\w]*$");
-    let new_value_trimmed_value = new_value.trim();
-    let default_value_trimmed_value = default_value.trim();
+    let new_value_trimmed_value = new_value.to_lowercase().trim().to_string();
+    let default_value_trimmed_value = default_value.to_lowercase().trim().to_string();
 
     let regex_start = match regex_start_result {
         Ok(regex) => regex,
@@ -57,11 +57,11 @@ pub fn validate_secret_field_name(
         return Err("The field name must be at least 2 character long.");
     }
 
-    if !regex_name.is_match(new_value_trimmed_value) {
+    if !regex_name.is_match(&new_value_trimmed_value) {
         return Err("For field name only only a-z, 0-9 and '_' are allowed.");
     }
 
-    if !regex_start.is_match(new_value_trimmed_value) {
+    if !regex_start.is_match(&new_value_trimmed_value) {
         return Err("Field name should start with a letter.");
     }
 

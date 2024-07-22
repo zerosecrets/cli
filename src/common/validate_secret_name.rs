@@ -31,8 +31,8 @@ pub fn validate_secret_name(
     already_used_values: &Vec<String>,
 ) -> Result<(), &'static str> {
     let regex_result = Regex::new(r"^[\w -]+$");
-    let new_value_trimmed_value = new_value.trim();
-    let default_value_trimmed_value = default_value.trim();
+    let new_value_trimmed_value = new_value.to_lowercase().trim().to_string();
+    let default_value_trimmed_value = default_value.to_lowercase().trim().to_string();
 
     let regex = match regex_result {
         Ok(regex) => regex,
@@ -47,7 +47,7 @@ pub fn validate_secret_name(
         return Err("The secret name must be at least 1 character long.");
     }
 
-    if !regex.is_match(new_value_trimmed_value) {
+    if !regex.is_match(&new_value_trimmed_value) {
         return Err("Only a-z, 0-9, ' ', '_', and '-' are allowed.");
     }
 

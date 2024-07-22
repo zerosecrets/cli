@@ -1,3 +1,4 @@
+use crate::common::print_formatted_error::print_formatted_error;
 use regex::Regex;
 
 /// Validates a name for a secret field name.
@@ -29,8 +30,26 @@ pub fn validate_secret_field_name(
     default_value: &str,
     already_used_values: &Vec<String>,
 ) -> Result<(), &'static str> {
-    let regex_start = Regex::new(r"^[a-zA-Z][\w ]*$").unwrap();
-    let regex_name = Regex::new(r"^[\w]*$").unwrap();
+    let regex_start_result = Regex::new(r"^[a-zA-Z][\w ]*$");
+    let regex_name_result = Regex::new(r"^[\w]*$");
+
+    let regex_start = match regex_start_result {
+        Ok(regex) => regex,
+
+        Err(_e) => {
+            print_formatted_error("Regular expression error checking the beginning of a name");
+            std::process::exit(1);
+        }
+    };
+
+    let regex_name = match regex_name_result {
+        Ok(regex) => regex,
+
+        Err(_e) => {
+            print_formatted_error("Regular expression name check error");
+            std::process::exit(1);
+        }
+    };
 
     if new_value.trim().len() < 2 {
         return Err("The field name must be at least 2 character long.");

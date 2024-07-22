@@ -1,4 +1,5 @@
 use regex::Regex;
+use crate::common::print_formatted_error::print_formatted_error;
 
 /// Validates a name for a secret or field.
 /// The function performs the following checks:
@@ -29,7 +30,16 @@ pub fn validate_secret_name(
     default_value: &str,
     already_used_values: &Vec<String>,
 ) -> Result<(), &'static str> {
-    let regex = Regex::new(r"^[\w -]+$").unwrap();
+    let regex_result = Regex::new(r"^[\w -]+$");
+
+    let regex = match regex_result {
+        Ok(regex) => regex,
+
+        Err(_e) => {
+            print_formatted_error("Regular expression error checking the beginning of a name");
+            std::process::exit(1);
+        }
+    };
 
     if new_value.trim().is_empty() {
         return Err("The secret name must be at least 1 character long.");

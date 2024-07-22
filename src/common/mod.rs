@@ -15,6 +15,7 @@ pub mod read_env_file;
 pub mod slugify;
 pub mod table;
 pub mod tokio_runtime;
-pub mod validate_name;
+pub mod validate_secret_field_name;
+pub mod validate_secret_name;
 pub mod vendors;
 pub mod write_env_file;

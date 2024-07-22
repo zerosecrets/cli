@@ -1,5 +1,5 @@
-use regex::Regex;
 use crate::common::print_formatted_error::print_formatted_error;
+use regex::Regex;
 
 /// Validates a name for a secret or field.
 /// The function performs the following checks:
@@ -31,6 +31,8 @@ pub fn validate_secret_name(
     already_used_values: &Vec<String>,
 ) -> Result<(), &'static str> {
     let regex_result = Regex::new(r"^[\w -]+$");
+    let new_value_trimmed_value = new_value.trim();
+    let default_value_trimmed_value = default_value.trim();
 
     let regex = match regex_result {
         Ok(regex) => regex,
@@ -41,15 +43,17 @@ pub fn validate_secret_name(
         }
     };
 
-    if new_value.trim().is_empty() {
+    if new_value_trimmed_value.is_empty() {
         return Err("The secret name must be at least 1 character long.");
     }
 
-    if !regex.is_match(new_value) {
+    if !regex.is_match(new_value_trimmed_value) {
         return Err("Only a-z, 0-9, ' ', '_', and '-' are allowed.");
     }
 
-    if already_used_values.contains(&new_value.to_string()) && new_value != default_value {
+    if already_used_values.contains(&new_value_trimmed_value.to_string())
+        && new_value_trimmed_value != default_value_trimmed_value
+    {
         return Err("The secret name must be unique.");
     }
 

@@ -5,10 +5,8 @@ pub mod keyring {
     use super::*;
     use std::sync::Arc;
 
-    /// The name of the service for which you want to store key-value pairs in the keyring.
     const SERVICE_NAME: &str = "zero-cli";
 
-    // Структура для хранения состояния
     struct KeyringState {
         storage: RwLock<HashMap<String, String>>,
     }
@@ -24,12 +22,11 @@ pub mod keyring {
         }
     }
 
-    // Создаем глобальное состояние с помощью lazy_static
-    lazy_static::lazy_static! {
-        static ref STATE: Arc<KeyringState> = Arc::new(KeyringState {
-            storage: RwLock::new(HashMap::new()),
-        });
-    }
+    // lazy_static::lazy_static! {
+    //     static ref STATE: Arc<KeyringState> = Arc::new(KeyringState {
+    //         storage: RwLock::new(HashMap::new()),
+    //     });
+    // }
 
     pub fn set(key: &str, value: &str) {
         let mut storage = STATE.storage.write().unwrap();

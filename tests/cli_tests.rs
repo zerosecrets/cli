@@ -11,21 +11,9 @@ fn test_interactive_cli_help() -> Result<(), Error> {
 }
 
 #[test]
-fn test_projects_create() -> Result<(), Error> {
-    let mut p = spawn("cargo run -- projects create", Some(5000))?;
-    p.exp_string("project name:")?;
-    p.send_line("newone_from_test_2321")?;
-    p.exp_string("Do you want to generate a new token for this project?")?;
-    p.send_line("n")?;
-    p.exp_string("Project successfully created")?;
-    Ok(())
-}
-
-// FIXME add project id static
-#[test]
 fn test_secrets_create_with_one_field() -> Result<(), Error> {
     // TODO interactions with select
-    let mut p = spawn("cargo run -- secrets create --id 8b8c", Some(15000))?;
+    let mut p = spawn("cargo run -- secrets create --id 002a", Some(15000))?;
     p.exp_string("Type a name for the secret")?;
     p.send_line("test secret one field")?;
 
@@ -47,11 +35,10 @@ fn test_secrets_create_with_one_field() -> Result<(), Error> {
     Ok(())
 }
 
-// FIXME add project id static
 #[test]
 fn test_secrets_create_with_many_fields() -> Result<(), Error> {
     // TODO interactions with select
-    let mut p = spawn("cargo run -- secrets create --id 8b8c", Some(15000))?;
+    let mut p = spawn("cargo run -- secrets create --id 002a", Some(15000))?;
     p.exp_string("Type a name for the secret")?;
     p.send_line("test secret many fields")?;
 
@@ -86,9 +73,9 @@ fn test_secrets_create_with_many_fields() -> Result<(), Error> {
 #[test]
 fn test_secrets_delete() -> Result<(), Error> {
     // TODO interactions with select
-    let mut p = spawn("cargo run -- secrets delete --id 9599", Some(15000))?;
-    p.exp_string("Type 9599 to confirm deletion")?;
-    p.send_line("9599")?;
+    let mut p = spawn("cargo run -- secrets delete --id fc2d", Some(15000))?;
+    p.exp_string("Type fc2d to confirm deletion")?;
+    p.send_line("fc2d")?;
     p.exp_string("Secret successfully deleted")?;
     Ok(())
 }

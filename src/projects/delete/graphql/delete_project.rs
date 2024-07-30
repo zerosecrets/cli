@@ -2,8 +2,10 @@
 pub struct DeleteProject;
 pub mod delete_project {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "DeleteProject";
-    pub const QUERY : & str = "mutation DeleteProject($object: DeleteProjectsInput!) {\n    deleteProjects(object: $object) {\n        affected_rows\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation DeleteProject($id: uuid!) {\n    delete_project_by_pk(id: $id) {\n        id\n    }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -13,31 +15,25 @@ pub mod delete_project {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
-    #[derive(Serialize)]
-    pub struct DeleteProjectsInput {
-        #[serde(rename = "deleteSecretsOn3rdParty")]
-        pub delete_secrets_on3rd_party: Option<Boolean>,
-        pub ids: Vec<uuid::Uuid>,
-    }
+    type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct Variables {
-        pub object: DeleteProjectsInput,
+        pub id: uuid,
     }
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        #[serde(rename = "deleteProjects")]
-        pub delete_projects: Option<DeleteProjectDeleteProjects>,
+        pub delete_project_by_pk: Option<DeleteProjectDeleteProjectByPk>,
     }
     #[derive(Deserialize)]
-    pub struct DeleteProjectDeleteProjects {
-        pub affected_rows: Int,
+    pub struct DeleteProjectDeleteProjectByPk {
+        pub id: uuid,
     }
 }
 impl graphql_client::GraphQLQuery for DeleteProject {
     type Variables = delete_project::Variables;
     type ResponseData = delete_project::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: delete_project::QUERY,

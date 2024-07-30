@@ -2,8 +2,10 @@
 pub struct RemoveTeam;
 pub mod remove_team {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "RemoveTeam";
-    pub const QUERY : & str = "mutation RemoveTeam($teamId: String!, $teamMemberIds: [String!]!, $teamName: String!) {\n  removeTeam(object: {teamId: $teamId, teamName: $teamName, teamMemberIds: $teamMemberIds}) {\n    success\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation RemoveTeam($teamId: String!) {\n  removeTeam(object: {teamId: $teamId}) {\n    success\n  }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -17,10 +19,6 @@ pub mod remove_team {
     pub struct Variables {
         #[serde(rename = "teamId")]
         pub team_id: String,
-        #[serde(rename = "teamMemberIds")]
-        pub team_member_ids: Vec<String>,
-        #[serde(rename = "teamName")]
-        pub team_name: String,
     }
     impl Variables {}
     #[derive(Deserialize)]

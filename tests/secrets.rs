@@ -1,19 +1,16 @@
 use rexpect::error::Error;
 use rexpect::spawn;
 
-// FIXME change P variable for more wordy
 #[test]
 fn test_secrets_create_with_one_field() -> Result<(), Error> {
     let mut p = spawn("cargo run -- secrets create --id dc1c", Some(15000))?;
     p.exp_string("Type a name for the secret")?;
     p.send_line("test secret one field")?;
-
     p.send("\x1B[B")?;
     p.send("\x1B[B")?;
     p.send("\x1B[B")?;
     p.send("\x1B[B")?;
     p.send_line("")?;
-
     p.exp_string("Type a field name:")?;
     p.send_line("new_secret_one_field")?;
     p.exp_string("Type a field value:")?;
@@ -30,12 +27,10 @@ fn test_secrets_create_with_many_fields() -> Result<(), Error> {
     let mut p = spawn("cargo run -- secrets create --id dc1c", Some(15000))?;
     p.exp_string("Type a name for the secret")?;
     p.send_line("new_secret_many_fields")?;
-
     p.send("\x1B[B")?;
     p.send("\x1B[B")?;
     p.send("\x1B[B")?;
     p.send_line("")?;
-
     p.exp_string("Type a field name:")?;
     p.send_line("first")?;
     p.exp_string("Type a field value:")?;
@@ -75,7 +70,6 @@ fn test_secrets_edit() -> Result<(), Error> {
     p.send_line("edited secret")?;
     p.send("\x1B[B")?;
     p.send_line("")?;
-
     p.exp_string("The secret has been successfully updated.")?;
     Ok(())
 }

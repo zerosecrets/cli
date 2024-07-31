@@ -82,7 +82,6 @@ fn test_secrets_edit() -> Result<(), Error> {
 
 #[test]
 fn test_secrets_list() -> Result<(), Error> {
-    // TODO interactions with select
     let mut p = spawn("cargo run -- secrets list --id dc1c", Some(15000))?;
     p.exp_string("#fc3d")?;
     p.exp_string("list secret")?;
@@ -91,7 +90,6 @@ fn test_secrets_list() -> Result<(), Error> {
 
 #[test]
 fn test_secrets_share() -> Result<(), Error> {
-    // TODO interactions with select
     let mut p = spawn("cargo run -- secrets share --id fc4d", Some(15000))?;
     p.exp_string("Type a passphrase of at least 6 character")?;
     p.send_line("123Qwe")?;
@@ -102,5 +100,15 @@ fn test_secrets_share() -> Result<(), Error> {
     p.send_line(" ")?;
     p.send_line("")?;
     p.exp_string("Your link for the shared secret")?;
+    Ok(())
+}
+
+#[test]
+fn test_secrets_view() -> Result<(), Error> {
+    let mut p = spawn("cargo run -- secrets view --id fc4d", Some(15000))?;
+    p.exp_string("URL")?;
+    p.exp_string("Name")?;
+    p.exp_string("Vendor")?;
+    p.exp_string("Fields")?;
     Ok(())
 }

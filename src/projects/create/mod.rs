@@ -40,8 +40,6 @@ pub fn create(args: &ProjectsCreateArgs) {
         None => keyring::get("access_token"),
     };
 
-    println!("is: {}", access_token);
-
     let client = Client::new();
     let headers = authorization_headers(&access_token);
 

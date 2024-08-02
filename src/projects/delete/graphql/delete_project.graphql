@@ -1,5 +1,5 @@
-mutation DeleteProject($object: DeleteProjectsInput!) {
-    deleteProjects(object: $object) {
-        affected_rows
+mutation DeleteProject($id: uuid!) {
+    delete_project_by_pk(id: $id) {
+        id
     }
 }

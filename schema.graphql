@@ -135,15 +135,6 @@ type ConfirmEmailChangeOutput {
   accessToken: String!
 }
 
-input CreateCustomerInput {
-  email: String!
-  userId: String!
-}
-
-type CreateCustomerOutput {
-  stripeCustomerId: String
-}
-
 input CreateProjectInput {
   projectIcon: String!
   projectName: String!
@@ -1374,7 +1365,6 @@ type mutation_root {
   changeSubscription(object: ChangeSubscriptionInput!): ChangeSubscriptionOutput!
   cliAccessTokens(object: CliAccessTokensInput!): CliAccessTokensOutput!
   confirmEmailChange(object: ConfirmEmailChangeInput!): ConfirmEmailChangeOutput!
-  createCustomer(object: CreateCustomerInput!): CreateCustomerOutput!
   createProject(object: CreateProjectInput!): CreateProjectOutput!
   createProjectToken(object: CreateProjectTokenInput!): CreateProjectTokenOutput!
   createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!, userId: String!): CreateSecretOutput!
@@ -7367,6 +7357,7 @@ enum vendorEnum_enum {
   linear
   mailchimp
   mixpanel
+  netlify
   openAI
   other
   paypal
@@ -7380,6 +7371,7 @@ enum vendorEnum_enum {
   terraform
   trello
   twilio
+  vercel
   zoom
 }
 

@@ -51,7 +51,6 @@ fn test_projects_create_with_token_7_days() -> Result<(), Error> {
 
 #[test]
 fn test_projects_delete() -> Result<(), Error> {
-    // let mut p = spawn("cargo run -- projects delete --id dc2c --access-token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJlbWFpbCI6ImNsaUB0ZXN0LmNvbSIsInJvbGUiOiJ1c2VyIiwidXNlcklkIjoiYzU0MThlZDItZmQ3Mi00NjFjLTk0NGUtNjY5YTI3NGNjMjAxIiwiaHR0cHM6Ly9oYXN1cmEuaW8vand0L2NsYWltcyI6eyJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInVzZXIiXSwieC1oYXN1cmEtZGVmYXVsdC1yb2xlIjoidXNlciIsIngtaGFzdXJhLXVzZXItaWQiOiJjNTQxOGVkMi1mZDcyLTQ2MWMtOTQ0ZS02NjlhMjc0Y2MyMDEifSwiaWF0IjoxNzIyMjYyNDI0LCJleHAiOjE3MjQyNDM4ODY2NzMsImlzcyI6Inplcm8tYXBwIn0.cpuHqrCT6W1bOr53wB-Lzymcxc-QfVUAR-ELTbGgEzA  > /dev/null 2>&1", Some(15000))?;
     let mut p = spawn("cargo run -- projects delete --id dc2c", Some(15000))?;
     p.exp_string("Type")?;
     p.exp_string("to confirm deletion:")?;

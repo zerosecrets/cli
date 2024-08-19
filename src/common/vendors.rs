@@ -30,6 +30,7 @@ impl Vendors {
                 "Linear",
                 "Mailchimp",
                 "Mixpanel",
+                "Netlify",
                 "OpenAI",
                 "Other",
                 "Paypal",
@@ -43,6 +44,7 @@ impl Vendors {
                 "Terraform",
                 "Trello",
                 "Twilio",
+                "Vercel",
                 "Zoom",
             ]),
         }
@@ -72,6 +74,7 @@ impl Vendors {
             "Linear" => "linear",
             "Mailchimp" => "mailchimp",
             "Mixpanel" => "mixpanel",
+            "Netlify" => "netlify",
             "OpenAI" => "openAI",
             "Other" => "other",
             "Paypal" => "paypal",
@@ -85,6 +88,7 @@ impl Vendors {
             "Terraform" => "terraform",
             "Trello" => "trello",
             "Twilio" => "twilio",
+            "Vercel" => "vercel",
             "Zoom" => "zoom",
             _ => {
                 print_formatted_error("Service error. Please try again.");

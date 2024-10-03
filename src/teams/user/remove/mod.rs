@@ -3,7 +3,6 @@ use crate::common::{
     authorization_headers::authorization_headers,
     colorful_theme::theme,
     execute_graphql_request::execute_graphql_request,
-    fetch_user_id::fetch_user_id,
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
@@ -15,6 +14,7 @@ use graphql::remove_user_from_team::{remove_user_from_team, RemoveUserFromTeam};
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
 use termimad::crossterm::style::Stylize;
+use uuid::Uuid;
 
 #[derive(Args, Debug)]
 pub struct UserRemoveArgs {
@@ -36,7 +36,15 @@ pub fn remove(args: &UserRemoveArgs) {
         None => keyring::get("access_token"),
     };
 
-    let user_id = fetch_user_id(&access_token);
+    let user_id = match Uuid::parse_str(&keyring::get("user_id")) {
+        Ok(uuid) => uuid,
+
+        Err(err) => {
+            print_formatted_error(&format!("Invalid user id: {}", err));
+            std::process::exit(1);
+        }
+    };
+
     let team_id = query_full_id(QueryType::Teams, args.id.clone(), &access_token);
     let user_id_to_be_deleted = query_full_id(QueryType::User, args.user_id.clone(), &access_token);
     let team_info = team_info(&access_token, team_id);

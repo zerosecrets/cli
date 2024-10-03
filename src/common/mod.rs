@@ -2,7 +2,6 @@ pub mod authorization_headers;
 pub mod colorful_theme;
 pub mod config;
 pub mod execute_graphql_request;
-pub mod fetch_user_id;
 pub mod format_relative_time;
 pub mod graphql;
 pub mod keyring;

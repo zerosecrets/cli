@@ -2,8 +2,8 @@ mod graphql;
 
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
-    execute_graphql_request::execute_graphql_request, fetch_user_id::fetch_user_id,
-    keyring::keyring, print_formatted_error::print_formatted_error,
+    execute_graphql_request::execute_graphql_request, keyring::keyring,
+    print_formatted_error::print_formatted_error,
 };
 use crate::teams::create::graphql::create_team::{create_team, CreateTeam};
 use crate::teams::create::graphql::user_info_and_team_names::{
@@ -18,6 +18,7 @@ use termimad::{
     crossterm::style::{style, Color, Stylize},
     minimad, MadSkin,
 };
+use uuid::Uuid;
 
 #[derive(Args, Debug)]
 pub struct TeamsCreateArgs {
@@ -36,7 +37,10 @@ fn validate_team_name(name: &String, existing_names: &Vec<String>) -> Result<(),
     let name_regex = Regex::new(r"^[\w -]+$").unwrap();
 
     if name.trim().len() < min_length {
-        return Err(format!("Team name must be at least {} characters", min_length));
+        return Err(format!(
+            "Team name must be at least {} characters",
+            min_length
+        ));
     }
 
     if !name_regex.is_match(name.trim()) {
@@ -50,7 +54,6 @@ fn validate_team_name(name: &String, existing_names: &Vec<String>) -> Result<(),
     Ok(())
 }
 
-
 pub fn create(args: &TeamsCreateArgs) {
     let access_token = match &args.access_token {
         Some(token) => token.clone(),
@@ -59,7 +62,15 @@ pub fn create(args: &TeamsCreateArgs) {
 
     let client = Client::new();
     let headers = authorization_headers(&access_token);
-    let user_id = fetch_user_id(&access_token);
+
+    let user_id = match Uuid::parse_str(&keyring::get("user_id")) {
+        Ok(uuid) => uuid,
+
+        Err(err) => {
+            print_formatted_error(&format!("Invalid user id: {}", err));
+            std::process::exit(1);
+        }
+    };
 
     let user_info = execute_graphql_request::<
         user_info_and_team_names::Variables,
@@ -154,13 +165,17 @@ pub fn create(args: &TeamsCreateArgs) {
 
     let mut expander = text_template.expander();
 
-    let team_link = style(format!("{}/teams/{}", Config::new().webapp_url, &team_id.replace("-", "")))
-        .with(Color::Rgb {
-            r: 0,
-            g: 135,
-            b: 255,
-        })
-        .to_string();
+    let team_link = style(format!(
+        "{}/teams/{}",
+        Config::new().webapp_url,
+        &team_id.replace("-", "")
+    ))
+    .with(Color::Rgb {
+        r: 0,
+        g: 135,
+        b: 255,
+    })
+    .to_string();
 
     expander
         .set("team-link", &team_link)

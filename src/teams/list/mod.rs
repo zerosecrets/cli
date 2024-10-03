@@ -1,9 +1,9 @@
 mod graphql;
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme,
-    execute_graphql_request::execute_graphql_request, fetch_user_id::fetch_user_id,
-    keyring::keyring, lengify::lengify, pad_to_column_width::pad_to_column_width,
-    print_formatted_error::print_formatted_error, table::table,
+    execute_graphql_request::execute_graphql_request, keyring::keyring, lengify::lengify,
+    pad_to_column_width::pad_to_column_width, print_formatted_error::print_formatted_error,
+    table::table,
 };
 use clap::Args;
 use dialoguer::Select;
@@ -12,6 +12,7 @@ use graphql::shared_teams::{shared_teams, SharedTeams};
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
 use termimad::crossterm::style::Stylize;
+use uuid::Uuid;
 
 #[derive(Args, Debug)]
 pub struct TeamListArgs {
@@ -71,7 +72,16 @@ pub fn list(args: &TeamListArgs) {
     let authorization_headers = authorization_headers(&access_token);
     let teams_error_message = "Failed to retrieve teams.";
     let client = Client::new();
-    let user_id = fetch_user_id(&access_token);
+
+    let user_id = match Uuid::parse_str(&keyring::get("user_id")) {
+        Ok(uuid) => uuid,
+
+        Err(err) => {
+            print_formatted_error(&format!("Invalid user id: {}", err));
+            std::process::exit(1);
+        }
+    };
+
     let mut list = Vec::new();
 
     struct ColumnWidthSize {

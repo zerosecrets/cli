@@ -1,10 +1,10 @@
 use crate::common::graphql::{
     search_project_by_id::{search_project_by_id, SearchProjectById},
     search_team_by_id::{search_team_by_id, SearchTeamById},
+    search_token_by_id::{search_token_by_id, SearchTokenById},
     search_usage_history_by_id::{search_usage_history_by_id, SearchUsageHistoryById},
     search_user_by_id::{search_user_by_id, SearchUserById},
     search_user_secret_by_id::{search_user_secret_by_id, SearchUserSecretById},
-    search_token_by_id::{search_token_by_id, SearchTokenById},
 };
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
@@ -222,7 +222,7 @@ pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str
                     id: short_id.clone(),
                 },
             )
-                .search_token_by_id;
+            .search_token_by_id;
 
             tokens
                 .iter()

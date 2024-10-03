@@ -1,5 +1,6 @@
 mutation CliAccessTokens($object: CliAccessTokensInput!) {
   cliAccessTokens(object: $object) {
     accessToken
+    userId
   }
 }

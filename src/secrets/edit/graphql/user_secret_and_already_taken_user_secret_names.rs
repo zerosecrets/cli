@@ -3,7 +3,7 @@ pub struct UserSecretAndAlreadyTakenUserSecretNames;
 pub mod user_secret_and_already_taken_user_secret_names {
     #![allow(dead_code)]
     use std::result::Result;
-    use strum_macros::{EnumIter, Display};
+    use strum_macros::{Display, EnumIter};
     pub const OPERATION_NAME: &str = "UserSecretAndAlreadyTakenUserSecretNames";
     pub const QUERY : & str = "query UserSecretAndAlreadyTakenUserSecretNames($id: uuid!) {\n  userSecret_by_pk(id: $id) {\n    id\n    name\n    slug\n    vendor\n    projectId\n\n    fields {\n      id\n      name\n      value\n      slug\n    }\n\n    project {\n      id\n\n      userSecrets {\n        id\n        name\n      }\n    }\n  }\n}\n" ;
     use serde::{Deserialize, Serialize};

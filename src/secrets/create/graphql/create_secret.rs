@@ -46,7 +46,11 @@ pub mod create_secret {
                 vendor,
             };
 
-            Self { secret, fields, user_id }
+            Self {
+                secret,
+                fields,
+                user_id,
+            }
         }
     }
     impl Variables {}

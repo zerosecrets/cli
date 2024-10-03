@@ -6,9 +6,9 @@ pub mod team_projects {
     pub const OPERATION_NAME: &str = "TeamProjects";
     pub const QUERY : & str = "query TeamProjects($id: uuid!, $userId: uuid!) {\n  project(\n    where: {\n      _and: [\n        { team: { id: { _eq: $id } } }\n        { team: { members: { member: { id: { _eq: $userId } } } } }\n      ]\n    }\n    limit: 1000\n  ) {\n    id\n    name\n\n    usageHistories(order_by: { updatedAt: desc }, limit: 1) {\n      updatedAt\n    }\n  }\n}\n" ;
     use super::*;
-    use serde::{Deserialize, Serialize};
     use chrono::offset::Utc;
     use chrono::DateTime;
+    use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
     #[allow(dead_code)]

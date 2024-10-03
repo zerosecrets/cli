@@ -2,7 +2,6 @@ pub mod graphql;
 use crate::common::{
     authorization_headers::authorization_headers,
     execute_graphql_request::execute_graphql_request,
-    fetch_user_id::fetch_user_id,
     format_relative_time::format_relative_time,
     keyring::keyring,
     lengify::lengify,
@@ -19,6 +18,7 @@ use clap::Args;
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
 use termimad::crossterm::style::Stylize;
+use uuid::Uuid;
 
 #[derive(Args, Debug)]
 pub struct ProjectsListArgs {
@@ -44,7 +44,16 @@ pub fn list(args: &ProjectsListArgs) {
 
     let client = Client::new();
     let authorization_headers = authorization_headers(&access_token);
-    let user_id = fetch_user_id(&access_token);
+
+    let user_id = match Uuid::parse_str(&keyring::get("user_id")) {
+        Ok(uuid) => uuid,
+
+        Err(err) => {
+            print_formatted_error(&format!("Invalid user id: {}", err));
+            std::process::exit(1);
+        }
+    };
+
     let team_id;
 
     match &args.id {

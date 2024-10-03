@@ -15,6 +15,18 @@ directive @cached(
 
 scalar AWSJSON
 
+input AWSUpdateSecretsInputIntegration {
+  installationId: String!
+}
+
+input AWSUpdateSecretsInputZero {
+  secretsIds: [String!]!
+}
+
+type AWSUpdateSecretsOutput {
+  success: Boolean!
+}
+
 input AcceptTeamInviteInput {
   failureAcceptInviteMessage: String!
   successfullAcceptInviteMessage: String!
@@ -22,8 +34,66 @@ input AcceptTeamInviteInput {
 }
 
 type AcceptTeamInviteOutput {
-  errorCode: String
   success: Boolean!
+}
+
+input BitbucketDownloadSecretsInput {
+  isDownloadSecretsEnabled: Boolean!
+  isDownloadVendorPriority: Boolean!
+}
+
+type BitbucketEnvironment {
+  id: String!
+  isUsed: Boolean!
+  name: String!
+}
+
+input BitbucketInputZero {
+  integrationConnectId: String!
+  projectId: String!
+  secretsIds: [String!]!
+}
+
+input BitbucketInstallInputIntegration {
+  extra: String!
+  vendorProjectName: String!
+}
+
+type BitbucketInstallOutput {
+  success: Boolean!
+}
+
+type BitbucketProject {
+  environments: [BitbucketEnvironment!]!
+  id: String!
+  name: String!
+}
+
+input BitbucketUpdateSecretsInputIntegration {
+  installationId: String!
+}
+
+input BitbucketUpdateSecretsInputZero {
+  secretsIds: [String!]!
+}
+
+type BitbucketUpdateSecretsOutput {
+  success: Boolean!
+}
+
+type BitbucketWorkspaceProjects {
+  id: String!
+  name: String!
+  repositories: [BitbucketProject!]!
+}
+
+input BitbucketWorkspaceProjectsInput {
+  integrationConnectId: String!
+  projectId: String!
+}
+
+type BitbucketWorkspaceProjectsOutput {
+  workspacesProjects: [BitbucketWorkspaceProjects!]!
 }
 
 """
@@ -70,7 +140,8 @@ type ChangeSubscriptionOutput {
 }
 
 input CheckIntegrationDeployInput {
-  accountId: String!
+  integrationConnectId: String
+  operationId: String
 }
 
 type CheckIntegrationDeployOutput {
@@ -103,6 +174,69 @@ input CliAccessTokensInput {
 
 type CliAccessTokensOutput {
   accessToken: String!
+  userId: String!
+}
+
+input CloudflareAuthInput {
+  accountId: String!
+  apiToken: String!
+}
+
+type CloudflareAuthOutput {
+  integrationConnectId: String!
+}
+
+input CloudflareDownloadSecretsInput {
+  isDownloadSecretsEnabled: Boolean!
+  isDownloadVendorPriority: Boolean!
+}
+
+type CloudflareEnvironment {
+  id: String!
+  isUsed: Boolean!
+  name: String!
+}
+
+input CloudflareInputZero {
+  integrationConnectId: String!
+  projectId: String!
+  secretsIds: [String!]!
+}
+
+input CloudflareInstallInputIntegration {
+  extra: String!
+  vendorProjectName: String!
+}
+
+type CloudflareInstallOutput {
+  success: Boolean!
+}
+
+type CloudflareProject {
+  environments: [CloudflareEnvironment!]!
+  id: String!
+  name: String!
+}
+
+input CloudflareProjectsInput {
+  integrationConnectId: String!
+  projectId: String!
+}
+
+type CloudflareProjectsOutput {
+  projects: [CloudflareProject!]!
+}
+
+input CloudflareUpdateSecretsInputIntegration {
+  installationId: String!
+}
+
+input CloudflareUpdateSecretsInputZero {
+  secretsIds: [String!]!
+}
+
+type CloudflareUpdateSecretsOutput {
+  success: Boolean!
 }
 
 input ConfirmEmailChangeInput {
@@ -111,15 +245,7 @@ input ConfirmEmailChangeInput {
 
 type ConfirmEmailChangeOutput {
   accessToken: String!
-}
-
-input CreateCustomerInput {
-  email: String!
   userId: String!
-}
-
-type CreateCustomerOutput {
-  stripeCustomerId: String
 }
 
 input CreateProjectInput {
@@ -129,7 +255,6 @@ input CreateProjectInput {
 }
 
 type CreateProjectOutput {
-  errorCode: String
   projectId: String
   tokenValue: String
 }
@@ -165,7 +290,6 @@ input CreateTeamInput {
 }
 
 type CreateTeamOutput {
-  errorCode: String
   teamId: String!
 }
 
@@ -193,10 +317,29 @@ type DecryptedSecretField {
   value: String!
 }
 
+input DeleteIntegrationInput {
+  installationId: String!
+  isDeleteInRemoteSourceEnabled: Boolean
+}
+
+type DeleteIntegrationOutput {
+  success: Boolean!
+}
+
+input DeleteProjectInput {
+  id: String!
+  isVendorSecretsDelete: Boolean!
+}
+
+type DeleteProjectOutput {
+  id: String!
+}
+
 enum DeployStatusIntegration {
   CREATE_COMPLETE
   DEPLOY_FAILED
   DEPLOY_IN_PROGRESS
+  DEPLOY_TIMEOUT
 }
 
 type Environment {
@@ -213,6 +356,96 @@ input GenerateSecretSharingUrlInput {
 
 type GenerateSecretSharingUrlOutput {
   url: String!
+}
+
+type GitHubEnvironment {
+  id: String!
+  isUsed: Boolean!
+  name: String!
+}
+
+input GitHubInputZero {
+  integrationConnectId: String!
+  projectId: String!
+  secretsIds: [String!]!
+}
+
+input GitHubInstallInputIntegration {
+  extra: String!
+  vendorProjectName: String!
+}
+
+type GitHubInstallOutput {
+  success: Boolean!
+}
+
+type GitHubProject {
+  environments: [GitHubEnvironment!]!
+  id: String!
+  name: String!
+}
+
+input GitHubProjectsInput {
+  integrationConnectId: String!
+  projectId: String!
+}
+
+type GitHubProjectsOutput {
+  projects: [GitHubProject!]!
+}
+
+input GitHubUpdateSecretsInputIntegration {
+  installationId: String!
+}
+
+input GitHubUpdateSecretsInputZero {
+  secretsIds: [String!]!
+}
+
+type GitHubUpdateSecretsOutput {
+  success: Boolean!
+}
+
+input GitLabInputZero {
+  integrationConnectId: String!
+  projectId: String!
+  secretsIds: [String!]!
+}
+
+input GitLabInstallInputIntegration {
+  extra: String!
+  vendorProjectName: String!
+}
+
+type GitLabInstallOutput {
+  success: Boolean!
+}
+
+type GitLabProject {
+  environments: [GitHubEnvironment!]!
+  id: String!
+  name: String!
+}
+
+input GitLabProjectsInput {
+  integrationConnectId: String!
+  projectId: String!
+}
+
+type GitLabProjectsOutput {
+  projects: [GitLabProject!]!
+}
+
+input GitLabUpdateSecretsInputIntegration {
+  installationId: String!
+}
+
+input GitLabUpdateSecretsInputZero {
+  secretsIds: [String!]!
+}
+
+type GitLabUpdateSecretsOutput {
+  success: Boolean!
 }
 
 type InstallationOutput {
@@ -235,11 +468,11 @@ input Int_comparison_exp {
 }
 
 input IntegrationAWSInstallInputZero {
-  accountId: String!
-  integrationId: String!
+  integrationConnectId: String
+  operationId: String
   projectId: String!
   secretName: String!
-  secretsIds: [String]
+  secretsIds: [String!]!
 }
 
 type IntegrationAWSInstallOutput {
@@ -250,118 +483,61 @@ type IntegrationAWSInstallOutputInstallation {
   id: String!
 }
 
-input IntegrationAuthInputIntegration {
-  vendorName: String!
+input LoginInput {
+  email: String!
+  password: String!
 }
 
-input IntegrationAuthInputZero {
-  userId: String!
-}
-
-input IntegrationAuthOAuthInput {
-  code: String!
-}
-
-type IntegrationAuthOutput {
-  id: String!
-  response: String!
-}
-
-input IntegrationDeleteInput {
-  id: String
-  installationId: String
-  isDeleteInRemoteSourceEnabled: Boolean
-}
-
-type IntegrationDeleteOutput {
-  success: Boolean!
-}
-
-input IntegrationDownloadSecretsInputIntegration {
-  installationId: String!
-}
-
-input IntegrationDownloadSecretsInputZero {
-  projectId: String!
-  userId: String!
-}
-
-type IntegrationDownloadSecretsOutput {
-  secret: SecretOutput!
-}
-
-input IntegrationInstallInputIntegration {
+input NetlifyInstallInputIntegration {
   extra: String!
   vendorName: String!
 }
 
-input IntegrationInstallInputZero {
-  integrationId: String!
-  isDownloadSecretsEnabled: Boolean
-  projectId: String
-  secretsIds: [String]
+input NetlifyInstallInputZero {
+  integrationConnectId: String!
+  isDownloadSecretsEnabled: Boolean!
+  isVendorPriority: Boolean!
+  projectId: String!
+  secretsIds: [String]!
 }
 
-type IntegrationInstallOutput {
-  installation: IntegrationInstallOutputInstallation!
+type NetlifyInstallOutput {
+  installation: NetlifyInstallOutputInstallation!
 }
 
-type IntegrationInstallOutputInstallation {
+type NetlifyInstallOutputInstallation {
   id: String!
 }
 
-type IntegrationProject {
+type NetlifyProject {
   environments: [Environment!]!
   id: String!
   isInUse: Boolean!
   name: String!
 }
 
-input IntegrationProjectsInput {
-  code: String!
+input NetlifyProjectsInput {
+  integrationConnectId: String!
   projectId: String!
-  vendorName: String!
 }
 
-type IntegrationProjectsOutput {
-  integrationId: String!
-  projects: [IntegrationProject!]!
+type NetlifyProjectsOutput {
+  projects: [NetlifyProject!]!
 }
 
-input IntegrationUpdateInputIntegration {
-  extra: String
+input NetlifyUpdateSecretsInputIntegration {
+  buildHookUrl: String
   installationId: String!
 }
 
-input IntegrationUpdateInputZero {
+input NetlifyUpdateSecretsInputZero {
   secretsIds: [String]
 }
 
-type IntegrationUpdateOutput {
+type NetlifyUpdateSecretsOutput {
   errors: [String!]
   installation: InstallationOutput!
   success: Boolean!
-}
-
-input IntegrationUploadSecretsInputIntegration {
-  installationId: String!
-}
-
-input IntegrationUploadSecretsInputZero {
-  secretsIds: [String]
-}
-
-type IntegrationUploadSecretsOutput {
-  success: Boolean!
-}
-
-input LoginInput {
-  email: String!
-  password: String!
-}
-
-type MeOutput {
-  id: ID!
 }
 
 type Payment {
@@ -401,7 +577,6 @@ input RegenerateProjectTokenInput {
 }
 
 type RegenerateProjectTokenOutput {
-  errorCode: String
   tokenValue: String
 }
 
@@ -411,13 +586,11 @@ input RegisterInput {
   password: String!
 }
 
-input RejectTeamInviteInput {
-  inviteId: String!
-  rejectInviteMessage: String!
+input RejectTeamInvitationInput {
+  invitationId: String!
 }
 
-type RejectTeamInviteOutput {
-  errorCode: String
+type RejectTeamInvitationOutput {
   success: Boolean!
 }
 
@@ -426,7 +599,6 @@ input RemoveTeamInput {
 }
 
 type RemoveTeamOutput {
-  errorCode: String
   success: Boolean!
 }
 
@@ -437,7 +609,6 @@ input RemoveUserFromTeamInput {
 }
 
 type RemoveUserFromTeamOutput {
-  errorCode: String
   success: Boolean!
 }
 
@@ -446,7 +617,6 @@ input RequestEmailChangeInput {
 }
 
 type RequestEmailChangeOutput {
-  errorCode: String
   success: Boolean!
 }
 
@@ -463,17 +633,12 @@ type ResendSignUpEmailOutput {
   success: Boolean
 }
 
-type SecretOutput {
-  id: String!
-}
-
 input SendInviteUserTeamInput {
   email: String!
   teamId: String!
 }
 
 type SendInviteUserTeamOutput {
-  errorCode: String
   success: Boolean!
 }
 
@@ -549,14 +714,13 @@ type UpdatePaymentMethodOutput {
 
 input UpdateProjectSettingsInput {
   icon: String!
-  projectDescription: String
   projectId: String!
   projectName: String!
   teamId: String!
 }
 
 type UpdateProjectSettingsOutput {
-  success: Boolean
+  success: Boolean!
 }
 
 type UpdateSecretOutput {
@@ -573,6 +737,58 @@ input UpdateUserSecretFieldsInput {
 input UpdateUserSecretInput {
   id: String!
   name: String!
+}
+
+input VercelInstallInputIntegration {
+  extra: String!
+  vendorName: String!
+}
+
+input VercelInstallInputZero {
+  integrationConnectId: String!
+  isDownloadSecretsEnabled: Boolean!
+  isVendorPriority: Boolean!
+  projectId: String!
+  secretsIds: [String]!
+}
+
+type VercelInstallOutput {
+  installation: VercelInstallOutputInstallation!
+}
+
+type VercelInstallOutputInstallation {
+  id: String!
+}
+
+type VercelProject {
+  environments: [Environment!]!
+  id: String!
+  isInUse: Boolean!
+  name: String!
+}
+
+input VercelProjectsInput {
+  integrationConnectId: String!
+  projectId: String!
+}
+
+type VercelProjectsOutput {
+  projects: [VercelProject!]!
+}
+
+input VercelUpdateSecretsInputIntegration {
+  buildHookUrl: String
+  installationId: String!
+}
+
+input VercelUpdateSecretsInputZero {
+  secretsIds: [String]
+}
+
+type VercelUpdateSecretsOutput {
+  errors: [String!]
+  installation: InstallationOutput!
+  success: Boolean!
 }
 
 input ViewSecretFieldsInput {
@@ -592,8 +808,10 @@ enum cursor_ordering {
   DESC
 }
 
-"""integration relative data"""
-type integration {
+"""
+columns and relationships of "integrationConnect"
+"""
+type integrationConnect {
   extra(
     """JSON select path"""
     path: String
@@ -635,8 +853,181 @@ type integration {
     """filter the rows returned"""
     where: integrationInstallation_bool_exp
   ): integrationInstallation_aggregate!
-  userId: uuid
+  userId: uuid!
   vendorName: integrationVendorNameEnum_enum!
+}
+
+"""
+aggregated selection of "integrationConnect"
+"""
+type integrationConnect_aggregate {
+  aggregate: integrationConnect_aggregate_fields
+  nodes: [integrationConnect!]!
+}
+
+"""
+aggregate fields of "integrationConnect"
+"""
+type integrationConnect_aggregate_fields {
+  count(columns: [integrationConnect_select_column!], distinct: Boolean): Int!
+  max: integrationConnect_max_fields
+  min: integrationConnect_min_fields
+}
+
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input integrationConnect_append_input {
+  extra: jsonb
+}
+
+"""
+Boolean expression to filter rows from the table "integrationConnect". All fields are combined with a logical 'AND'.
+"""
+input integrationConnect_bool_exp {
+  _and: [integrationConnect_bool_exp!]
+  _not: integrationConnect_bool_exp
+  _or: [integrationConnect_bool_exp!]
+  extra: jsonb_comparison_exp
+  id: uuid_comparison_exp
+  installations: integrationInstallation_bool_exp
+  installations_aggregate: integrationInstallation_aggregate_bool_exp
+  userId: uuid_comparison_exp
+  vendorName: integrationVendorNameEnum_enum_comparison_exp
+}
+
+"""
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input integrationConnect_delete_at_path_input {
+  extra: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+"""
+input integrationConnect_delete_elem_input {
+  extra: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input integrationConnect_delete_key_input {
+  extra: String
+}
+
+"""aggregate max on columns"""
+type integrationConnect_max_fields {
+  id: uuid
+  userId: uuid
+}
+
+"""aggregate min on columns"""
+type integrationConnect_min_fields {
+  id: uuid
+  userId: uuid
+}
+
+"""
+response of any mutation on the table "integrationConnect"
+"""
+type integrationConnect_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [integrationConnect!]!
+}
+
+"""Ordering options when selecting data from "integrationConnect"."""
+input integrationConnect_order_by {
+  extra: order_by
+  id: order_by
+  installations_aggregate: integrationInstallation_aggregate_order_by
+  userId: order_by
+  vendorName: order_by
+}
+
+"""primary key columns input for table: integrationConnect"""
+input integrationConnect_pk_columns_input {
+  id: uuid!
+}
+
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input integrationConnect_prepend_input {
+  extra: jsonb
+}
+
+"""
+select columns of table "integrationConnect"
+"""
+enum integrationConnect_select_column {
+  """column name"""
+  extra
+
+  """column name"""
+  id
+
+  """column name"""
+  userId
+
+  """column name"""
+  vendorName
+}
+
+"""
+input type for updating data in table "integrationConnect"
+"""
+input integrationConnect_set_input {
+  extra: jsonb
+  id: uuid
+}
+
+"""
+Streaming cursor of the table "integrationConnect"
+"""
+input integrationConnect_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: integrationConnect_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input integrationConnect_stream_cursor_value_input {
+  extra: jsonb
+  id: uuid
+  userId: uuid
+  vendorName: integrationVendorNameEnum_enum
+}
+
+input integrationConnect_updates {
+  """append existing jsonb value of filtered columns with new jsonb value"""
+  _append: integrationConnect_append_input
+
+  """
+  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+  """
+  _delete_at_path: integrationConnect_delete_at_path_input
+
+  """
+  delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+  """
+  _delete_elem: integrationConnect_delete_elem_input
+
+  """
+  delete key/value pair or string element. key/value pairs are matched based on their key value
+  """
+  _delete_key: integrationConnect_delete_key_input
+
+  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  _prepend: integrationConnect_prepend_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: integrationConnect_set_input
+
+  """filter the rows which have to be updated"""
+  where: integrationConnect_bool_exp!
 }
 
 """
@@ -651,9 +1042,12 @@ type integrationInstallation {
   id: uuid!
 
   """An object relationship"""
-  integration: integration
-  integrationId: uuid!
+  integrationConnect: integrationConnect!
+  integrationConnectId: uuid!
   isSuccessful: Boolean
+
+  """An object relationship"""
+  project: project
   projectId: uuid
 
   """An array relationship"""
@@ -683,11 +1077,11 @@ type integrationInstallationUserSecret {
   id: uuid!
 
   """An object relationship"""
-  integrationInstallation: integrationInstallation
+  integrationInstallation: integrationInstallation!
   integrationInstallationId: uuid!
 
   """An object relationship"""
-  secret: userSecret
+  secret: userSecret!
   userSecretId: uuid!
 }
 
@@ -738,7 +1132,6 @@ enum integrationInstallationUserSecret_constraint {
 input type for inserting data into table "integrationInstallationUserSecret"
 """
 input integrationInstallationUserSecret_insert_input {
-  id: uuid
   integrationInstallationId: uuid
   secret: userSecret_obj_rel_insert_input
   userSecretId: uuid
@@ -901,9 +1294,10 @@ input integrationInstallation_bool_exp {
   createdAt: timestamptz_comparison_exp
   extra: jsonb_comparison_exp
   id: uuid_comparison_exp
-  integration: integration_bool_exp
-  integrationId: uuid_comparison_exp
+  integrationConnect: integrationConnect_bool_exp
+  integrationConnectId: uuid_comparison_exp
   isSuccessful: Boolean_comparison_exp
+  project: project_bool_exp
   projectId: uuid_comparison_exp
   secrets: integrationInstallationUserSecret_bool_exp
   vendorProjectName: String_comparison_exp
@@ -934,7 +1328,7 @@ input integrationInstallation_delete_key_input {
 type integrationInstallation_max_fields {
   createdAt: timestamptz
   id: uuid
-  integrationId: uuid
+  integrationConnectId: uuid
   projectId: uuid
   vendorProjectName: String
 }
@@ -945,7 +1339,7 @@ order by max() on columns of table "integrationInstallation"
 input integrationInstallation_max_order_by {
   createdAt: order_by
   id: order_by
-  integrationId: order_by
+  integrationConnectId: order_by
   projectId: order_by
   vendorProjectName: order_by
 }
@@ -954,7 +1348,7 @@ input integrationInstallation_max_order_by {
 type integrationInstallation_min_fields {
   createdAt: timestamptz
   id: uuid
-  integrationId: uuid
+  integrationConnectId: uuid
   projectId: uuid
   vendorProjectName: String
 }
@@ -965,7 +1359,7 @@ order by min() on columns of table "integrationInstallation"
 input integrationInstallation_min_order_by {
   createdAt: order_by
   id: order_by
-  integrationId: order_by
+  integrationConnectId: order_by
   projectId: order_by
   vendorProjectName: order_by
 }
@@ -986,9 +1380,10 @@ input integrationInstallation_order_by {
   createdAt: order_by
   extra: order_by
   id: order_by
-  integration: integration_order_by
-  integrationId: order_by
+  integrationConnect: integrationConnect_order_by
+  integrationConnectId: order_by
   isSuccessful: order_by
+  project: project_order_by
   projectId: order_by
   secrets_aggregate: integrationInstallationUserSecret_aggregate_order_by
   vendorProjectName: order_by
@@ -1018,7 +1413,7 @@ enum integrationInstallation_select_column {
   id
 
   """column name"""
-  integrationId
+  integrationConnectId
 
   """column name"""
   isSuccessful
@@ -1069,7 +1464,7 @@ input integrationInstallation_stream_cursor_value_input {
   createdAt: timestamptz
   extra: jsonb
   id: uuid
-  integrationId: uuid
+  integrationConnectId: uuid
   isSuccessful: Boolean
   projectId: uuid
   vendorProjectName: String
@@ -1106,6 +1501,10 @@ input integrationInstallation_updates {
 
 enum integrationVendorNameEnum_enum {
   aws
+  bitbucket
+  cloudflare
+  gitHub
+  gitLab
   netlify
   vercel
 }
@@ -1119,66 +1518,6 @@ input integrationVendorNameEnum_enum_comparison_exp {
   _is_null: Boolean
   _neq: integrationVendorNameEnum_enum
   _nin: [integrationVendorNameEnum_enum!]
-}
-
-"""
-Boolean expression to filter rows from the table "integration". All fields are combined with a logical 'AND'.
-"""
-input integration_bool_exp {
-  _and: [integration_bool_exp!]
-  _not: integration_bool_exp
-  _or: [integration_bool_exp!]
-  extra: jsonb_comparison_exp
-  id: uuid_comparison_exp
-  installations: integrationInstallation_bool_exp
-  installations_aggregate: integrationInstallation_aggregate_bool_exp
-  userId: uuid_comparison_exp
-  vendorName: integrationVendorNameEnum_enum_comparison_exp
-}
-
-"""Ordering options when selecting data from "integration"."""
-input integration_order_by {
-  extra: order_by
-  id: order_by
-  installations_aggregate: integrationInstallation_aggregate_order_by
-  userId: order_by
-  vendorName: order_by
-}
-
-"""
-select columns of table "integration"
-"""
-enum integration_select_column {
-  """column name"""
-  extra
-
-  """column name"""
-  id
-
-  """column name"""
-  userId
-
-  """column name"""
-  vendorName
-}
-
-"""
-Streaming cursor of the table "integration"
-"""
-input integration_stream_cursor_input {
-  """Stream column input with initial value"""
-  initial_value: integration_stream_cursor_value_input!
-
-  """cursor ordering"""
-  ordering: cursor_ordering
-}
-
-"""Initial value of the column from where the streaming should start"""
-input integration_stream_cursor_value_input {
-  extra: jsonb
-  id: uuid
-  userId: uuid
-  vendorName: integrationVendorNameEnum_enum
 }
 
 scalar jsonb
@@ -1240,17 +1579,37 @@ input listIdEnum_enum_comparison_exp {
 """mutation root"""
 type mutation_root {
   acceptTeamInvite(object: AcceptTeamInviteInput!): AcceptTeamInviteOutput!
+  awsUpdateSecrets(integrationInstallation: AWSUpdateSecretsInputIntegration!, zero: AWSUpdateSecretsInputZero!): AWSUpdateSecretsOutput!
+  bitbucketInstall(downloadSecrets: BitbucketDownloadSecretsInput!, integrationInstallation: BitbucketInstallInputIntegration!, zero: BitbucketInputZero!): BitbucketInstallOutput!
+  bitbucketUpdateSecrets(integrationInstallation: BitbucketUpdateSecretsInputIntegration!, zero: BitbucketUpdateSecretsInputZero!): BitbucketUpdateSecretsOutput!
   cancelSubscription(object: CancelSubscriptionInput!): CancelSubscriptionOutput!
   changePassword(object: ChangePasswordInput!): ChangePasswordOutput!
   changeSubscription(object: ChangeSubscriptionInput!): ChangeSubscriptionOutput!
   cliAccessTokens(object: CliAccessTokensInput!): CliAccessTokensOutput!
+  cloudflareAuth(auth: CloudflareAuthInput!): CloudflareAuthOutput!
+  cloudflareInstall(downloadSecrets: CloudflareDownloadSecretsInput!, integrationInstallation: CloudflareInstallInputIntegration!, zero: CloudflareInputZero!): CloudflareInstallOutput!
+  cloudflareUpdateSecrets(integrationInstallation: CloudflareUpdateSecretsInputIntegration!, zero: CloudflareUpdateSecretsInputZero!): CloudflareUpdateSecretsOutput!
   confirmEmailChange(object: ConfirmEmailChangeInput!): ConfirmEmailChangeOutput!
-  createCustomer(object: CreateCustomerInput!): CreateCustomerOutput!
   createProject(object: CreateProjectInput!): CreateProjectOutput!
   createProjectToken(object: CreateProjectTokenInput!): CreateProjectTokenOutput!
   createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!, userId: String!): CreateSecretOutput!
   createTeam(object: CreateTeamInput!): CreateTeamOutput!
   decodeSharingSecrets(object: DecodeSharingSecretsInput!): DecodeSharingSecretsOutput!
+  deleteIntegration(integrationInstallation: DeleteIntegrationInput!): DeleteIntegrationOutput!
+  deleteProject(input: DeleteProjectInput!): DeleteProjectOutput!
+
+  """
+  delete data from the table: "integrationConnect"
+  """
+  delete_integrationConnect(
+    """filter the rows which have to be deleted"""
+    where: integrationConnect_bool_exp!
+  ): integrationConnect_mutation_response
+
+  """
+  delete single row from the table: "integrationConnect"
+  """
+  delete_integrationConnect_by_pk(id: uuid!): integrationConnect
 
   """
   delete data from the table: "integrationInstallation"
@@ -1277,19 +1636,6 @@ type mutation_root {
   delete single row from the table: "integrationInstallation"
   """
   delete_integrationInstallation_by_pk(id: uuid!): integrationInstallation
-
-  """
-  delete data from the table: "project"
-  """
-  delete_project(
-    """filter the rows which have to be deleted"""
-    where: project_bool_exp!
-  ): project_mutation_response
-
-  """
-  delete single row from the table: "project"
-  """
-  delete_project_by_pk(id: uuid!): project
 
   """
   delete data from the table: "team"
@@ -1356,6 +1702,10 @@ type mutation_root {
   """
   delete_userSecret_by_pk(id: uuid!): userSecret
   generateSecretSharingUrl(object: GenerateSecretSharingUrlInput!): GenerateSecretSharingUrlOutput!
+  githubInstall(integrationInstallation: GitHubInstallInputIntegration!, zero: GitHubInputZero!): GitHubInstallOutput!
+  githubUpdateSecrets(integrationInstallation: GitHubUpdateSecretsInputIntegration!, zero: GitHubUpdateSecretsInputZero!): GitHubUpdateSecretsOutput!
+  gitlabInstall(integrationInstallation: GitLabInstallInputIntegration!, zero: GitLabInputZero!): GitLabInstallOutput!
+  gitlabUpdateSecrets(integrationInstallation: GitLabUpdateSecretsInputIntegration!, zero: GitLabUpdateSecretsInputZero!): GitLabUpdateSecretsOutput!
 
   """
   insert data into the table: "integrationInstallationUserSecret"
@@ -1533,24 +1883,20 @@ type mutation_root {
     on_conflict: viewPreferences_on_conflict
   ): viewPreferences
   integrationAWSInstall(zero: IntegrationAWSInstallInputZero!): IntegrationAWSInstallOutput!
-  integrationAuth(integration: IntegrationAuthInputIntegration!, oauth: IntegrationAuthOAuthInput!, zero: IntegrationAuthInputZero!): IntegrationAuthOutput!
-  integrationDelete(integration: IntegrationDeleteInput!): IntegrationDeleteOutput!
-  integrationDownloadSecrets(integration: IntegrationDownloadSecretsInputIntegration!, zero: IntegrationDownloadSecretsInputZero!): IntegrationDownloadSecretsOutput!
-  integrationInstall(integration: IntegrationInstallInputIntegration!, zero: IntegrationInstallInputZero!): IntegrationInstallOutput!
-  integrationUpdate(integration: IntegrationUpdateInputIntegration!, zero: IntegrationUpdateInputZero!): IntegrationUpdateOutput!
-  integrationUploadSecrets(integration: IntegrationUploadSecretsInputIntegration!, zero: IntegrationUploadSecretsInputZero!): IntegrationUploadSecretsOutput!
 
   """Login api action"""
   login(object: LoginInput!): SuccessOutput!
 
   """Logout action from the webapp"""
   logout: SuccessOutput!
+  netlifyInstall(integrationInstallation: NetlifyInstallInputIntegration!, zero: NetlifyInstallInputZero!): NetlifyInstallOutput!
+  netlifyUpdateSecrets(integrationInstallation: NetlifyUpdateSecretsInputIntegration!, zero: NetlifyUpdateSecretsInputZero!): NetlifyUpdateSecretsOutput!
   recalculateTeamSeatsSubscription(object: RecalculateTeamSeatsSubscriptionInput!): RecalculateTeamSeatsSubscriptionOutput!
   regenerateProjectToken(object: RegenerateProjectTokenInput!): RegenerateProjectTokenOutput!
 
   """Register api action"""
   register(object: RegisterInput!): SuccessOutput!
-  rejectTeamInvite(object: RejectTeamInviteInput!): RejectTeamInviteOutput!
+  rejectTeamInvitation(object: RejectTeamInvitationInput!): RejectTeamInvitationOutput!
   removeTeam(object: RemoveTeamInput!): RemoveTeamOutput!
   removeUserFromTeam(object: RemoveUserFromTeamInput!): RemoveUserFromTeamOutput!
   requestEmailChange(object: RequestEmailChangeInput!): RequestEmailChangeOutput!
@@ -1560,6 +1906,76 @@ type mutation_root {
   updatePaymentMethod(object: UpdatePaymentMethodInput!): UpdatePaymentMethodOutput!
   updateProjectSettings(object: UpdateProjectSettingsInput!): UpdateProjectSettingsOutput!
   updateSecret(userSecret: UpdateUserSecretInput!, userSecretFields: [UpdateUserSecretFieldsInput!]!): UpdateSecretOutput!
+
+  """
+  update data of the table: "integrationConnect"
+  """
+  update_integrationConnect(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: integrationConnect_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: integrationConnect_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: integrationConnect_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: integrationConnect_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: integrationConnect_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: integrationConnect_set_input
+
+    """filter the rows which have to be updated"""
+    where: integrationConnect_bool_exp!
+  ): integrationConnect_mutation_response
+
+  """
+  update single row of the table: "integrationConnect"
+  """
+  update_integrationConnect_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: integrationConnect_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: integrationConnect_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: integrationConnect_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: integrationConnect_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: integrationConnect_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: integrationConnect_set_input
+    pk_columns: integrationConnect_pk_columns_input!
+  ): integrationConnect
+
+  """
+  update multiples rows of table: "integrationConnect"
+  """
+  update_integrationConnect_many(
+    """updates to execute, in order"""
+    updates: [integrationConnect_updates!]!
+  ): [integrationConnect_mutation_response]
 
   """
   update data of the table: "integrationInstallation"
@@ -1910,6 +2326,8 @@ type mutation_root {
     """updates to execute, in order"""
     updates: [viewPreferences_updates!]!
   ): [viewPreferences_mutation_response]
+  vercelInstall(integrationInstallation: VercelInstallInputIntegration!, zero: VercelInstallInputZero!): VercelInstallOutput!
+  vercelUpdateSecrets(integrationInstallation: VercelUpdateSecretsInputIntegration!, zero: VercelUpdateSecretsInputZero!): VercelUpdateSecretsOutput!
 }
 
 """
@@ -2641,17 +3059,21 @@ input project_updates {
 }
 
 type query_root {
-  checkIntegrationDeploy(integration: CheckIntegrationDeployInput!): CheckIntegrationDeployOutput!
+  bitbucketWorkspaceProjects(where: BitbucketWorkspaceProjectsInput!): BitbucketWorkspaceProjectsOutput!
+  checkIntegrationDeploy(integrationConnect: CheckIntegrationDeployInput!): CheckIntegrationDeployOutput!
   checkPaymentMethod(where: CheckPaymentMethodInput!): CheckPaymentMethodOutput!
   checkUserEmailExist(object: CheckUserEmailExistInput!): CheckUserEmailExistOutput!
+  cloudflareProjects(where: CloudflareProjectsInput!): CloudflareProjectsOutput!
   currentPlan(where: CurrentPlanInput!): CurrentPlanOutput!
+  githubProjects(where: GitHubProjectsInput!): GitHubProjectsOutput!
+  gitlabProjects(where: GitLabProjectsInput!): GitLabProjectsOutput!
 
   """
-  fetch data from the table: "integration"
+  fetch data from the table: "integrationConnect"
   """
-  integration(
+  integrationConnect(
     """distinct select on columns"""
-    distinct_on: [integration_select_column!]
+    distinct_on: [integrationConnect_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -2660,11 +3082,36 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [integration_order_by!]
+    order_by: [integrationConnect_order_by!]
 
     """filter the rows returned"""
-    where: integration_bool_exp
-  ): [integration!]!
+    where: integrationConnect_bool_exp
+  ): [integrationConnect!]!
+
+  """
+  fetch aggregated fields from the table: "integrationConnect"
+  """
+  integrationConnect_aggregate(
+    """distinct select on columns"""
+    distinct_on: [integrationConnect_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [integrationConnect_order_by!]
+
+    """filter the rows returned"""
+    where: integrationConnect_bool_exp
+  ): integrationConnect_aggregate!
+
+  """
+  fetch data from the table: "integrationConnect" using primary key columns
+  """
+  integrationConnect_by_pk(id: uuid!): integrationConnect
 
   """
   fetch data from the table: "integrationInstallation"
@@ -2735,11 +3182,7 @@ type query_root {
   fetch data from the table: "integrationInstallation" using primary key columns
   """
   integrationInstallation_by_pk(id: uuid!): integrationInstallation
-  integrationProjects(where: IntegrationProjectsInput!): IntegrationProjectsOutput!
-
-  """fetch data from the table: "integration" using primary key columns"""
-  integration_by_pk(id: uuid!): integration
-  me: MeOutput!
+  netlifyProjects(where: NetlifyProjectsInput!): NetlifyProjectsOutput!
 
   """
   fetch data from the table: "notification"
@@ -3371,6 +3814,7 @@ type query_root {
 
   """fetch data from the table: "user" using primary key columns"""
   user_by_pk(id: uuid!): user
+  vercelProjects(where: VercelProjectsInput!): VercelProjectsOutput!
 
   """An array relationship"""
   viewPreferences(
@@ -3494,11 +3938,11 @@ input subscriptionPlanEnum_enum_comparison_exp {
 
 type subscription_root {
   """
-  fetch data from the table: "integration"
+  fetch data from the table: "integrationConnect"
   """
-  integration(
+  integrationConnect(
     """distinct select on columns"""
-    distinct_on: [integration_select_column!]
+    distinct_on: [integrationConnect_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3507,11 +3951,50 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [integration_order_by!]
+    order_by: [integrationConnect_order_by!]
 
     """filter the rows returned"""
-    where: integration_bool_exp
-  ): [integration!]!
+    where: integrationConnect_bool_exp
+  ): [integrationConnect!]!
+
+  """
+  fetch aggregated fields from the table: "integrationConnect"
+  """
+  integrationConnect_aggregate(
+    """distinct select on columns"""
+    distinct_on: [integrationConnect_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [integrationConnect_order_by!]
+
+    """filter the rows returned"""
+    where: integrationConnect_bool_exp
+  ): integrationConnect_aggregate!
+
+  """
+  fetch data from the table: "integrationConnect" using primary key columns
+  """
+  integrationConnect_by_pk(id: uuid!): integrationConnect
+
+  """
+  fetch data from the table in a streaming manner: "integrationConnect"
+  """
+  integrationConnect_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [integrationConnect_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: integrationConnect_bool_exp
+  ): [integrationConnect!]!
 
   """
   fetch data from the table: "integrationInstallation"
@@ -3610,23 +4093,6 @@ type subscription_root {
     """filter the rows returned"""
     where: integrationInstallation_bool_exp
   ): [integrationInstallation!]!
-
-  """fetch data from the table: "integration" using primary key columns"""
-  integration_by_pk(id: uuid!): integration
-
-  """
-  fetch data from the table in a streaming manner: "integration"
-  """
-  integration_stream(
-    """maximum number of rows returned in a single batch"""
-    batch_size: Int!
-
-    """cursor to stream the results returned by the query"""
-    cursor: [integration_stream_cursor_input]!
-
-    """filter the rows returned"""
-    where: integration_bool_exp
-  ): [integration!]!
 
   """
   fetch data from the table: "notification"
@@ -4541,7 +5007,7 @@ type team {
   name: String!
 
   """An object relationship"""
-  owner: user
+  owner: user!
   ownerUserId: uuid!
 
   """An array relationship"""
@@ -5902,7 +6368,7 @@ type userSecret {
   note: String!
 
   """An object relationship"""
-  project: project
+  project: project!
   projectId: uuid!
   slug: String!
   updatedAt: timestamptz!
@@ -5956,7 +6422,7 @@ type userSecretField {
   updatedAt: timestamptz!
 
   """An object relationship"""
-  userSecret: userSecret
+  userSecret: userSecret!
   userSecretId: uuid!
   value: String!
 }
@@ -6438,7 +6904,7 @@ type userSubscription {
   createdAt: timestamptz!
   id: uuid!
   paidSeats: smallint!
-  stripeCustomerId: String
+  stripeCustomerId: String!
   subscriptionCancellationDate: timestamptz
   subscriptionExpirationDate: timestamptz
   subscriptionExpirationMessageRead: Boolean!
@@ -6747,7 +7213,7 @@ enum vendorEnum_enum {
   azure
   bitbucket
   braintree
-  claude
+  cloudflare
   datadog
   digitalOcean
   docker
@@ -6763,6 +7229,7 @@ enum vendorEnum_enum {
   linear
   mailchimp
   mixpanel
+  netlify
   openAI
   other
   paypal
@@ -6776,6 +7243,7 @@ enum vendorEnum_enum {
   terraform
   trello
   twilio
+  vercel
   zoom
 }
 
@@ -6972,3 +7440,4 @@ input viewPreferences_updates {
   """filter the rows which have to be updated"""
   where: viewPreferences_bool_exp!
 }
+

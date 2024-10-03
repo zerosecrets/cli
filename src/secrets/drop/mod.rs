@@ -47,16 +47,18 @@ pub fn drop(args: &SecretDropArgs) {
 
     let user_secret_id = query_full_id(QueryType::UserSecret, args.id.clone(), &access_token);
 
-    let user_secret_fields: Vec<view_secret::ViewSecretViewSecretFieldsSecretFields> = execute_graphql_request::<view_secret::Variables, view_secret::ResponseData>(
-        authorization_headers(&access_token),
-        ViewSecret::build_query,
-        &Client::new(),
-        "Dump failed. Failed to retrieve the user's secret field value.",
-        view_secret::Variables {
-            secret_id: user_secret_id.to_string(),
-        },
-    )
-        .view_secret_fields.secret_fields;
+    let user_secret_fields: Vec<view_secret::ViewSecretViewSecretFieldsSecretFields> =
+        execute_graphql_request::<view_secret::Variables, view_secret::ResponseData>(
+            authorization_headers(&access_token),
+            ViewSecret::build_query,
+            &Client::new(),
+            "Dump failed. Failed to retrieve the user's secret field value.",
+            view_secret::Variables {
+                secret_id: user_secret_id.to_string(),
+            },
+        )
+        .view_secret_fields
+        .secret_fields;
 
     if user_secret_fields.len() == 0 {
         print_formatted_error("Dump failed. The user's secret has no fields.");
@@ -79,7 +81,15 @@ pub fn drop(args: &SecretDropArgs) {
                 std::process::exit(1);
             });
 
-        new_fields.insert(user_secret_field.key.clone(), user_secret_fields.iter().find(|field| field.key.eq(field_key)).unwrap().value.clone());
+        new_fields.insert(
+            user_secret_field.key.clone(),
+            user_secret_fields
+                .iter()
+                .find(|field| field.key.eq(field_key))
+                .unwrap()
+                .value
+                .clone(),
+        );
 
         // If the field key is not specified, drop all fields.
     } else {

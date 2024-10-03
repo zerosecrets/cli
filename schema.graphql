@@ -4,12 +4,18 @@ schema {
   subscription: subscription_root
 }
 
-"""whether this query should be cached (Hasura Cloud only)"""
+"""
+whether this query should be cached (Hasura Cloud only)
+"""
 directive @cached(
-  """measured in seconds"""
+  """
+  measured in seconds
+  """
   ttl: Int! = 60
 
-  """refresh the cache entry"""
+  """
+  refresh the cache entry
+  """
   refresh: Boolean! = false
 ) on QUERY
 
@@ -650,7 +656,9 @@ input String_comparison_exp {
   _gt: String
   _gte: String
 
-  """does the column match the given case-insensitive pattern"""
+  """
+  does the column match the given case-insensitive pattern
+  """
   _ilike: String
   _in: [String!]
 
@@ -660,13 +668,17 @@ input String_comparison_exp {
   _iregex: String
   _is_null: Boolean
 
-  """does the column match the given pattern"""
+  """
+  does the column match the given pattern
+  """
   _like: String
   _lt: String
   _lte: String
   _neq: String
 
-  """does the column NOT match the given case-insensitive pattern"""
+  """
+  does the column NOT match the given case-insensitive pattern
+  """
   _nilike: String
   _nin: [String!]
 
@@ -675,7 +687,9 @@ input String_comparison_exp {
   """
   _niregex: String
 
-  """does the column NOT match the given pattern"""
+  """
+  does the column NOT match the given pattern
+  """
   _nlike: String
 
   """
@@ -683,7 +697,9 @@ input String_comparison_exp {
   """
   _nregex: String
 
-  """does the column NOT match the given SQL regular expression"""
+  """
+  does the column NOT match the given SQL regular expression
+  """
   _nsimilar: String
 
   """
@@ -691,7 +707,9 @@ input String_comparison_exp {
   """
   _regex: String
 
-  """does the column match the given SQL regular expression"""
+  """
+  does the column match the given SQL regular expression
+  """
   _similar: String
 }
 
@@ -799,12 +817,18 @@ type ViewSecretFieldsOutput {
   secretFields: [DecryptedSecretField!]!
 }
 
-"""ordering argument of a cursor"""
+"""
+ordering argument of a cursor
+"""
 enum cursor_ordering {
-  """ascending ordering of the cursor"""
+  """
+  ascending ordering of the cursor
+  """
   ASC
 
-  """descending ordering of the cursor"""
+  """
+  descending ordering of the cursor
+  """
   DESC
 }
 
@@ -813,44 +837,70 @@ columns and relationships of "integrationConnect"
 """
 type integrationConnect {
   extra(
-    """JSON select path"""
+    """
+    JSON select path
+    """
     path: String
   ): jsonb
   id: uuid!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   installations(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationInstallation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationInstallation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallation_bool_exp
   ): [integrationInstallation!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   installations_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationInstallation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationInstallation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallation_bool_exp
   ): integrationInstallation_aggregate!
   userId: uuid!
@@ -874,7 +924,9 @@ type integrationConnect_aggregate_fields {
   min: integrationConnect_min_fields
 }
 
-"""append existing jsonb value of filtered columns with new jsonb value"""
+"""
+append existing jsonb value of filtered columns with new jsonb value
+"""
 input integrationConnect_append_input {
   extra: jsonb
 }
@@ -915,13 +967,17 @@ input integrationConnect_delete_key_input {
   extra: String
 }
 
-"""aggregate max on columns"""
+"""
+aggregate max on columns
+"""
 type integrationConnect_max_fields {
   id: uuid
   userId: uuid
 }
 
-"""aggregate min on columns"""
+"""
+aggregate min on columns
+"""
 type integrationConnect_min_fields {
   id: uuid
   userId: uuid
@@ -931,14 +987,20 @@ type integrationConnect_min_fields {
 response of any mutation on the table "integrationConnect"
 """
 type integrationConnect_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [integrationConnect!]!
 }
 
-"""Ordering options when selecting data from "integrationConnect"."""
+"""
+Ordering options when selecting data from "integrationConnect".
+"""
 input integrationConnect_order_by {
   extra: order_by
   id: order_by
@@ -947,12 +1009,16 @@ input integrationConnect_order_by {
   vendorName: order_by
 }
 
-"""primary key columns input for table: integrationConnect"""
+"""
+primary key columns input for table: integrationConnect
+"""
 input integrationConnect_pk_columns_input {
   id: uuid!
 }
 
-"""prepend existing jsonb value of filtered columns with new jsonb value"""
+"""
+prepend existing jsonb value of filtered columns with new jsonb value
+"""
 input integrationConnect_prepend_input {
   extra: jsonb
 }
@@ -961,16 +1027,24 @@ input integrationConnect_prepend_input {
 select columns of table "integrationConnect"
 """
 enum integrationConnect_select_column {
-  """column name"""
+  """
+  column name
+  """
   extra
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   userId
 
-  """column name"""
+  """
+  column name
+  """
   vendorName
 }
 
@@ -986,14 +1060,20 @@ input integrationConnect_set_input {
 Streaming cursor of the table "integrationConnect"
 """
 input integrationConnect_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: integrationConnect_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input integrationConnect_stream_cursor_value_input {
   extra: jsonb
   id: uuid
@@ -1002,7 +1082,9 @@ input integrationConnect_stream_cursor_value_input {
 }
 
 input integrationConnect_updates {
-  """append existing jsonb value of filtered columns with new jsonb value"""
+  """
+  append existing jsonb value of filtered columns with new jsonb value
+  """
   _append: integrationConnect_append_input
 
   """
@@ -1020,13 +1102,19 @@ input integrationConnect_updates {
   """
   _delete_key: integrationConnect_delete_key_input
 
-  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  """
+  prepend existing jsonb value of filtered columns with new jsonb value
+  """
   _prepend: integrationConnect_prepend_input
 
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: integrationConnect_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: integrationConnect_bool_exp!
 }
 
@@ -1036,35 +1124,53 @@ Created per each integration installation, should link 3rd party with zero proje
 type integrationInstallation {
   createdAt: timestamptz!
   extra(
-    """JSON select path"""
+    """
+    JSON select path
+    """
     path: String
   ): jsonb
   id: uuid!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   integrationConnect: integrationConnect!
   integrationConnectId: uuid!
   isSuccessful: Boolean
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   project: project
   projectId: uuid
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   secrets(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationInstallationUserSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationInstallationUserSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallationUserSecret_bool_exp
   ): [integrationInstallationUserSecret!]!
   vendorProjectName: String!
@@ -1076,11 +1182,15 @@ columns and relationships of "integrationInstallationUserSecret"
 type integrationInstallationUserSecret {
   id: uuid!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   integrationInstallation: integrationInstallation!
   integrationInstallationId: uuid!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   secret: userSecret!
   userSecretId: uuid!
 }
@@ -1100,7 +1210,9 @@ input type for inserting array relation for remote table "integrationInstallatio
 input integrationInstallationUserSecret_arr_rel_insert_input {
   data: [integrationInstallationUserSecret_insert_input!]!
 
-  """upsert condition"""
+  """
+  upsert condition
+  """
   on_conflict: integrationInstallationUserSecret_on_conflict
 }
 
@@ -1159,10 +1271,14 @@ input integrationInstallationUserSecret_min_order_by {
 response of any mutation on the table "integrationInstallationUserSecret"
 """
 type integrationInstallationUserSecret_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [integrationInstallationUserSecret!]!
 }
 
@@ -1190,13 +1306,19 @@ input integrationInstallationUserSecret_order_by {
 select columns of table "integrationInstallationUserSecret"
 """
 enum integrationInstallationUserSecret_select_column {
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   integrationInstallationId
 
-  """column name"""
+  """
+  column name
+  """
   userSecretId
 }
 
@@ -1204,14 +1326,20 @@ enum integrationInstallationUserSecret_select_column {
 Streaming cursor of the table "integrationInstallationUserSecret"
 """
 input integrationInstallationUserSecret_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: integrationInstallationUserSecret_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input integrationInstallationUserSecret_stream_cursor_value_input {
   id: uuid
   integrationInstallationId: uuid
@@ -1222,7 +1350,9 @@ input integrationInstallationUserSecret_stream_cursor_value_input {
 placeholder for update columns of table "integrationInstallationUserSecret" (current role has no relevant permissions)
 """
 enum integrationInstallationUserSecret_update_column {
-  """placeholder (do not use)"""
+  """
+  placeholder (do not use)
+  """
   _PLACEHOLDER
 }
 
@@ -1265,7 +1395,10 @@ input integrationInstallation_aggregate_bool_exp_count {
 aggregate fields of "integrationInstallation"
 """
 type integrationInstallation_aggregate_fields {
-  count(columns: [integrationInstallation_select_column!], distinct: Boolean): Int!
+  count(
+    columns: [integrationInstallation_select_column!]
+    distinct: Boolean
+  ): Int!
   max: integrationInstallation_max_fields
   min: integrationInstallation_min_fields
 }
@@ -1279,7 +1412,9 @@ input integrationInstallation_aggregate_order_by {
   min: integrationInstallation_min_order_by
 }
 
-"""append existing jsonb value of filtered columns with new jsonb value"""
+"""
+append existing jsonb value of filtered columns with new jsonb value
+"""
 input integrationInstallation_append_input {
   extra: jsonb
 }
@@ -1324,7 +1459,9 @@ input integrationInstallation_delete_key_input {
   extra: String
 }
 
-"""aggregate max on columns"""
+"""
+aggregate max on columns
+"""
 type integrationInstallation_max_fields {
   createdAt: timestamptz
   id: uuid
@@ -1344,7 +1481,9 @@ input integrationInstallation_max_order_by {
   vendorProjectName: order_by
 }
 
-"""aggregate min on columns"""
+"""
+aggregate min on columns
+"""
 type integrationInstallation_min_fields {
   createdAt: timestamptz
   id: uuid
@@ -1368,14 +1507,20 @@ input integrationInstallation_min_order_by {
 response of any mutation on the table "integrationInstallation"
 """
 type integrationInstallation_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [integrationInstallation!]!
 }
 
-"""Ordering options when selecting data from "integrationInstallation"."""
+"""
+Ordering options when selecting data from "integrationInstallation".
+"""
 input integrationInstallation_order_by {
   createdAt: order_by
   extra: order_by
@@ -1389,12 +1534,16 @@ input integrationInstallation_order_by {
   vendorProjectName: order_by
 }
 
-"""primary key columns input for table: integrationInstallation"""
+"""
+primary key columns input for table: integrationInstallation
+"""
 input integrationInstallation_pk_columns_input {
   id: uuid!
 }
 
-"""prepend existing jsonb value of filtered columns with new jsonb value"""
+"""
+prepend existing jsonb value of filtered columns with new jsonb value
+"""
 input integrationInstallation_prepend_input {
   extra: jsonb
 }
@@ -1403,25 +1552,39 @@ input integrationInstallation_prepend_input {
 select columns of table "integrationInstallation"
 """
 enum integrationInstallation_select_column {
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   extra
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   integrationConnectId
 
-  """column name"""
+  """
+  column name
+  """
   isSuccessful
 
-  """column name"""
+  """
+  column name
+  """
   projectId
 
-  """column name"""
+  """
+  column name
+  """
   vendorProjectName
 }
 
@@ -1429,7 +1592,9 @@ enum integrationInstallation_select_column {
 select "integrationInstallation_aggregate_bool_exp_bool_and_arguments_columns" columns of table "integrationInstallation"
 """
 enum integrationInstallation_select_column_integrationInstallation_aggregate_bool_exp_bool_and_arguments_columns {
-  """column name"""
+  """
+  column name
+  """
   isSuccessful
 }
 
@@ -1437,7 +1602,9 @@ enum integrationInstallation_select_column_integrationInstallation_aggregate_boo
 select "integrationInstallation_aggregate_bool_exp_bool_or_arguments_columns" columns of table "integrationInstallation"
 """
 enum integrationInstallation_select_column_integrationInstallation_aggregate_bool_exp_bool_or_arguments_columns {
-  """column name"""
+  """
+  column name
+  """
   isSuccessful
 }
 
@@ -1452,14 +1619,20 @@ input integrationInstallation_set_input {
 Streaming cursor of the table "integrationInstallation"
 """
 input integrationInstallation_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: integrationInstallation_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input integrationInstallation_stream_cursor_value_input {
   createdAt: timestamptz
   extra: jsonb
@@ -1471,7 +1644,9 @@ input integrationInstallation_stream_cursor_value_input {
 }
 
 input integrationInstallation_updates {
-  """append existing jsonb value of filtered columns with new jsonb value"""
+  """
+  append existing jsonb value of filtered columns with new jsonb value
+  """
   _append: integrationInstallation_append_input
 
   """
@@ -1489,13 +1664,19 @@ input integrationInstallation_updates {
   """
   _delete_key: integrationInstallation_delete_key_input
 
-  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  """
+  prepend existing jsonb value of filtered columns with new jsonb value
+  """
   _prepend: integrationInstallation_prepend_input
 
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: integrationInstallation_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: integrationInstallation_bool_exp!
 }
 
@@ -1532,22 +1713,32 @@ Boolean expression to compare columns of type "jsonb". All fields are combined w
 input jsonb_comparison_exp {
   _cast: jsonb_cast_exp
 
-  """is the column contained in the given json value"""
+  """
+  is the column contained in the given json value
+  """
   _contained_in: jsonb
 
-  """does the column contain the given json value at the top level"""
+  """
+  does the column contain the given json value at the top level
+  """
   _contains: jsonb
   _eq: jsonb
   _gt: jsonb
   _gte: jsonb
 
-  """does the string exist as a top-level key in the column"""
+  """
+  does the string exist as a top-level key in the column
+  """
   _has_key: String
 
-  """do all of these strings exist as top-level keys in the column"""
+  """
+  do all of these strings exist as top-level keys in the column
+  """
   _has_keys_all: [String!]
 
-  """do any of these strings exist as top-level keys in the column"""
+  """
+  do any of these strings exist as top-level keys in the column
+  """
   _has_keys_any: [String!]
   _in: [jsonb!]
   _is_null: Boolean
@@ -1576,33 +1767,70 @@ input listIdEnum_enum_comparison_exp {
   _nin: [listIdEnum_enum!]
 }
 
-"""mutation root"""
+"""
+mutation root
+"""
 type mutation_root {
   acceptTeamInvite(object: AcceptTeamInviteInput!): AcceptTeamInviteOutput!
-  awsUpdateSecrets(integrationInstallation: AWSUpdateSecretsInputIntegration!, zero: AWSUpdateSecretsInputZero!): AWSUpdateSecretsOutput!
-  bitbucketInstall(downloadSecrets: BitbucketDownloadSecretsInput!, integrationInstallation: BitbucketInstallInputIntegration!, zero: BitbucketInputZero!): BitbucketInstallOutput!
-  bitbucketUpdateSecrets(integrationInstallation: BitbucketUpdateSecretsInputIntegration!, zero: BitbucketUpdateSecretsInputZero!): BitbucketUpdateSecretsOutput!
-  cancelSubscription(object: CancelSubscriptionInput!): CancelSubscriptionOutput!
+  awsUpdateSecrets(
+    integrationInstallation: AWSUpdateSecretsInputIntegration!
+    zero: AWSUpdateSecretsInputZero!
+  ): AWSUpdateSecretsOutput!
+  bitbucketInstall(
+    downloadSecrets: BitbucketDownloadSecretsInput!
+    integrationInstallation: BitbucketInstallInputIntegration!
+    zero: BitbucketInputZero!
+  ): BitbucketInstallOutput!
+  bitbucketUpdateSecrets(
+    integrationInstallation: BitbucketUpdateSecretsInputIntegration!
+    zero: BitbucketUpdateSecretsInputZero!
+  ): BitbucketUpdateSecretsOutput!
+  cancelSubscription(
+    object: CancelSubscriptionInput!
+  ): CancelSubscriptionOutput!
   changePassword(object: ChangePasswordInput!): ChangePasswordOutput!
-  changeSubscription(object: ChangeSubscriptionInput!): ChangeSubscriptionOutput!
+  changeSubscription(
+    object: ChangeSubscriptionInput!
+  ): ChangeSubscriptionOutput!
   cliAccessTokens(object: CliAccessTokensInput!): CliAccessTokensOutput!
   cloudflareAuth(auth: CloudflareAuthInput!): CloudflareAuthOutput!
-  cloudflareInstall(downloadSecrets: CloudflareDownloadSecretsInput!, integrationInstallation: CloudflareInstallInputIntegration!, zero: CloudflareInputZero!): CloudflareInstallOutput!
-  cloudflareUpdateSecrets(integrationInstallation: CloudflareUpdateSecretsInputIntegration!, zero: CloudflareUpdateSecretsInputZero!): CloudflareUpdateSecretsOutput!
-  confirmEmailChange(object: ConfirmEmailChangeInput!): ConfirmEmailChangeOutput!
+  cloudflareInstall(
+    downloadSecrets: CloudflareDownloadSecretsInput!
+    integrationInstallation: CloudflareInstallInputIntegration!
+    zero: CloudflareInputZero!
+  ): CloudflareInstallOutput!
+  cloudflareUpdateSecrets(
+    integrationInstallation: CloudflareUpdateSecretsInputIntegration!
+    zero: CloudflareUpdateSecretsInputZero!
+  ): CloudflareUpdateSecretsOutput!
+  confirmEmailChange(
+    object: ConfirmEmailChangeInput!
+  ): ConfirmEmailChangeOutput!
   createProject(object: CreateProjectInput!): CreateProjectOutput!
-  createProjectToken(object: CreateProjectTokenInput!): CreateProjectTokenOutput!
-  createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!, userId: String!): CreateSecretOutput!
+  createProjectToken(
+    object: CreateProjectTokenInput!
+  ): CreateProjectTokenOutput!
+  createSecret(
+    fields: [CreateSecretFieldInput!]!
+    secret: CreateSecretInput!
+    userId: String!
+  ): CreateSecretOutput!
   createTeam(object: CreateTeamInput!): CreateTeamOutput!
-  decodeSharingSecrets(object: DecodeSharingSecretsInput!): DecodeSharingSecretsOutput!
-  deleteIntegration(integrationInstallation: DeleteIntegrationInput!): DeleteIntegrationOutput!
+  decodeSharingSecrets(
+    object: DecodeSharingSecretsInput!
+  ): DecodeSharingSecretsOutput!
+  deleteIntegration(
+    integrationInstallation: DeleteIntegrationInput!
+  ): DeleteIntegrationOutput!
   deleteProject(input: DeleteProjectInput!): DeleteProjectOutput!
 
   """
   delete data from the table: "integrationConnect"
   """
   delete_integrationConnect(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: integrationConnect_bool_exp!
   ): integrationConnect_mutation_response
 
@@ -1615,7 +1843,9 @@ type mutation_root {
   delete data from the table: "integrationInstallation"
   """
   delete_integrationInstallation(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: integrationInstallation_bool_exp!
   ): integrationInstallation_mutation_response
 
@@ -1623,14 +1853,18 @@ type mutation_root {
   delete data from the table: "integrationInstallationUserSecret"
   """
   delete_integrationInstallationUserSecret(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: integrationInstallationUserSecret_bool_exp!
   ): integrationInstallationUserSecret_mutation_response
 
   """
   delete single row from the table: "integrationInstallationUserSecret"
   """
-  delete_integrationInstallationUserSecret_by_pk(id: uuid!): integrationInstallationUserSecret
+  delete_integrationInstallationUserSecret_by_pk(
+    id: uuid!
+  ): integrationInstallationUserSecret
 
   """
   delete single row from the table: "integrationInstallation"
@@ -1641,7 +1875,9 @@ type mutation_root {
   delete data from the table: "team"
   """
   delete_team(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: team_bool_exp!
   ): team_mutation_response
 
@@ -1649,7 +1885,9 @@ type mutation_root {
   delete data from the table: "teamInvitation"
   """
   delete_teamInvitation(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: teamInvitation_bool_exp!
   ): teamInvitation_mutation_response
 
@@ -1667,7 +1905,9 @@ type mutation_root {
   delete data from the table: "token"
   """
   delete_token(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: token_bool_exp!
   ): token_mutation_response
 
@@ -1680,7 +1920,9 @@ type mutation_root {
   delete data from the table: "userSecret"
   """
   delete_userSecret(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: userSecret_bool_exp!
   ): userSecret_mutation_response
 
@@ -1688,7 +1930,9 @@ type mutation_root {
   delete data from the table: "userSecretField"
   """
   delete_userSecretField(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: userSecretField_bool_exp!
   ): userSecretField_mutation_response
 
@@ -1701,20 +1945,38 @@ type mutation_root {
   delete single row from the table: "userSecret"
   """
   delete_userSecret_by_pk(id: uuid!): userSecret
-  generateSecretSharingUrl(object: GenerateSecretSharingUrlInput!): GenerateSecretSharingUrlOutput!
-  githubInstall(integrationInstallation: GitHubInstallInputIntegration!, zero: GitHubInputZero!): GitHubInstallOutput!
-  githubUpdateSecrets(integrationInstallation: GitHubUpdateSecretsInputIntegration!, zero: GitHubUpdateSecretsInputZero!): GitHubUpdateSecretsOutput!
-  gitlabInstall(integrationInstallation: GitLabInstallInputIntegration!, zero: GitLabInputZero!): GitLabInstallOutput!
-  gitlabUpdateSecrets(integrationInstallation: GitLabUpdateSecretsInputIntegration!, zero: GitLabUpdateSecretsInputZero!): GitLabUpdateSecretsOutput!
+  generateSecretSharingUrl(
+    object: GenerateSecretSharingUrlInput!
+  ): GenerateSecretSharingUrlOutput!
+  githubInstall(
+    integrationInstallation: GitHubInstallInputIntegration!
+    zero: GitHubInputZero!
+  ): GitHubInstallOutput!
+  githubUpdateSecrets(
+    integrationInstallation: GitHubUpdateSecretsInputIntegration!
+    zero: GitHubUpdateSecretsInputZero!
+  ): GitHubUpdateSecretsOutput!
+  gitlabInstall(
+    integrationInstallation: GitLabInstallInputIntegration!
+    zero: GitLabInputZero!
+  ): GitLabInstallOutput!
+  gitlabUpdateSecrets(
+    integrationInstallation: GitLabUpdateSecretsInputIntegration!
+    zero: GitLabUpdateSecretsInputZero!
+  ): GitLabUpdateSecretsOutput!
 
   """
   insert data into the table: "integrationInstallationUserSecret"
   """
   insert_integrationInstallationUserSecret(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [integrationInstallationUserSecret_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: integrationInstallationUserSecret_on_conflict
   ): integrationInstallationUserSecret_mutation_response
 
@@ -1722,10 +1984,14 @@ type mutation_root {
   insert a single row into the table: "integrationInstallationUserSecret"
   """
   insert_integrationInstallationUserSecret_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: integrationInstallationUserSecret_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: integrationInstallationUserSecret_on_conflict
   ): integrationInstallationUserSecret
 
@@ -1733,10 +1999,14 @@ type mutation_root {
   insert data into the table: "notification"
   """
   insert_notification(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [notification_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: notification_on_conflict
   ): notification_mutation_response
 
@@ -1744,10 +2014,14 @@ type mutation_root {
   insert data into the table: "notificationUser"
   """
   insert_notificationUser(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [notificationUser_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: notificationUser_on_conflict
   ): notificationUser_mutation_response
 
@@ -1755,10 +2029,14 @@ type mutation_root {
   insert a single row into the table: "notificationUser"
   """
   insert_notificationUser_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: notificationUser_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: notificationUser_on_conflict
   ): notificationUser
 
@@ -1766,10 +2044,14 @@ type mutation_root {
   insert a single row into the table: "notification"
   """
   insert_notification_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: notification_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: notification_on_conflict
   ): notification
 
@@ -1777,10 +2059,14 @@ type mutation_root {
   insert data into the table: "teamInvitation"
   """
   insert_teamInvitation(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [teamInvitation_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: teamInvitation_on_conflict
   ): teamInvitation_mutation_response
 
@@ -1788,10 +2074,14 @@ type mutation_root {
   insert a single row into the table: "teamInvitation"
   """
   insert_teamInvitation_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: teamInvitation_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: teamInvitation_on_conflict
   ): teamInvitation
 
@@ -1799,10 +2089,14 @@ type mutation_root {
   insert data into the table: "teamUser"
   """
   insert_teamUser(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [teamUser_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: teamUser_on_conflict
   ): teamUser_mutation_response
 
@@ -1810,10 +2104,14 @@ type mutation_root {
   insert a single row into the table: "teamUser"
   """
   insert_teamUser_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: teamUser_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: teamUser_on_conflict
   ): teamUser
 
@@ -1821,10 +2119,14 @@ type mutation_root {
   insert data into the table: "userSecret"
   """
   insert_userSecret(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [userSecret_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: userSecret_on_conflict
   ): userSecret_mutation_response
 
@@ -1832,10 +2134,14 @@ type mutation_root {
   insert data into the table: "userSecretField"
   """
   insert_userSecretField(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [userSecretField_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: userSecretField_on_conflict
   ): userSecretField_mutation_response
 
@@ -1843,10 +2149,14 @@ type mutation_root {
   insert a single row into the table: "userSecretField"
   """
   insert_userSecretField_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: userSecretField_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: userSecretField_on_conflict
   ): userSecretField
 
@@ -1854,10 +2164,14 @@ type mutation_root {
   insert a single row into the table: "userSecret"
   """
   insert_userSecret_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: userSecret_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: userSecret_on_conflict
   ): userSecret
 
@@ -1865,10 +2179,14 @@ type mutation_root {
   insert data into the table: "viewPreferences"
   """
   insert_viewPreferences(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [viewPreferences_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: viewPreferences_on_conflict
   ): viewPreferences_mutation_response
 
@@ -1876,42 +2194,83 @@ type mutation_root {
   insert a single row into the table: "viewPreferences"
   """
   insert_viewPreferences_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: viewPreferences_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: viewPreferences_on_conflict
   ): viewPreferences
-  integrationAWSInstall(zero: IntegrationAWSInstallInputZero!): IntegrationAWSInstallOutput!
+  integrationAWSInstall(
+    zero: IntegrationAWSInstallInputZero!
+  ): IntegrationAWSInstallOutput!
 
-  """Login api action"""
+  """
+  Login api action
+  """
   login(object: LoginInput!): SuccessOutput!
 
-  """Logout action from the webapp"""
+  """
+  Logout action from the webapp
+  """
   logout: SuccessOutput!
-  netlifyInstall(integrationInstallation: NetlifyInstallInputIntegration!, zero: NetlifyInstallInputZero!): NetlifyInstallOutput!
-  netlifyUpdateSecrets(integrationInstallation: NetlifyUpdateSecretsInputIntegration!, zero: NetlifyUpdateSecretsInputZero!): NetlifyUpdateSecretsOutput!
-  recalculateTeamSeatsSubscription(object: RecalculateTeamSeatsSubscriptionInput!): RecalculateTeamSeatsSubscriptionOutput!
-  regenerateProjectToken(object: RegenerateProjectTokenInput!): RegenerateProjectTokenOutput!
+  netlifyInstall(
+    integrationInstallation: NetlifyInstallInputIntegration!
+    zero: NetlifyInstallInputZero!
+  ): NetlifyInstallOutput!
+  netlifyUpdateSecrets(
+    integrationInstallation: NetlifyUpdateSecretsInputIntegration!
+    zero: NetlifyUpdateSecretsInputZero!
+  ): NetlifyUpdateSecretsOutput!
+  recalculateTeamSeatsSubscription(
+    object: RecalculateTeamSeatsSubscriptionInput!
+  ): RecalculateTeamSeatsSubscriptionOutput!
+  regenerateProjectToken(
+    object: RegenerateProjectTokenInput!
+  ): RegenerateProjectTokenOutput!
 
-  """Register api action"""
+  """
+  Register api action
+  """
   register(object: RegisterInput!): SuccessOutput!
-  rejectTeamInvitation(object: RejectTeamInvitationInput!): RejectTeamInvitationOutput!
+  rejectTeamInvitation(
+    object: RejectTeamInvitationInput!
+  ): RejectTeamInvitationOutput!
   removeTeam(object: RemoveTeamInput!): RemoveTeamOutput!
-  removeUserFromTeam(object: RemoveUserFromTeamInput!): RemoveUserFromTeamOutput!
-  requestEmailChange(object: RequestEmailChangeInput!): RequestEmailChangeOutput!
-  requestResetPassword(object: RequestResetPasswordInput!): RequestResetPasswordOutput!
+  removeUserFromTeam(
+    object: RemoveUserFromTeamInput!
+  ): RemoveUserFromTeamOutput!
+  requestEmailChange(
+    object: RequestEmailChangeInput!
+  ): RequestEmailChangeOutput!
+  requestResetPassword(
+    object: RequestResetPasswordInput!
+  ): RequestResetPasswordOutput!
   resendSignUpEmail: ResendSignUpEmailOutput!
-  sendInviteUserTeam(object: SendInviteUserTeamInput!): SendInviteUserTeamOutput!
-  updatePaymentMethod(object: UpdatePaymentMethodInput!): UpdatePaymentMethodOutput!
-  updateProjectSettings(object: UpdateProjectSettingsInput!): UpdateProjectSettingsOutput!
-  updateSecret(userSecret: UpdateUserSecretInput!, userSecretFields: [UpdateUserSecretFieldsInput!]!): UpdateSecretOutput!
+  sendInviteUserTeam(
+    object: SendInviteUserTeamInput!
+  ): SendInviteUserTeamOutput!
+  updatePaymentMethod(
+    object: UpdatePaymentMethodInput!
+  ): UpdatePaymentMethodOutput!
+  updateProjectSettings(
+    object: UpdateProjectSettingsInput!
+  ): UpdateProjectSettingsOutput!
+  updateSecret(
+    userSecret: UpdateUserSecretInput!
+    userSecretFields: [UpdateUserSecretFieldsInput!]!
+  ): UpdateSecretOutput!
 
   """
   update data of the table: "integrationConnect"
   """
   update_integrationConnect(
-    """append existing jsonb value of filtered columns with new jsonb value"""
+    """
+    append existing jsonb value of filtered columns with new jsonb value
+    """
     _append: integrationConnect_append_input
 
     """
@@ -1929,13 +2288,19 @@ type mutation_root {
     """
     _delete_key: integrationConnect_delete_key_input
 
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    """
+    prepend existing jsonb value of filtered columns with new jsonb value
+    """
     _prepend: integrationConnect_prepend_input
 
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: integrationConnect_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: integrationConnect_bool_exp!
   ): integrationConnect_mutation_response
 
@@ -1943,7 +2308,9 @@ type mutation_root {
   update single row of the table: "integrationConnect"
   """
   update_integrationConnect_by_pk(
-    """append existing jsonb value of filtered columns with new jsonb value"""
+    """
+    append existing jsonb value of filtered columns with new jsonb value
+    """
     _append: integrationConnect_append_input
 
     """
@@ -1961,10 +2328,14 @@ type mutation_root {
     """
     _delete_key: integrationConnect_delete_key_input
 
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    """
+    prepend existing jsonb value of filtered columns with new jsonb value
+    """
     _prepend: integrationConnect_prepend_input
 
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: integrationConnect_set_input
     pk_columns: integrationConnect_pk_columns_input!
   ): integrationConnect
@@ -1973,7 +2344,9 @@ type mutation_root {
   update multiples rows of table: "integrationConnect"
   """
   update_integrationConnect_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [integrationConnect_updates!]!
   ): [integrationConnect_mutation_response]
 
@@ -1981,7 +2354,9 @@ type mutation_root {
   update data of the table: "integrationInstallation"
   """
   update_integrationInstallation(
-    """append existing jsonb value of filtered columns with new jsonb value"""
+    """
+    append existing jsonb value of filtered columns with new jsonb value
+    """
     _append: integrationInstallation_append_input
 
     """
@@ -1999,13 +2374,19 @@ type mutation_root {
     """
     _delete_key: integrationInstallation_delete_key_input
 
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    """
+    prepend existing jsonb value of filtered columns with new jsonb value
+    """
     _prepend: integrationInstallation_prepend_input
 
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: integrationInstallation_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: integrationInstallation_bool_exp!
   ): integrationInstallation_mutation_response
 
@@ -2013,7 +2394,9 @@ type mutation_root {
   update single row of the table: "integrationInstallation"
   """
   update_integrationInstallation_by_pk(
-    """append existing jsonb value of filtered columns with new jsonb value"""
+    """
+    append existing jsonb value of filtered columns with new jsonb value
+    """
     _append: integrationInstallation_append_input
 
     """
@@ -2031,10 +2414,14 @@ type mutation_root {
     """
     _delete_key: integrationInstallation_delete_key_input
 
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    """
+    prepend existing jsonb value of filtered columns with new jsonb value
+    """
     _prepend: integrationInstallation_prepend_input
 
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: integrationInstallation_set_input
     pk_columns: integrationInstallation_pk_columns_input!
   ): integrationInstallation
@@ -2043,7 +2430,9 @@ type mutation_root {
   update multiples rows of table: "integrationInstallation"
   """
   update_integrationInstallation_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [integrationInstallation_updates!]!
   ): [integrationInstallation_mutation_response]
 
@@ -2051,10 +2440,14 @@ type mutation_root {
   update data of the table: "notification"
   """
   update_notification(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: notification_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: notification_bool_exp!
   ): notification_mutation_response
 
@@ -2062,7 +2455,9 @@ type mutation_root {
   update single row of the table: "notification"
   """
   update_notification_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: notification_set_input
     pk_columns: notification_pk_columns_input!
   ): notification
@@ -2071,7 +2466,9 @@ type mutation_root {
   update multiples rows of table: "notification"
   """
   update_notification_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [notification_updates!]!
   ): [notification_mutation_response]
 
@@ -2079,10 +2476,14 @@ type mutation_root {
   update data of the table: "project"
   """
   update_project(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: project_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: project_bool_exp!
   ): project_mutation_response
 
@@ -2090,7 +2491,9 @@ type mutation_root {
   update single row of the table: "project"
   """
   update_project_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: project_set_input
     pk_columns: project_pk_columns_input!
   ): project
@@ -2099,7 +2502,9 @@ type mutation_root {
   update multiples rows of table: "project"
   """
   update_project_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [project_updates!]!
   ): [project_mutation_response]
 
@@ -2107,10 +2512,14 @@ type mutation_root {
   update data of the table: "team"
   """
   update_team(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: team_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: team_bool_exp!
   ): team_mutation_response
 
@@ -2118,10 +2527,14 @@ type mutation_root {
   update data of the table: "teamUser"
   """
   update_teamUser(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: teamUser_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: teamUser_bool_exp!
   ): teamUser_mutation_response
 
@@ -2129,7 +2542,9 @@ type mutation_root {
   update single row of the table: "teamUser"
   """
   update_teamUser_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: teamUser_set_input
     pk_columns: teamUser_pk_columns_input!
   ): teamUser
@@ -2138,7 +2553,9 @@ type mutation_root {
   update multiples rows of table: "teamUser"
   """
   update_teamUser_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [teamUser_updates!]!
   ): [teamUser_mutation_response]
 
@@ -2146,7 +2563,9 @@ type mutation_root {
   update single row of the table: "team"
   """
   update_team_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: team_set_input
     pk_columns: team_pk_columns_input!
   ): team
@@ -2155,7 +2574,9 @@ type mutation_root {
   update multiples rows of table: "team"
   """
   update_team_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [team_updates!]!
   ): [team_mutation_response]
 
@@ -2163,10 +2584,14 @@ type mutation_root {
   update data of the table: "token"
   """
   update_token(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: token_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: token_bool_exp!
   ): token_mutation_response
 
@@ -2174,7 +2599,9 @@ type mutation_root {
   update single row of the table: "token"
   """
   update_token_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: token_set_input
     pk_columns: token_pk_columns_input!
   ): token
@@ -2183,7 +2610,9 @@ type mutation_root {
   update multiples rows of table: "token"
   """
   update_token_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [token_updates!]!
   ): [token_mutation_response]
 
@@ -2191,10 +2620,14 @@ type mutation_root {
   update data of the table: "user"
   """
   update_user(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: user_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: user_bool_exp!
   ): user_mutation_response
 
@@ -2202,10 +2635,14 @@ type mutation_root {
   update data of the table: "userSecret"
   """
   update_userSecret(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: userSecret_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: userSecret_bool_exp!
   ): userSecret_mutation_response
 
@@ -2213,10 +2650,14 @@ type mutation_root {
   update data of the table: "userSecretField"
   """
   update_userSecretField(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: userSecretField_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: userSecretField_bool_exp!
   ): userSecretField_mutation_response
 
@@ -2224,7 +2665,9 @@ type mutation_root {
   update single row of the table: "userSecretField"
   """
   update_userSecretField_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: userSecretField_set_input
     pk_columns: userSecretField_pk_columns_input!
   ): userSecretField
@@ -2233,7 +2676,9 @@ type mutation_root {
   update multiples rows of table: "userSecretField"
   """
   update_userSecretField_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [userSecretField_updates!]!
   ): [userSecretField_mutation_response]
 
@@ -2241,7 +2686,9 @@ type mutation_root {
   update single row of the table: "userSecret"
   """
   update_userSecret_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: userSecret_set_input
     pk_columns: userSecret_pk_columns_input!
   ): userSecret
@@ -2250,7 +2697,9 @@ type mutation_root {
   update multiples rows of table: "userSecret"
   """
   update_userSecret_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [userSecret_updates!]!
   ): [userSecret_mutation_response]
 
@@ -2258,10 +2707,14 @@ type mutation_root {
   update data of the table: "userSubscription"
   """
   update_userSubscription(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: userSubscription_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: userSubscription_bool_exp!
   ): userSubscription_mutation_response
 
@@ -2269,7 +2722,9 @@ type mutation_root {
   update single row of the table: "userSubscription"
   """
   update_userSubscription_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: userSubscription_set_input
     pk_columns: userSubscription_pk_columns_input!
   ): userSubscription
@@ -2278,7 +2733,9 @@ type mutation_root {
   update multiples rows of table: "userSubscription"
   """
   update_userSubscription_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [userSubscription_updates!]!
   ): [userSubscription_mutation_response]
 
@@ -2286,7 +2743,9 @@ type mutation_root {
   update single row of the table: "user"
   """
   update_user_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: user_set_input
     pk_columns: user_pk_columns_input!
   ): user
@@ -2295,7 +2754,9 @@ type mutation_root {
   update multiples rows of table: "user"
   """
   update_user_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [user_updates!]!
   ): [user_mutation_response]
 
@@ -2303,10 +2764,14 @@ type mutation_root {
   update data of the table: "viewPreferences"
   """
   update_viewPreferences(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: viewPreferences_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: viewPreferences_bool_exp!
   ): viewPreferences_mutation_response
 
@@ -2314,7 +2779,9 @@ type mutation_root {
   update single row of the table: "viewPreferences"
   """
   update_viewPreferences_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: viewPreferences_set_input
     pk_columns: viewPreferences_pk_columns_input!
   ): viewPreferences
@@ -2323,11 +2790,19 @@ type mutation_root {
   update multiples rows of table: "viewPreferences"
   """
   update_viewPreferences_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [viewPreferences_updates!]!
   ): [viewPreferences_mutation_response]
-  vercelInstall(integrationInstallation: VercelInstallInputIntegration!, zero: VercelInstallInputZero!): VercelInstallOutput!
-  vercelUpdateSecrets(integrationInstallation: VercelUpdateSecretsInputIntegration!, zero: VercelUpdateSecretsInputZero!): VercelUpdateSecretsOutput!
+  vercelInstall(
+    integrationInstallation: VercelInstallInputIntegration!
+    zero: VercelInstallInputZero!
+  ): VercelInstallOutput!
+  vercelUpdateSecrets(
+    integrationInstallation: VercelUpdateSecretsInputIntegration!
+    zero: VercelUpdateSecretsInputZero!
+  ): VercelUpdateSecretsOutput!
 }
 
 """
@@ -2340,25 +2815,39 @@ type notification {
   message: String!
   updatedAt: timestamp!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   user: user!
   userId: uuid!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   users(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [notificationUser_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [notificationUser_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: notificationUser_bool_exp
   ): [notificationUser!]!
 }
@@ -2370,12 +2859,16 @@ type notificationUser {
   createdAt: timestamptz!
   id: uuid!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   notification: notification!
   notificationId: uuid!
   updatedAt: timestamptz!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   user: user!
   userId: uuid!
 }
@@ -2395,7 +2888,9 @@ input type for inserting array relation for remote table "notificationUser"
 input notificationUser_arr_rel_insert_input {
   data: [notificationUser_insert_input!]!
 
-  """upsert condition"""
+  """
+  upsert condition
+  """
   on_conflict: notificationUser_on_conflict
 }
 
@@ -2460,10 +2955,14 @@ input notificationUser_min_order_by {
 response of any mutation on the table "notificationUser"
 """
 type notificationUser_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [notificationUser!]!
 }
 
@@ -2476,7 +2975,9 @@ input notificationUser_on_conflict {
   where: notificationUser_bool_exp
 }
 
-"""Ordering options when selecting data from "notificationUser"."""
+"""
+Ordering options when selecting data from "notificationUser".
+"""
 input notificationUser_order_by {
   createdAt: order_by
   id: order_by
@@ -2491,19 +2992,29 @@ input notificationUser_order_by {
 select columns of table "notificationUser"
 """
 enum notificationUser_select_column {
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   notificationId
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 
-  """column name"""
+  """
+  column name
+  """
   userId
 }
 
@@ -2511,14 +3022,20 @@ enum notificationUser_select_column {
 Streaming cursor of the table "notificationUser"
 """
 input notificationUser_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: notificationUser_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input notificationUser_stream_cursor_value_input {
   createdAt: timestamptz
   id: uuid
@@ -2531,7 +3048,9 @@ input notificationUser_stream_cursor_value_input {
 placeholder for update columns of table "notificationUser" (current role has no relevant permissions)
 """
 enum notificationUser_update_column {
-  """placeholder (do not use)"""
+  """
+  placeholder (do not use)
+  """
   _PLACEHOLDER
 }
 
@@ -2606,10 +3125,14 @@ input notification_min_order_by {
 response of any mutation on the table "notification"
 """
 type notification_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [notification!]!
 }
 
@@ -2619,7 +3142,9 @@ input type for inserting object relation for remote table "notification"
 input notification_obj_rel_insert_input {
   data: notification_insert_input!
 
-  """upsert condition"""
+  """
+  upsert condition
+  """
   on_conflict: notification_on_conflict
 }
 
@@ -2632,7 +3157,9 @@ input notification_on_conflict {
   where: notification_bool_exp
 }
 
-"""Ordering options when selecting data from "notification"."""
+"""
+Ordering options when selecting data from "notification".
+"""
 input notification_order_by {
   createdAt: order_by
   id: order_by
@@ -2644,7 +3171,9 @@ input notification_order_by {
   users_aggregate: notificationUser_aggregate_order_by
 }
 
-"""primary key columns input for table: notification"""
+"""
+primary key columns input for table: notification
+"""
 input notification_pk_columns_input {
   id: uuid!
 }
@@ -2653,22 +3182,34 @@ input notification_pk_columns_input {
 select columns of table "notification"
 """
 enum notification_select_column {
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   isViewed
 
-  """column name"""
+  """
+  column name
+  """
   message
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 
-  """column name"""
+  """
+  column name
+  """
   userId
 }
 
@@ -2683,14 +3224,20 @@ input notification_set_input {
 Streaming cursor of the table "notification"
 """
 input notification_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: notification_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input notification_stream_cursor_value_input {
   createdAt: timestamp
   id: uuid
@@ -2704,79 +3251,125 @@ input notification_stream_cursor_value_input {
 update columns of table "notification"
 """
 enum notification_update_column {
-  """column name"""
+  """
+  column name
+  """
   isViewed
 }
 
 input notification_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: notification_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: notification_bool_exp!
 }
 
-"""column ordering options"""
+"""
+column ordering options
+"""
 enum order_by {
-  """in ascending order, nulls last"""
+  """
+  in ascending order, nulls last
+  """
   asc
 
-  """in ascending order, nulls first"""
+  """
+  in ascending order, nulls first
+  """
   asc_nulls_first
 
-  """in ascending order, nulls last"""
+  """
+  in ascending order, nulls last
+  """
   asc_nulls_last
 
-  """in descending order, nulls first"""
+  """
+  in descending order, nulls first
+  """
   desc
 
-  """in descending order, nulls first"""
+  """
+  in descending order, nulls first
+  """
   desc_nulls_first
 
-  """in descending order, nulls last"""
+  """
+  in descending order, nulls last
+  """
   desc_nulls_last
 }
 
-"""Table of user projects created in Zero."""
+"""
+Table of user projects created in Zero.
+"""
 type project {
   createdAt: timestamptz!
   description: String
   icon: String!
   id: uuid!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   integrationInstallations(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationInstallation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationInstallation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallation_bool_exp
   ): [integrationInstallation!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   integrationInstallations_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationInstallation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationInstallation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallation_bool_exp
   ): integrationInstallation_aggregate!
   lastUpdatedAt: timestamptz
@@ -2788,98 +3381,160 @@ type project {
   name: String!
   slug: String!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   team: team
   teamId: uuid
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   tokens(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [token_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [token_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: token_bool_exp
   ): [token!]!
   updatedAt: timestamptz!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   usageHistories(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistory_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistory_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistory_bool_exp
   ): [usageHistory!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   usageHistories_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistory_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistory_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistory_bool_exp
   ): usageHistory_aggregate!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   userSecrets(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecret_bool_exp
   ): [userSecret!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   userSecrets_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecret_bool_exp
   ): userSecret_aggregate!
 }
@@ -2954,14 +3609,20 @@ input project_min_order_by {
 response of any mutation on the table "project"
 """
 type project_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [project!]!
 }
 
-"""Ordering options when selecting data from "project"."""
+"""
+Ordering options when selecting data from "project".
+"""
 input project_order_by {
   createdAt: order_by
   description: order_by
@@ -2980,7 +3641,9 @@ input project_order_by {
   userSecrets_aggregate: userSecret_aggregate_order_by
 }
 
-"""primary key columns input for table: project"""
+"""
+primary key columns input for table: project
+"""
 input project_pk_columns_input {
   id: uuid!
 }
@@ -2989,31 +3652,49 @@ input project_pk_columns_input {
 select columns of table "project"
 """
 enum project_select_column {
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   description
 
-  """column name"""
+  """
+  column name
+  """
   icon
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   lastUpdatedAt
 
-  """column name"""
+  """
+  column name
+  """
   name
 
-  """column name"""
+  """
+  column name
+  """
   slug
 
-  """column name"""
+  """
+  column name
+  """
   teamId
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 }
 
@@ -3030,14 +3711,20 @@ input project_set_input {
 Streaming cursor of the table "project"
 """
 input project_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: project_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input project_stream_cursor_value_input {
   createdAt: timestamptz
   description: String
@@ -3051,18 +3738,28 @@ input project_stream_cursor_value_input {
 }
 
 input project_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: project_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: project_bool_exp!
 }
 
 type query_root {
-  bitbucketWorkspaceProjects(where: BitbucketWorkspaceProjectsInput!): BitbucketWorkspaceProjectsOutput!
-  checkIntegrationDeploy(integrationConnect: CheckIntegrationDeployInput!): CheckIntegrationDeployOutput!
+  bitbucketWorkspaceProjects(
+    where: BitbucketWorkspaceProjectsInput!
+  ): BitbucketWorkspaceProjectsOutput!
+  checkIntegrationDeploy(
+    integrationConnect: CheckIntegrationDeployInput!
+  ): CheckIntegrationDeployOutput!
   checkPaymentMethod(where: CheckPaymentMethodInput!): CheckPaymentMethodOutput!
-  checkUserEmailExist(object: CheckUserEmailExistInput!): CheckUserEmailExistOutput!
+  checkUserEmailExist(
+    object: CheckUserEmailExistInput!
+  ): CheckUserEmailExistOutput!
   cloudflareProjects(where: CloudflareProjectsInput!): CloudflareProjectsOutput!
   currentPlan(where: CurrentPlanInput!): CurrentPlanOutput!
   githubProjects(where: GitHubProjectsInput!): GitHubProjectsOutput!
@@ -3072,19 +3769,29 @@ type query_root {
   fetch data from the table: "integrationConnect"
   """
   integrationConnect(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationConnect_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationConnect_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationConnect_bool_exp
   ): [integrationConnect!]!
 
@@ -3092,19 +3799,29 @@ type query_root {
   fetch aggregated fields from the table: "integrationConnect"
   """
   integrationConnect_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationConnect_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationConnect_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationConnect_bool_exp
   ): integrationConnect_aggregate!
 
@@ -3117,19 +3834,29 @@ type query_root {
   fetch data from the table: "integrationInstallation"
   """
   integrationInstallation(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationInstallation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationInstallation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallation_bool_exp
   ): [integrationInstallation!]!
 
@@ -3137,44 +3864,66 @@ type query_root {
   fetch data from the table: "integrationInstallationUserSecret"
   """
   integrationInstallationUserSecret(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationInstallationUserSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationInstallationUserSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallationUserSecret_bool_exp
   ): [integrationInstallationUserSecret!]!
 
   """
   fetch data from the table: "integrationInstallationUserSecret" using primary key columns
   """
-  integrationInstallationUserSecret_by_pk(id: uuid!): integrationInstallationUserSecret
+  integrationInstallationUserSecret_by_pk(
+    id: uuid!
+  ): integrationInstallationUserSecret
 
   """
   fetch aggregated fields from the table: "integrationInstallation"
   """
   integrationInstallation_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationInstallation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationInstallation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallation_bool_exp
   ): integrationInstallation_aggregate!
 
@@ -3188,19 +3937,29 @@ type query_root {
   fetch data from the table: "notification"
   """
   notification(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [notification_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [notification_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: notification_bool_exp
   ): [notification!]!
 
@@ -3208,19 +3967,29 @@ type query_root {
   fetch data from the table: "notificationUser"
   """
   notificationUser(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [notificationUser_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [notificationUser_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: notificationUser_bool_exp
   ): [notificationUser!]!
 
@@ -3229,7 +3998,9 @@ type query_root {
   """
   notificationUser_by_pk(id: uuid!): notificationUser
 
-  """fetch data from the table: "notification" using primary key columns"""
+  """
+  fetch data from the table: "notification" using primary key columns
+  """
   notification_by_pk(id: uuid!): notification
   paymentList(where: PaymentListInput!): PaymentListOutput!
 
@@ -3237,23 +4008,35 @@ type query_root {
   fetch data from the table: "project"
   """
   project(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [project_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [project_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: project_bool_exp
   ): [project!]!
 
-  """fetch data from the table: "project" using primary key columns"""
+  """
+  fetch data from the table: "project" using primary key columns
+  """
   project_by_pk(id: uuid!): project
 
   """
@@ -3265,19 +4048,29 @@ type query_root {
     """
     args: search_project_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [project_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [project_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: project_bool_exp
   ): [project!]!
 
@@ -3290,19 +4083,29 @@ type query_root {
     """
     args: search_team_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [team_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [team_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: team_bool_exp
   ): [team!]!
 
@@ -3315,19 +4118,29 @@ type query_root {
     """
     args: search_team_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [team_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [team_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: team_bool_exp
   ): team_aggregate!
 
@@ -3340,19 +4153,29 @@ type query_root {
     """
     args: search_token_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [token_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [token_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: token_bool_exp
   ): [token!]!
 
@@ -3365,19 +4188,29 @@ type query_root {
     """
     args: search_usage_history_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistory_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistory_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistory_bool_exp
   ): [usageHistory!]!
 
@@ -3390,19 +4223,29 @@ type query_root {
     """
     args: search_usage_history_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistory_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistory_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistory_bool_exp
   ): usageHistory_aggregate!
 
@@ -3415,19 +4258,29 @@ type query_root {
     """
     args: search_user_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [user_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [user_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: user_bool_exp
   ): [user!]!
 
@@ -3440,19 +4293,29 @@ type query_root {
     """
     args: search_user_secret_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecret_bool_exp
   ): [userSecret!]!
 
@@ -3465,19 +4328,29 @@ type query_root {
     """
     args: search_user_secret_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecret_bool_exp
   ): userSecret_aggregate!
 
@@ -3485,19 +4358,29 @@ type query_root {
   fetch data from the table: "team"
   """
   team(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [team_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [team_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: team_bool_exp
   ): [team!]!
 
@@ -3505,42 +4388,64 @@ type query_root {
   fetch data from the table: "teamInvitation"
   """
   teamInvitation(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamInvitation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamInvitation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamInvitation_bool_exp
   ): [teamInvitation!]!
 
-  """fetch data from the table: "teamInvitation" using primary key columns"""
+  """
+  fetch data from the table: "teamInvitation" using primary key columns
+  """
   teamInvitation_by_pk(id: uuid!): teamInvitation
 
   """
   fetch data from the table: "teamUser"
   """
   teamUser(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamUser_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamUser_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamUser_bool_exp
   ): [teamUser!]!
 
@@ -3548,88 +4453,134 @@ type query_root {
   fetch aggregated fields from the table: "teamUser"
   """
   teamUser_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamUser_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamUser_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamUser_bool_exp
   ): teamUser_aggregate!
 
-  """fetch data from the table: "teamUser" using primary key columns"""
+  """
+  fetch data from the table: "teamUser" using primary key columns
+  """
   teamUser_by_pk(id: uuid!): teamUser
 
   """
   fetch aggregated fields from the table: "team"
   """
   team_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [team_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [team_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: team_bool_exp
   ): team_aggregate!
 
-  """fetch data from the table: "team" using primary key columns"""
+  """
+  fetch data from the table: "team" using primary key columns
+  """
   team_by_pk(id: uuid!): team
 
   """
   fetch data from the table: "token"
   """
   token(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [token_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [token_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: token_bool_exp
   ): [token!]!
 
-  """fetch data from the table: "token" using primary key columns"""
+  """
+  fetch data from the table: "token" using primary key columns
+  """
   token_by_pk(id: uuid!): token
 
   """
   fetch data from the table: "usageHistory"
   """
   usageHistory(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistory_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistory_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistory_bool_exp
   ): [usageHistory!]!
 
@@ -3637,19 +4588,29 @@ type query_root {
   fetch data from the table: "usageHistorySecret"
   """
   usageHistorySecret(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistorySecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistorySecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistorySecret_bool_exp
   ): [usageHistorySecret!]!
 
@@ -3657,19 +4618,29 @@ type query_root {
   fetch aggregated fields from the table: "usageHistorySecret"
   """
   usageHistorySecret_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistorySecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistorySecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistorySecret_bool_exp
   ): usageHistorySecret_aggregate!
 
@@ -3682,42 +4653,64 @@ type query_root {
   fetch aggregated fields from the table: "usageHistory"
   """
   usageHistory_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistory_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistory_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistory_bool_exp
   ): usageHistory_aggregate!
 
-  """fetch data from the table: "usageHistory" using primary key columns"""
+  """
+  fetch data from the table: "usageHistory" using primary key columns
+  """
   usageHistory_by_pk(id: uuid!): usageHistory
 
   """
   fetch data from the table: "user"
   """
   user(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [user_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [user_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: user_bool_exp
   ): [user!]!
 
@@ -3725,19 +4718,29 @@ type query_root {
   fetch data from the table: "userSecret"
   """
   userSecret(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecret_bool_exp
   ): [userSecret!]!
 
@@ -3745,65 +4748,99 @@ type query_root {
   fetch data from the table: "userSecretField"
   """
   userSecretField(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecretField_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecretField_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecretField_bool_exp
   ): [userSecretField!]!
 
-  """fetch data from the table: "userSecretField" using primary key columns"""
+  """
+  fetch data from the table: "userSecretField" using primary key columns
+  """
   userSecretField_by_pk(id: uuid!): userSecretField
 
   """
   fetch aggregated fields from the table: "userSecret"
   """
   userSecret_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecret_bool_exp
   ): userSecret_aggregate!
 
-  """fetch data from the table: "userSecret" using primary key columns"""
+  """
+  fetch data from the table: "userSecret" using primary key columns
+  """
   userSecret_by_pk(id: uuid!): userSecret
 
   """
   fetch data from the table: "userSubscription"
   """
   userSubscription(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSubscription_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSubscription_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSubscription_bool_exp
   ): [userSubscription!]!
 
@@ -3812,41 +4849,63 @@ type query_root {
   """
   userSubscription_by_pk(id: uuid!): userSubscription
 
-  """fetch data from the table: "user" using primary key columns"""
+  """
+  fetch data from the table: "user" using primary key columns
+  """
   user_by_pk(id: uuid!): user
   vercelProjects(where: VercelProjectsInput!): VercelProjectsOutput!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   viewPreferences(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [viewPreferences_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [viewPreferences_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: viewPreferences_bool_exp
   ): [viewPreferences!]!
 
-  """fetch data from the table: "viewPreferences" using primary key columns"""
+  """
+  fetch data from the table: "viewPreferences" using primary key columns
+  """
   viewPreferences_by_pk(id: uuid!): viewPreferences
   viewSecretFields(secretField: ViewSecretFieldsInput!): ViewSecretFieldsOutput!
 }
 
 enum registrationStep_enum {
-  """billing information collection step"""
+  """
+  billing information collection step
+  """
   billingInformation
 
-  """registration is complete"""
+  """
+  registration is complete
+  """
   complete
 
-  """email verification step"""
+  """
+  email verification step
+  """
   emailVerification
 }
 
@@ -3941,19 +5000,29 @@ type subscription_root {
   fetch data from the table: "integrationConnect"
   """
   integrationConnect(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationConnect_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationConnect_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationConnect_bool_exp
   ): [integrationConnect!]!
 
@@ -3961,19 +5030,29 @@ type subscription_root {
   fetch aggregated fields from the table: "integrationConnect"
   """
   integrationConnect_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationConnect_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationConnect_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationConnect_bool_exp
   ): integrationConnect_aggregate!
 
@@ -3986,13 +5065,19 @@ type subscription_root {
   fetch data from the table in a streaming manner: "integrationConnect"
   """
   integrationConnect_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [integrationConnect_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationConnect_bool_exp
   ): [integrationConnect!]!
 
@@ -4000,19 +5085,29 @@ type subscription_root {
   fetch data from the table: "integrationInstallation"
   """
   integrationInstallation(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationInstallation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationInstallation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallation_bool_exp
   ): [integrationInstallation!]!
 
@@ -4020,38 +5115,56 @@ type subscription_root {
   fetch data from the table: "integrationInstallationUserSecret"
   """
   integrationInstallationUserSecret(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationInstallationUserSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationInstallationUserSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallationUserSecret_bool_exp
   ): [integrationInstallationUserSecret!]!
 
   """
   fetch data from the table: "integrationInstallationUserSecret" using primary key columns
   """
-  integrationInstallationUserSecret_by_pk(id: uuid!): integrationInstallationUserSecret
+  integrationInstallationUserSecret_by_pk(
+    id: uuid!
+  ): integrationInstallationUserSecret
 
   """
   fetch data from the table in a streaming manner: "integrationInstallationUserSecret"
   """
   integrationInstallationUserSecret_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [integrationInstallationUserSecret_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallationUserSecret_bool_exp
   ): [integrationInstallationUserSecret!]!
 
@@ -4059,19 +5172,29 @@ type subscription_root {
   fetch aggregated fields from the table: "integrationInstallation"
   """
   integrationInstallation_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationInstallation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationInstallation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallation_bool_exp
   ): integrationInstallation_aggregate!
 
@@ -4084,13 +5207,19 @@ type subscription_root {
   fetch data from the table in a streaming manner: "integrationInstallation"
   """
   integrationInstallation_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [integrationInstallation_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallation_bool_exp
   ): [integrationInstallation!]!
 
@@ -4098,19 +5227,29 @@ type subscription_root {
   fetch data from the table: "notification"
   """
   notification(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [notification_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [notification_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: notification_bool_exp
   ): [notification!]!
 
@@ -4118,19 +5257,29 @@ type subscription_root {
   fetch data from the table: "notificationUser"
   """
   notificationUser(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [notificationUser_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [notificationUser_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: notificationUser_bool_exp
   ): [notificationUser!]!
 
@@ -4143,30 +5292,44 @@ type subscription_root {
   fetch data from the table in a streaming manner: "notificationUser"
   """
   notificationUser_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [notificationUser_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: notificationUser_bool_exp
   ): [notificationUser!]!
 
-  """fetch data from the table: "notification" using primary key columns"""
+  """
+  fetch data from the table: "notification" using primary key columns
+  """
   notification_by_pk(id: uuid!): notification
 
   """
   fetch data from the table in a streaming manner: "notification"
   """
   notification_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [notification_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: notification_bool_exp
   ): [notification!]!
 
@@ -4174,36 +5337,54 @@ type subscription_root {
   fetch data from the table: "project"
   """
   project(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [project_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [project_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: project_bool_exp
   ): [project!]!
 
-  """fetch data from the table: "project" using primary key columns"""
+  """
+  fetch data from the table: "project" using primary key columns
+  """
   project_by_pk(id: uuid!): project
 
   """
   fetch data from the table in a streaming manner: "project"
   """
   project_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [project_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: project_bool_exp
   ): [project!]!
 
@@ -4216,19 +5397,29 @@ type subscription_root {
     """
     args: search_project_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [project_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [project_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: project_bool_exp
   ): [project!]!
 
@@ -4241,19 +5432,29 @@ type subscription_root {
     """
     args: search_team_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [team_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [team_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: team_bool_exp
   ): [team!]!
 
@@ -4266,19 +5467,29 @@ type subscription_root {
     """
     args: search_team_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [team_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [team_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: team_bool_exp
   ): team_aggregate!
 
@@ -4291,19 +5502,29 @@ type subscription_root {
     """
     args: search_token_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [token_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [token_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: token_bool_exp
   ): [token!]!
 
@@ -4316,19 +5537,29 @@ type subscription_root {
     """
     args: search_usage_history_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistory_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistory_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistory_bool_exp
   ): [usageHistory!]!
 
@@ -4341,19 +5572,29 @@ type subscription_root {
     """
     args: search_usage_history_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistory_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistory_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistory_bool_exp
   ): usageHistory_aggregate!
 
@@ -4366,19 +5607,29 @@ type subscription_root {
     """
     args: search_user_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [user_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [user_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: user_bool_exp
   ): [user!]!
 
@@ -4391,19 +5642,29 @@ type subscription_root {
     """
     args: search_user_secret_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecret_bool_exp
   ): [userSecret!]!
 
@@ -4416,19 +5677,29 @@ type subscription_root {
     """
     args: search_user_secret_by_id_args!
 
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecret_bool_exp
   ): userSecret_aggregate!
 
@@ -4436,19 +5707,29 @@ type subscription_root {
   fetch data from the table: "team"
   """
   team(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [team_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [team_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: team_bool_exp
   ): [team!]!
 
@@ -4456,36 +5737,54 @@ type subscription_root {
   fetch data from the table: "teamInvitation"
   """
   teamInvitation(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamInvitation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamInvitation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamInvitation_bool_exp
   ): [teamInvitation!]!
 
-  """fetch data from the table: "teamInvitation" using primary key columns"""
+  """
+  fetch data from the table: "teamInvitation" using primary key columns
+  """
   teamInvitation_by_pk(id: uuid!): teamInvitation
 
   """
   fetch data from the table in a streaming manner: "teamInvitation"
   """
   teamInvitation_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [teamInvitation_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamInvitation_bool_exp
   ): [teamInvitation!]!
 
@@ -4493,19 +5792,29 @@ type subscription_root {
   fetch data from the table: "teamUser"
   """
   teamUser(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamUser_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamUser_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamUser_bool_exp
   ): [teamUser!]!
 
@@ -4513,36 +5822,54 @@ type subscription_root {
   fetch aggregated fields from the table: "teamUser"
   """
   teamUser_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamUser_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamUser_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamUser_bool_exp
   ): teamUser_aggregate!
 
-  """fetch data from the table: "teamUser" using primary key columns"""
+  """
+  fetch data from the table: "teamUser" using primary key columns
+  """
   teamUser_by_pk(id: uuid!): teamUser
 
   """
   fetch data from the table in a streaming manner: "teamUser"
   """
   teamUser_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [teamUser_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamUser_bool_exp
   ): [teamUser!]!
 
@@ -4550,36 +5877,54 @@ type subscription_root {
   fetch aggregated fields from the table: "team"
   """
   team_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [team_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [team_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: team_bool_exp
   ): team_aggregate!
 
-  """fetch data from the table: "team" using primary key columns"""
+  """
+  fetch data from the table: "team" using primary key columns
+  """
   team_by_pk(id: uuid!): team
 
   """
   fetch data from the table in a streaming manner: "team"
   """
   team_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [team_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: team_bool_exp
   ): [team!]!
 
@@ -4587,36 +5932,54 @@ type subscription_root {
   fetch data from the table: "token"
   """
   token(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [token_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [token_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: token_bool_exp
   ): [token!]!
 
-  """fetch data from the table: "token" using primary key columns"""
+  """
+  fetch data from the table: "token" using primary key columns
+  """
   token_by_pk(id: uuid!): token
 
   """
   fetch data from the table in a streaming manner: "token"
   """
   token_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [token_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: token_bool_exp
   ): [token!]!
 
@@ -4624,19 +5987,29 @@ type subscription_root {
   fetch data from the table: "usageHistory"
   """
   usageHistory(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistory_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistory_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistory_bool_exp
   ): [usageHistory!]!
 
@@ -4644,19 +6017,29 @@ type subscription_root {
   fetch data from the table: "usageHistorySecret"
   """
   usageHistorySecret(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistorySecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistorySecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistorySecret_bool_exp
   ): [usageHistorySecret!]!
 
@@ -4664,19 +6047,29 @@ type subscription_root {
   fetch aggregated fields from the table: "usageHistorySecret"
   """
   usageHistorySecret_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistorySecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistorySecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistorySecret_bool_exp
   ): usageHistorySecret_aggregate!
 
@@ -4689,13 +6082,19 @@ type subscription_root {
   fetch data from the table in a streaming manner: "usageHistorySecret"
   """
   usageHistorySecret_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [usageHistorySecret_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistorySecret_bool_exp
   ): [usageHistorySecret!]!
 
@@ -4703,36 +6102,54 @@ type subscription_root {
   fetch aggregated fields from the table: "usageHistory"
   """
   usageHistory_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistory_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistory_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistory_bool_exp
   ): usageHistory_aggregate!
 
-  """fetch data from the table: "usageHistory" using primary key columns"""
+  """
+  fetch data from the table: "usageHistory" using primary key columns
+  """
   usageHistory_by_pk(id: uuid!): usageHistory
 
   """
   fetch data from the table in a streaming manner: "usageHistory"
   """
   usageHistory_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [usageHistory_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistory_bool_exp
   ): [usageHistory!]!
 
@@ -4740,19 +6157,29 @@ type subscription_root {
   fetch data from the table: "user"
   """
   user(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [user_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [user_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: user_bool_exp
   ): [user!]!
 
@@ -4760,19 +6187,29 @@ type subscription_root {
   fetch data from the table: "userSecret"
   """
   userSecret(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecret_bool_exp
   ): [userSecret!]!
 
@@ -4780,36 +6217,54 @@ type subscription_root {
   fetch data from the table: "userSecretField"
   """
   userSecretField(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecretField_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecretField_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecretField_bool_exp
   ): [userSecretField!]!
 
-  """fetch data from the table: "userSecretField" using primary key columns"""
+  """
+  fetch data from the table: "userSecretField" using primary key columns
+  """
   userSecretField_by_pk(id: uuid!): userSecretField
 
   """
   fetch data from the table in a streaming manner: "userSecretField"
   """
   userSecretField_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [userSecretField_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecretField_bool_exp
   ): [userSecretField!]!
 
@@ -4817,36 +6272,54 @@ type subscription_root {
   fetch aggregated fields from the table: "userSecret"
   """
   userSecret_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecret_bool_exp
   ): userSecret_aggregate!
 
-  """fetch data from the table: "userSecret" using primary key columns"""
+  """
+  fetch data from the table: "userSecret" using primary key columns
+  """
   userSecret_by_pk(id: uuid!): userSecret
 
   """
   fetch data from the table in a streaming manner: "userSecret"
   """
   userSecret_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [userSecret_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecret_bool_exp
   ): [userSecret!]!
 
@@ -4854,19 +6327,29 @@ type subscription_root {
   fetch data from the table: "userSubscription"
   """
   userSubscription(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSubscription_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSubscription_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSubscription_bool_exp
   ): [userSubscription!]!
 
@@ -4879,65 +6362,99 @@ type subscription_root {
   fetch data from the table in a streaming manner: "userSubscription"
   """
   userSubscription_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [userSubscription_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSubscription_bool_exp
   ): [userSubscription!]!
 
-  """fetch data from the table: "user" using primary key columns"""
+  """
+  fetch data from the table: "user" using primary key columns
+  """
   user_by_pk(id: uuid!): user
 
   """
   fetch data from the table in a streaming manner: "user"
   """
   user_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [user_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: user_bool_exp
   ): [user!]!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   viewPreferences(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [viewPreferences_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [viewPreferences_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: viewPreferences_bool_exp
   ): [viewPreferences!]!
 
-  """fetch data from the table: "viewPreferences" using primary key columns"""
+  """
+  fetch data from the table: "viewPreferences" using primary key columns
+  """
   viewPreferences_by_pk(id: uuid!): viewPreferences
 
   """
   fetch data from the table in a streaming manner: "viewPreferences"
   """
   viewPreferences_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [viewPreferences_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: viewPreferences_bool_exp
   ): [viewPreferences!]!
 }
@@ -4950,81 +6467,131 @@ type team {
   description: String
   id: uuid!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   invitations(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamInvitation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamInvitation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamInvitation_bool_exp
   ): [teamInvitation!]!
   lastUpdatedAt: timestamptz
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   members(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamUser_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamUser_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamUser_bool_exp
   ): [teamUser!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   members_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamUser_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamUser_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamUser_bool_exp
   ): teamUser_aggregate!
   name: String!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   owner: user!
   ownerUserId: uuid!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   projects(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [project_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [project_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: project_bool_exp
   ): [project!]!
   updatedAt: timestamptz!
@@ -5040,13 +6607,19 @@ type teamInvitation {
   id: uuid!
   invitedBy: uuid!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   invitedUser: user
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   ownerTeam: user!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   team: team!
   teamId: uuid!
   teamName: String!
@@ -5135,10 +6708,14 @@ input teamInvitation_min_order_by {
 response of any mutation on the table "teamInvitation"
 """
 type teamInvitation_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [teamInvitation!]!
 }
 
@@ -5151,7 +6728,9 @@ input teamInvitation_on_conflict {
   where: teamInvitation_bool_exp
 }
 
-"""Ordering options when selecting data from "teamInvitation"."""
+"""
+Ordering options when selecting data from "teamInvitation".
+"""
 input teamInvitation_order_by {
   createdAt: order_by
   email: order_by
@@ -5170,28 +6749,44 @@ input teamInvitation_order_by {
 select columns of table "teamInvitation"
 """
 enum teamInvitation_select_column {
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   email
 
-  """column name"""
+  """
+  column name
+  """
   expiredAt
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   invitedBy
 
-  """column name"""
+  """
+  column name
+  """
   teamId
 
-  """column name"""
+  """
+  column name
+  """
   teamName
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 }
 
@@ -5199,14 +6794,20 @@ enum teamInvitation_select_column {
 Streaming cursor of the table "teamInvitation"
 """
 input teamInvitation_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: teamInvitation_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input teamInvitation_stream_cursor_value_input {
   createdAt: timestamptz
   email: String
@@ -5222,7 +6823,9 @@ input teamInvitation_stream_cursor_value_input {
 placeholder for update columns of table "teamInvitation" (current role has no relevant permissions)
 """
 enum teamInvitation_update_column {
-  """placeholder (do not use)"""
+  """
+  placeholder (do not use)
+  """
   _PLACEHOLDER
 }
 
@@ -5233,10 +6836,14 @@ type teamUser {
   createdAt: timestamptz!
   id: uuid!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   member: user!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   team: team!
   teamId: uuid!
   updatedAt: timestamptz!
@@ -5317,7 +6924,9 @@ input teamUser_insert_input {
   userId: uuid
 }
 
-"""aggregate max on columns"""
+"""
+aggregate max on columns
+"""
 type teamUser_max_fields {
   createdAt: timestamptz
   id: uuid
@@ -5337,7 +6946,9 @@ input teamUser_max_order_by {
   userId: order_by
 }
 
-"""aggregate min on columns"""
+"""
+aggregate min on columns
+"""
 type teamUser_min_fields {
   createdAt: timestamptz
   id: uuid
@@ -5361,10 +6972,14 @@ input teamUser_min_order_by {
 response of any mutation on the table "teamUser"
 """
 type teamUser_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [teamUser!]!
 }
 
@@ -5377,7 +6992,9 @@ input teamUser_on_conflict {
   where: teamUser_bool_exp
 }
 
-"""Ordering options when selecting data from "teamUser"."""
+"""
+Ordering options when selecting data from "teamUser".
+"""
 input teamUser_order_by {
   createdAt: order_by
   id: order_by
@@ -5388,7 +7005,9 @@ input teamUser_order_by {
   userId: order_by
 }
 
-"""primary key columns input for table: teamUser"""
+"""
+primary key columns input for table: teamUser
+"""
 input teamUser_pk_columns_input {
   id: uuid!
 }
@@ -5397,19 +7016,29 @@ input teamUser_pk_columns_input {
 select columns of table "teamUser"
 """
 enum teamUser_select_column {
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   teamId
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 
-  """column name"""
+  """
+  column name
+  """
   userId
 }
 
@@ -5428,14 +7057,20 @@ input teamUser_set_input {
 Streaming cursor of the table "teamUser"
 """
 input teamUser_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: teamUser_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input teamUser_stream_cursor_value_input {
   createdAt: timestamptz
   id: uuid
@@ -5448,27 +7083,41 @@ input teamUser_stream_cursor_value_input {
 update columns of table "teamUser"
 """
 enum teamUser_update_column {
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   teamId
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 
-  """column name"""
+  """
+  column name
+  """
   userId
 }
 
 input teamUser_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: teamUser_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: teamUser_bool_exp!
 }
 
@@ -5507,7 +7156,9 @@ input team_bool_exp {
   updatedAt: timestamptz_comparison_exp
 }
 
-"""aggregate max on columns"""
+"""
+aggregate max on columns
+"""
 type team_max_fields {
   createdAt: timestamptz
   description: String
@@ -5518,7 +7169,9 @@ type team_max_fields {
   updatedAt: timestamptz
 }
 
-"""aggregate min on columns"""
+"""
+aggregate min on columns
+"""
 type team_min_fields {
   createdAt: timestamptz
   description: String
@@ -5533,14 +7186,20 @@ type team_min_fields {
 response of any mutation on the table "team"
 """
 type team_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [team!]!
 }
 
-"""Ordering options when selecting data from "team"."""
+"""
+Ordering options when selecting data from "team".
+"""
 input team_order_by {
   createdAt: order_by
   description: order_by
@@ -5555,7 +7214,9 @@ input team_order_by {
   updatedAt: order_by
 }
 
-"""primary key columns input for table: team"""
+"""
+primary key columns input for table: team
+"""
 input team_pk_columns_input {
   id: uuid!
 }
@@ -5564,25 +7225,39 @@ input team_pk_columns_input {
 select columns of table "team"
 """
 enum team_select_column {
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   description
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   lastUpdatedAt
 
-  """column name"""
+  """
+  column name
+  """
   name
 
-  """column name"""
+  """
+  column name
+  """
   ownerUserId
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 }
 
@@ -5598,14 +7273,20 @@ input team_set_input {
 Streaming cursor of the table "team"
 """
 input team_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: team_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input team_stream_cursor_value_input {
   createdAt: timestamptz
   description: String
@@ -5617,10 +7298,14 @@ input team_stream_cursor_value_input {
 }
 
 input team_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: team_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: team_bool_exp!
 }
 
@@ -5658,14 +7343,18 @@ input timestamptz_comparison_exp {
   _nin: [timestamptz!]
 }
 
-"""Table for storing user project tokens."""
+"""
+Table for storing user project tokens.
+"""
 type token {
   created_at: timestamptz!
   expiresAt: timestamptz
   id: uuid!
   name: String!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   project: project!
   projectId: uuid!
   updated_at: timestamptz!
@@ -5724,14 +7413,20 @@ input token_min_order_by {
 response of any mutation on the table "token"
 """
 type token_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [token!]!
 }
 
-"""Ordering options when selecting data from "token"."""
+"""
+Ordering options when selecting data from "token".
+"""
 input token_order_by {
   created_at: order_by
   expiresAt: order_by
@@ -5742,7 +7437,9 @@ input token_order_by {
   updated_at: order_by
 }
 
-"""primary key columns input for table: token"""
+"""
+primary key columns input for table: token
+"""
 input token_pk_columns_input {
   id: uuid!
 }
@@ -5751,22 +7448,34 @@ input token_pk_columns_input {
 select columns of table "token"
 """
 enum token_select_column {
-  """column name"""
+  """
+  column name
+  """
   created_at
 
-  """column name"""
+  """
+  column name
+  """
   expiresAt
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   name
 
-  """column name"""
+  """
+  column name
+  """
   projectId
 
-  """column name"""
+  """
+  column name
+  """
   updated_at
 }
 
@@ -5781,14 +7490,20 @@ input token_set_input {
 Streaming cursor of the table "token"
 """
 input token_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: token_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input token_stream_cursor_value_input {
   created_at: timestamptz
   expiresAt: timestamptz
@@ -5799,10 +7514,14 @@ input token_stream_cursor_value_input {
 }
 
 input token_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: token_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: token_bool_exp!
 }
 
@@ -5814,44 +7533,70 @@ type usageHistory {
   createdAt: timestamptz!
   id: uuid!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   project: project!
   projectId: uuid!
   remoteIp: String
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   secrets(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistorySecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistorySecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistorySecret_bool_exp
   ): [usageHistorySecret!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   secrets_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistorySecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistorySecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistorySecret_bool_exp
   ): usageHistorySecret_aggregate!
   updatedAt: timestamptz!
@@ -5865,11 +7610,15 @@ type usageHistorySecret {
   id: uuid!
   updatedAt: timestamptz!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   usageHistory: usageHistory!
   usageHistoryId: uuid!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   userSecret: userSecret
   userSecretId: uuid
 }
@@ -5927,7 +7676,9 @@ input usageHistorySecret_bool_exp {
   userSecretId: uuid_comparison_exp
 }
 
-"""aggregate max on columns"""
+"""
+aggregate max on columns
+"""
 type usageHistorySecret_max_fields {
   createdAt: timestamptz
   id: uuid
@@ -5947,7 +7698,9 @@ input usageHistorySecret_max_order_by {
   userSecretId: order_by
 }
 
-"""aggregate min on columns"""
+"""
+aggregate min on columns
+"""
 type usageHistorySecret_min_fields {
   createdAt: timestamptz
   id: uuid
@@ -5967,7 +7720,9 @@ input usageHistorySecret_min_order_by {
   userSecretId: order_by
 }
 
-"""Ordering options when selecting data from "usageHistorySecret"."""
+"""
+Ordering options when selecting data from "usageHistorySecret".
+"""
 input usageHistorySecret_order_by {
   createdAt: order_by
   id: order_by
@@ -5982,19 +7737,29 @@ input usageHistorySecret_order_by {
 select columns of table "usageHistorySecret"
 """
 enum usageHistorySecret_select_column {
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 
-  """column name"""
+  """
+  column name
+  """
   usageHistoryId
 
-  """column name"""
+  """
+  column name
+  """
   userSecretId
 }
 
@@ -6002,14 +7767,20 @@ enum usageHistorySecret_select_column {
 Streaming cursor of the table "usageHistorySecret"
 """
 input usageHistorySecret_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: usageHistorySecret_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input usageHistorySecret_stream_cursor_value_input {
   createdAt: timestamptz
   id: uuid
@@ -6073,7 +7844,9 @@ input usageHistory_bool_exp {
   updatedAt: timestamptz_comparison_exp
 }
 
-"""aggregate max on columns"""
+"""
+aggregate max on columns
+"""
 type usageHistory_max_fields {
   callerName: String
   createdAt: timestamptz
@@ -6095,7 +7868,9 @@ input usageHistory_max_order_by {
   updatedAt: order_by
 }
 
-"""aggregate min on columns"""
+"""
+aggregate min on columns
+"""
 type usageHistory_min_fields {
   callerName: String
   createdAt: timestamptz
@@ -6117,7 +7892,9 @@ input usageHistory_min_order_by {
   updatedAt: order_by
 }
 
-"""Ordering options when selecting data from "usageHistory"."""
+"""
+Ordering options when selecting data from "usageHistory".
+"""
 input usageHistory_order_by {
   callerName: order_by
   createdAt: order_by
@@ -6133,22 +7910,34 @@ input usageHistory_order_by {
 select columns of table "usageHistory"
 """
 enum usageHistory_select_column {
-  """column name"""
+  """
+  column name
+  """
   callerName
 
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   projectId
 
-  """column name"""
+  """
+  column name
+  """
   remoteIp
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 }
 
@@ -6156,14 +7945,20 @@ enum usageHistory_select_column {
 Streaming cursor of the table "usageHistory"
 """
 input usageHistory_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: usageHistory_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input usageHistory_stream_cursor_value_input {
   callerName: String
   createdAt: timestamptz
@@ -6182,142 +7977,232 @@ type user {
   createdAt: timestamptz!
   email: String!
 
-  """A computed field which return the hasPassword boolean value"""
+  """
+  A computed field which return the hasPassword boolean value
+  """
   hasPassword: Boolean
   id: uuid!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   invitation(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamInvitation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamInvitation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamInvitation_bool_exp
   ): [teamInvitation!]!
   name: String!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   notificationUsers(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [notificationUser_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [notificationUser_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: notificationUser_bool_exp
   ): [notificationUser!]!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   notifications(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [notification_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [notification_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: notification_bool_exp
   ): [notification!]!
   registrationStep: registrationStep_enum
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   teams(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamUser_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamUser_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamUser_bool_exp
   ): [teamUser!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   teams_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamUser_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamUser_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamUser_bool_exp
   ): teamUser_aggregate!
   updatedAt: timestamptz!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   userSubscription: userSubscription
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   user_activeTeam: team
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   user_teamInvitation(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [teamInvitation_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [teamInvitation_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: teamInvitation_bool_exp
   ): [teamInvitation!]!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   viewPreferences(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [viewPreferences_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [viewPreferences_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: viewPreferences_bool_exp
   ): [viewPreferences!]!
 }
@@ -6328,84 +8213,134 @@ columns and relationships of "userSecret"
 type userSecret {
   createdAt: timestamptz!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   fields(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [userSecretField_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [userSecretField_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: userSecretField_bool_exp
   ): [userSecretField!]!
   id: uuid!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   installations(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [integrationInstallationUserSecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [integrationInstallationUserSecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: integrationInstallationUserSecret_bool_exp
   ): [integrationInstallationUserSecret!]!
   name: String!
   note: String!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   project: project!
   projectId: uuid!
   slug: String!
   updatedAt: timestamptz!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   userSecret_usageHistorySecrets(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistorySecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistorySecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistorySecret_bool_exp
   ): [usageHistorySecret!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   userSecret_usageHistorySecrets_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [usageHistorySecret_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [usageHistorySecret_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: usageHistorySecret_bool_exp
   ): usageHistorySecret_aggregate!
   vendor: vendorEnum_enum!
@@ -6421,7 +8356,9 @@ type userSecretField {
   slug: String!
   updatedAt: timestamptz!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   userSecret: userSecret!
   userSecretId: uuid!
   value: String!
@@ -6442,7 +8379,9 @@ input type for inserting array relation for remote table "userSecretField"
 input userSecretField_arr_rel_insert_input {
   data: [userSecretField_insert_input!]!
 
-  """upsert condition"""
+  """
+  upsert condition
+  """
   on_conflict: userSecretField_on_conflict
 }
 
@@ -6514,10 +8453,14 @@ input userSecretField_min_order_by {
 response of any mutation on the table "userSecretField"
 """
 type userSecretField_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [userSecretField!]!
 }
 
@@ -6530,7 +8473,9 @@ input userSecretField_on_conflict {
   where: userSecretField_bool_exp
 }
 
-"""Ordering options when selecting data from "userSecretField"."""
+"""
+Ordering options when selecting data from "userSecretField".
+"""
 input userSecretField_order_by {
   createdAt: order_by
   id: order_by
@@ -6542,7 +8487,9 @@ input userSecretField_order_by {
   value: order_by
 }
 
-"""primary key columns input for table: userSecretField"""
+"""
+primary key columns input for table: userSecretField
+"""
 input userSecretField_pk_columns_input {
   id: uuid!
 }
@@ -6551,25 +8498,39 @@ input userSecretField_pk_columns_input {
 select columns of table "userSecretField"
 """
 enum userSecretField_select_column {
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   name
 
-  """column name"""
+  """
+  column name
+  """
   slug
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 
-  """column name"""
+  """
+  column name
+  """
   userSecretId
 
-  """column name"""
+  """
+  column name
+  """
   value
 }
 
@@ -6587,14 +8548,20 @@ input userSecretField_set_input {
 Streaming cursor of the table "userSecretField"
 """
 input userSecretField_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: userSecretField_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input userSecretField_stream_cursor_value_input {
   createdAt: timestamptz
   id: uuid
@@ -6609,24 +8576,36 @@ input userSecretField_stream_cursor_value_input {
 update columns of table "userSecretField"
 """
 enum userSecretField_update_column {
-  """column name"""
+  """
+  column name
+  """
   name
 
-  """column name"""
+  """
+  column name
+  """
   slug
 
-  """column name"""
+  """
+  column name
+  """
   userSecretId
 
-  """column name"""
+  """
+  column name
+  """
   value
 }
 
 input userSecretField_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: userSecretField_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: userSecretField_bool_exp!
 }
 
@@ -6712,7 +8691,9 @@ input userSecret_insert_input {
   vendor: vendorEnum_enum
 }
 
-"""aggregate max on columns"""
+"""
+aggregate max on columns
+"""
 type userSecret_max_fields {
   createdAt: timestamptz
   id: uuid
@@ -6736,7 +8717,9 @@ input userSecret_max_order_by {
   updatedAt: order_by
 }
 
-"""aggregate min on columns"""
+"""
+aggregate min on columns
+"""
 type userSecret_min_fields {
   createdAt: timestamptz
   id: uuid
@@ -6764,10 +8747,14 @@ input userSecret_min_order_by {
 response of any mutation on the table "userSecret"
 """
 type userSecret_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [userSecret!]!
 }
 
@@ -6777,7 +8764,9 @@ input type for inserting object relation for remote table "userSecret"
 input userSecret_obj_rel_insert_input {
   data: userSecret_insert_input!
 
-  """upsert condition"""
+  """
+  upsert condition
+  """
   on_conflict: userSecret_on_conflict
 }
 
@@ -6790,7 +8779,9 @@ input userSecret_on_conflict {
   where: userSecret_bool_exp
 }
 
-"""Ordering options when selecting data from "userSecret"."""
+"""
+Ordering options when selecting data from "userSecret".
+"""
 input userSecret_order_by {
   createdAt: order_by
   fields_aggregate: userSecretField_aggregate_order_by
@@ -6806,7 +8797,9 @@ input userSecret_order_by {
   vendor: order_by
 }
 
-"""primary key columns input for table: userSecret"""
+"""
+primary key columns input for table: userSecret
+"""
 input userSecret_pk_columns_input {
   id: uuid!
 }
@@ -6815,28 +8808,44 @@ input userSecret_pk_columns_input {
 select columns of table "userSecret"
 """
 enum userSecret_select_column {
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   name
 
-  """column name"""
+  """
+  column name
+  """
   note
 
-  """column name"""
+  """
+  column name
+  """
   projectId
 
-  """column name"""
+  """
+  column name
+  """
   slug
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 
-  """column name"""
+  """
+  column name
+  """
   vendor
 }
 
@@ -6854,14 +8863,20 @@ input userSecret_set_input {
 Streaming cursor of the table "userSecret"
 """
 input userSecret_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: userSecret_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input userSecret_stream_cursor_value_input {
   createdAt: timestamptz
   id: uuid
@@ -6877,28 +8892,42 @@ input userSecret_stream_cursor_value_input {
 update columns of table "userSecret"
 """
 enum userSecret_update_column {
-  """column name"""
+  """
+  column name
+  """
   name
 
-  """column name"""
+  """
+  column name
+  """
   note
 
-  """column name"""
+  """
+  column name
+  """
   slug
 
-  """column name"""
+  """
+  column name
+  """
   vendor
 }
 
 input userSecret_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: userSecret_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: userSecret_bool_exp!
 }
 
-"""User subscription data"""
+"""
+User subscription data
+"""
 type userSubscription {
   availableSeats: smallint!
   createdAt: timestamptz!
@@ -6912,7 +8941,9 @@ type userSubscription {
   subscriptionPlan: subscriptionPlanEnum_enum!
   updatedAt: timestamptz!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   user: user!
   userId: uuid!
 }
@@ -6943,14 +8974,20 @@ input userSubscription_bool_exp {
 response of any mutation on the table "userSubscription"
 """
 type userSubscription_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [userSubscription!]!
 }
 
-"""Ordering options when selecting data from "userSubscription"."""
+"""
+Ordering options when selecting data from "userSubscription".
+"""
 input userSubscription_order_by {
   availableSeats: order_by
   createdAt: order_by
@@ -6967,7 +9004,9 @@ input userSubscription_order_by {
   userId: order_by
 }
 
-"""primary key columns input for table: userSubscription"""
+"""
+primary key columns input for table: userSubscription
+"""
 input userSubscription_pk_columns_input {
   id: uuid!
 }
@@ -6976,40 +9015,64 @@ input userSubscription_pk_columns_input {
 select columns of table "userSubscription"
 """
 enum userSubscription_select_column {
-  """column name"""
+  """
+  column name
+  """
   availableSeats
 
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   paidSeats
 
-  """column name"""
+  """
+  column name
+  """
   stripeCustomerId
 
-  """column name"""
+  """
+  column name
+  """
   subscriptionCancellationDate
 
-  """column name"""
+  """
+  column name
+  """
   subscriptionExpirationDate
 
-  """column name"""
+  """
+  column name
+  """
   subscriptionExpirationMessageRead
 
-  """column name"""
+  """
+  column name
+  """
   subscriptionInterval
 
-  """column name"""
+  """
+  column name
+  """
   subscriptionPlan
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 
-  """column name"""
+  """
+  column name
+  """
   userId
 }
 
@@ -7024,14 +9087,20 @@ input userSubscription_set_input {
 Streaming cursor of the table "userSubscription"
 """
 input userSubscription_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: userSubscription_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input userSubscription_stream_cursor_value_input {
   availableSeats: smallint
   createdAt: timestamptz
@@ -7048,10 +9117,14 @@ input userSubscription_stream_cursor_value_input {
 }
 
 input userSubscription_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: userSubscription_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: userSubscription_bool_exp!
 }
 
@@ -7086,14 +9159,20 @@ input user_bool_exp {
 response of any mutation on the table "user"
 """
 type user_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [user!]!
 }
 
-"""Ordering options when selecting data from "user"."""
+"""
+Ordering options when selecting data from "user".
+"""
 input user_order_by {
   activeTeamId: order_by
   avatarUrl: order_by
@@ -7114,7 +9193,9 @@ input user_order_by {
   viewPreferences_aggregate: viewPreferences_aggregate_order_by
 }
 
-"""primary key columns input for table: user"""
+"""
+primary key columns input for table: user
+"""
 input user_pk_columns_input {
   id: uuid!
 }
@@ -7123,28 +9204,44 @@ input user_pk_columns_input {
 select columns of table "user"
 """
 enum user_select_column {
-  """column name"""
+  """
+  column name
+  """
   activeTeamId
 
-  """column name"""
+  """
+  column name
+  """
   avatarUrl
 
-  """column name"""
+  """
+  column name
+  """
   createdAt
 
-  """column name"""
+  """
+  column name
+  """
   email
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   name
 
-  """column name"""
+  """
+  column name
+  """
   registrationStep
 
-  """column name"""
+  """
+  column name
+  """
   updatedAt
 }
 
@@ -7162,14 +9259,20 @@ input user_set_input {
 Streaming cursor of the table "user"
 """
 input user_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: user_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input user_stream_cursor_value_input {
   activeTeamId: uuid
   avatarUrl: String
@@ -7182,10 +9285,14 @@ input user_stream_cursor_value_input {
 }
 
 input user_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: user_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: user_bool_exp!
 }
 
@@ -7340,10 +9447,14 @@ input viewPreferences_min_order_by {
 response of any mutation on the table "viewPreferences"
 """
 type viewPreferences_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [viewPreferences!]!
 }
 
@@ -7356,7 +9467,9 @@ input viewPreferences_on_conflict {
   where: viewPreferences_bool_exp
 }
 
-"""Ordering options when selecting data from "viewPreferences"."""
+"""
+Ordering options when selecting data from "viewPreferences".
+"""
 input viewPreferences_order_by {
   id: order_by
   isSortingReversed: order_by
@@ -7365,7 +9478,9 @@ input viewPreferences_order_by {
   sortedBy: order_by
 }
 
-"""primary key columns input for table: viewPreferences"""
+"""
+primary key columns input for table: viewPreferences
+"""
 input viewPreferences_pk_columns_input {
   id: uuid!
 }
@@ -7374,19 +9489,29 @@ input viewPreferences_pk_columns_input {
 select columns of table "viewPreferences"
 """
 enum viewPreferences_select_column {
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   isSortingReversed
 
-  """column name"""
+  """
+  column name
+  """
   layout
 
-  """column name"""
+  """
+  column name
+  """
   listId
 
-  """column name"""
+  """
+  column name
+  """
   sortedBy
 }
 
@@ -7403,14 +9528,20 @@ input viewPreferences_set_input {
 Streaming cursor of the table "viewPreferences"
 """
 input viewPreferences_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: viewPreferences_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input viewPreferences_stream_cursor_value_input {
   id: uuid
   isSortingReversed: Boolean
@@ -7423,21 +9554,30 @@ input viewPreferences_stream_cursor_value_input {
 update columns of table "viewPreferences"
 """
 enum viewPreferences_update_column {
-  """column name"""
+  """
+  column name
+  """
   isSortingReversed
 
-  """column name"""
+  """
+  column name
+  """
   layout
 
-  """column name"""
+  """
+  column name
+  """
   sortedBy
 }
 
 input viewPreferences_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: viewPreferences_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: viewPreferences_bool_exp!
 }
-

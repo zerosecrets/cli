@@ -1,10 +1,10 @@
 query ProjectDetails($id: uuid!) {
-  project(where: {id: {_eq: $id}}) {
+  project(where: { id: { _eq: $id } }) {
     id
     name
     description
 
-    usageHistories(limit: 1, order_by: {createdAt: desc}) {
+    usageHistories(limit: 1, order_by: { createdAt: desc }) {
       createdAt
     }
 

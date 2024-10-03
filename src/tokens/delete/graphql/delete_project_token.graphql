@@ -1,5 +1,5 @@
 mutation DeleteToken($tokenId: uuid!) {
-    delete_token_by_pk(id: $tokenId) {
-        id
-    }
+  delete_token_by_pk(id: $tokenId) {
+    id
+  }
 }

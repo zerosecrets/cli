@@ -1,5 +1,5 @@
 query TokenList($id: uuid!) {
-  project(where: {id: {_eq: $id}}) {
+  project(where: { id: { _eq: $id } }) {
     id
     name
 

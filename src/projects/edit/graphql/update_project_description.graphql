@@ -1,5 +1,11 @@
-mutation UpdateProjectDescription($projectId: uuid!, $projectDescription: String!) {
-    update_project(where: {id: {_eq: $projectId}}, _set: {description: $projectDescription}) {
-        affected_rows
-    }
+mutation UpdateProjectDescription(
+  $projectId: uuid!
+  $projectDescription: String!
+) {
+  update_project(
+    where: { id: { _eq: $projectId } }
+    _set: { description: $projectDescription }
+  ) {
+    affected_rows
+  }
 }

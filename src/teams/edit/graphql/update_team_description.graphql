@@ -1,5 +1,8 @@
 mutation UpdateTeamDescription($id: uuid!, $description: String!) {
-  update_team_by_pk(pk_columns: {id: $id}, _set: {description: $description}) {
+  update_team_by_pk(
+    pk_columns: { id: $id }
+    _set: { description: $description }
+  ) {
     id
   }
 }

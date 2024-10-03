@@ -1,5 +1,5 @@
 query SearchUsageHistoryById($id: String!) {
-  search_usage_history_by_id(args: {match: $id}) {
+  search_usage_history_by_id(args: { match: $id }) {
     id
     createdAt
   }

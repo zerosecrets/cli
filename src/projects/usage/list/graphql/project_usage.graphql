@@ -1,9 +1,9 @@
 query ProjectUsage($id: uuid!) {
-  project(where: {id: {_eq: $id}}, limit: 1000) {
+  project(where: { id: { _eq: $id } }, limit: 1000) {
     id
     name
 
-    usageHistories(order_by: {createdAt: desc}) {
+    usageHistories(order_by: { createdAt: desc }) {
       id
       createdAt
       callerName

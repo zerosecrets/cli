@@ -1,5 +1,5 @@
 mutation CreateTeam($teamName: String!) {
-    createTeam(object: {teamName: $teamName}) {
-        teamId
-    }
+  createTeam(object: { teamName: $teamName }) {
+    teamId
+  }
 }

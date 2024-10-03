@@ -1,5 +1,5 @@
 query SearchTokenById($id: String!) {
-  search_token_by_id(args: {match: $id}) {
+  search_token_by_id(args: { match: $id }) {
     id
     name
   }

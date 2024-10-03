@@ -1,15 +1,15 @@
 query UserInfoAndTeamNames($userId: uuid!) {
-    user_by_pk(id: $userId) {
-        id
+  user_by_pk(id: $userId) {
+    id
 
-        userSubscription {
-            id
-            subscriptionPlan
-        }
+    userSubscription {
+      id
+      subscriptionPlan
     }
+  }
 
-    team(where: {ownerUserId: {_eq: $userId}}) {
-        id
-        name
-    }
+  team(where: { ownerUserId: { _eq: $userId } }) {
+    id
+    name
+  }
 }

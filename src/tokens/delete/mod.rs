@@ -68,7 +68,7 @@ pub fn delete(args: &TokensDeleteArgs) {
             &delete_secret_error_message,
             delete_token::Variables { token_id },
         )
-            .delete_token_by_pk;
+        .delete_token_by_pk;
 
     if delete_token_response.is_none() {
         print_formatted_error(&delete_secret_error_message);

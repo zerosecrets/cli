@@ -76,12 +76,7 @@ pub fn delete(args: &ProjectsDeleteArgs) {
         .delete_project_by_pk;
 
     match delete_project_response {
-        Some(project) => {
-            if project.id.is_nil() {
-                print_formatted_error(&delete_project_error_message);
-                std::process::exit(1);
-            }
-        }
+        Some(project) => project,
 
         None => {
             print_formatted_error(&delete_project_error_message);

@@ -64,7 +64,9 @@ pub fn delete(args: &TeamsDeleteArgs) {
             DeleteTeam::build_query,
             &client,
             &remove_team_error_message,
-            delete_team::Variables { id: team_id },
+            remove_team::Variables {
+                team_id: team_id.to_string(),
+            },
         )
         .delete_team_by_pk;
 

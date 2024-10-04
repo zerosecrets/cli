@@ -71,18 +71,17 @@ pub fn delete(args: &ProjectsDeleteArgs) {
             DeleteProject::build_query,
             &Client::new(),
             &delete_project_error_message,
-            delete_project::Variables { id: project_id },
+            delete_project::Variables {
+                id: project_id.to_string(),
+            },
         )
-        .delete_project_by_pk;
+        .delete_project
+        .id;
 
-    match delete_project_response {
-        Some(project) => project,
+    if delete_project_response.to_string().trim().is_empty() {
+        print_formatted_error(&delete_project_error_message);
+        std::process::exit(1);
+    }
 
-        None => {
-            print_formatted_error(&delete_project_error_message);
-            std::process::exit(1);
-        }
-    };
-
-    println!("{} {}", "✔".green(), "Project successfully deleted.");
+    println!("{} {}", "✔".green(), "Project successfully deleted.")
 }

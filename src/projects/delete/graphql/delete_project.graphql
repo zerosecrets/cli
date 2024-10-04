@@ -1,5 +1,5 @@
-mutation DeleteProject($id: uuid!) {
-    delete_project_by_pk(id: $id) {
-        id
-    }
+mutation DeleteProject($id: String!) {
+  deleteProject(input: { id: $id, isVendorSecretsDelete: true }) {
+    id
+  }
 }

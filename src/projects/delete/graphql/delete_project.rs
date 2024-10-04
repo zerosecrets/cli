@@ -4,7 +4,7 @@ pub mod delete_project {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "DeleteProject";
-    pub const QUERY : & str = "mutation DeleteProject($id: uuid!) {\n    delete_project_by_pk(id: $id) {\n        id\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation DeleteProject($id: String!) {\n  deleteProject(input: { id: $id, isVendorSecretsDelete: true }) {\n    id\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -15,19 +15,19 @@ pub mod delete_project {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
-    type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct Variables {
-        pub id: uuid,
+        pub id: String,
     }
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        pub delete_project_by_pk: Option<DeleteProjectDeleteProjectByPk>,
+        #[serde(rename = "deleteProject")]
+        pub delete_project: DeleteProjectDeleteProject,
     }
     #[derive(Deserialize)]
-    pub struct DeleteProjectDeleteProjectByPk {
-        pub id: uuid,
+    pub struct DeleteProjectDeleteProject {
+        pub id: String,
     }
 }
 impl graphql_client::GraphQLQuery for DeleteProject {

@@ -3,8 +3,8 @@ use crate::auth::login::graphql::cli_access_tokens::{cli_access_tokens, CliAcces
 use crate::auth::login::graphql::user_by_pk::{user_by_pk, UserByPk};
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
-    execute_graphql_request::execute_graphql_request, fetch_user_id::fetch_user_id,
-    keyring::keyring, print_formatted_error::print_formatted_error,
+    execute_graphql_request::execute_graphql_request, keyring::keyring,
+    print_formatted_error::print_formatted_error,
 };
 use clap::Args;
 use dialoguer::Input;
@@ -12,6 +12,7 @@ use graphql_client::GraphQLQuery;
 use reqwest::{header, Client};
 use std::io;
 use termimad::crossterm::style::Stylize;
+use uuid::Uuid;
 
 #[derive(Args, Debug)]
 pub struct AuthLoginArgs {
@@ -77,14 +78,23 @@ pub fn login(args: &AuthLoginArgs) {
                     }
                 };
 
-                // Check the code and get the access token
-                let access_token = execute_graphql_request::<cli_access_tokens::Variables, cli_access_tokens::ResponseData>(
+                // Check the code and get the user ID and its access token
+                let user_auth = execute_graphql_request::<cli_access_tokens::Variables, cli_access_tokens::ResponseData>(
                     header::HeaderMap::new(),
                     CliAccessTokens::build_query,
                     &client,
                     "Failed to retrieve access token, please check if the code is correct and try again.",
                     cli_access_tokens::Variables::new(code),
-                ).cli_access_tokens.access_token;
+                ).cli_access_tokens;
+
+                let user_id = match Uuid::parse_str(&user_auth.user_id) {
+                    Ok(uuid) => uuid,
+
+                    Err(err) => {
+                        print_formatted_error(&format!("Invalid user id: {}", err));
+                        std::process::exit(1);
+                    }
+                };
 
                 let user_info_error_message =
                     "Authorization error. Failed to retrieve a user info.";
@@ -92,13 +102,11 @@ pub fn login(args: &AuthLoginArgs) {
                 // Send a request for user info
                 let user_info_response =
                     execute_graphql_request::<user_by_pk::Variables, user_by_pk::ResponseData>(
-                        authorization_headers(&access_token),
+                        authorization_headers(&user_auth.access_token),
                         UserByPk::build_query,
                         &client,
                         user_info_error_message,
-                        user_by_pk::Variables {
-                            id: fetch_user_id(&access_token),
-                        },
+                        user_by_pk::Variables { id: user_id },
                     )
                     .user_by_pk;
 
@@ -120,12 +128,17 @@ pub fn login(args: &AuthLoginArgs) {
                             "Be careful! Do not share your access token with anyone.".yellow()
                         );
 
-                        println!("{} {}", "Your access token is:".bold(), access_token);
+                        println!(
+                            "{} {}",
+                            "Your access token is:".bold(),
+                            user_auth.access_token
+                        );
                         std::process::exit(0);
                     }
 
                     false => {
-                        keyring::set("access_token", &access_token);
+                        keyring::set("access_token", &user_auth.access_token);
+                        keyring::set("user_id", &user_auth.user_id);
                         println!("{} You are authorized as {}", "✓".green(), user_info.name);
                         std::process::exit(0);
                     }

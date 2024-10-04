@@ -2,7 +2,6 @@ pub mod graphql;
 use crate::common::{
     authorization_headers::authorization_headers,
     execute_graphql_request::execute_graphql_request,
-    fetch_user_id::fetch_user_id,
     format_relative_time::format_relative_time,
     keyring::keyring,
     lengify::lengify,
@@ -19,6 +18,7 @@ use clap::Args;
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
 use termimad::crossterm::style::Stylize;
+use uuid::Uuid;
 
 #[derive(Args, Debug)]
 pub struct ProjectsListArgs {
@@ -44,9 +44,17 @@ pub fn list(args: &ProjectsListArgs) {
 
     let client = Client::new();
     let authorization_headers = authorization_headers(&access_token);
-    let user_id = fetch_user_id(&access_token);
+
+    let user_id = match Uuid::parse_str(&keyring::get("user_id")) {
+        Ok(uuid) => uuid,
+
+        Err(err) => {
+            print_formatted_error(&format!("Invalid user id: {}", err));
+            std::process::exit(1);
+        }
+    };
+
     let team_id;
-    let mut is_personal_project = false;
 
     match &args.id {
         Some(id) => {
@@ -72,7 +80,6 @@ pub fn list(args: &ProjectsListArgs) {
 
             if let Some(team_data) = personal_team.first() {
                 team_id = team_data.id.clone();
-                is_personal_project = true;
             } else {
                 print_formatted_error(&user_personal_project_team_id_error_message);
                 std::process::exit(1);
@@ -95,24 +102,16 @@ pub fn list(args: &ProjectsListArgs) {
 
     struct ColumnWidthSize {
         id: usize,
-        owner: usize,
         last_usage: usize,
     }
 
     let mut column_width_size = ColumnWidthSize {
         id: 5,
-        owner: 5,
         last_usage: 10,
     };
 
     // save the length of the longest column element
     for project in &projects {
-        if !is_personal_project {
-            column_width_size.owner = column_width_size
-                .owner
-                .max(project.owner.name.len() + project.owner.email.len() + 3);
-        }
-
         if let Some(usage_history) = project.usage_histories.first() {
             column_width_size.last_usage = column_width_size.last_usage.max(
                 format_relative_time(&usage_history.updated_at.to_string())
@@ -143,25 +142,13 @@ pub fn list(args: &ProjectsListArgs) {
         };
 
         list.push(format!(
-            "{}{}{}{}",
+            "{}{}{}",
             pad_to_column_width(
                 format!("#{}", &project.id.to_string()[..4]),
                 column_width_size.id + indentation
             )
             .green(),
             lengify(&project.name),
-            pad_to_column_width(
-                if is_personal_project {
-                    "".to_string()
-                } else {
-                    format!("{} ({})", project.owner.name, project.owner.email)
-                },
-                if is_personal_project {
-                    column_width_size.owner
-                } else {
-                    column_width_size.owner + indentation
-                }
-            ),
             pad_to_column_width(
                 format!("{}", last_usage_time),
                 column_width_size.last_usage + indentation
@@ -177,21 +164,9 @@ pub fn list(args: &ProjectsListArgs) {
         ),
         "You don't have any projects on this team.",
         format!(
-            "{}{}{}{}",
+            "{}{}{}",
             pad_to_column_width("ID".to_string(), column_width_size.id + indentation),
             lengify("NAME"),
-            pad_to_column_width(
-                if is_personal_project {
-                    "".to_string()
-                } else {
-                    "OWNER".to_string()
-                },
-                if is_personal_project {
-                    column_width_size.owner
-                } else {
-                    column_width_size.owner + indentation
-                }
-            ),
             pad_to_column_width(
                 "LAST USAGE".to_string(),
                 column_width_size.last_usage + indentation

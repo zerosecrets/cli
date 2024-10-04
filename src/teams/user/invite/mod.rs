@@ -2,7 +2,6 @@ mod graphql;
 use crate::common::{
     authorization_headers::authorization_headers,
     execute_graphql_request::execute_graphql_request,
-    fetch_user_id::fetch_user_id,
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
@@ -13,6 +12,7 @@ use graphql::send_invite::{send_invite, SendInvite};
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
 use termimad::crossterm::style::Stylize;
+use uuid::Uuid;
 
 #[derive(Args, Debug)]
 pub struct UserInviteArgs {
@@ -34,7 +34,15 @@ pub fn invite(args: &UserInviteArgs) {
         None => keyring::get("access_token"),
     };
 
-    let user_id = fetch_user_id(&access_token);
+    let user_id = match Uuid::parse_str(&keyring::get("user_id")) {
+        Ok(uuid) => uuid,
+
+        Err(err) => {
+            print_formatted_error(&format!("Invalid user id: {}", err));
+            std::process::exit(1);
+        }
+    };
+
     let team_id = query_full_id(QueryType::Teams, args.id.clone(), &access_token);
     let team_info = team_info(&access_token, team_id);
 

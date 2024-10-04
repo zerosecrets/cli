@@ -83,9 +83,16 @@ pub fn usage_details(args: &ProjectsUsageDetailsArgs) {
         ),
         format!(
             "**Caller**   : {}",
-            usage_details_response.caller_name.unwrap_or_else(|| "N\\A".to_string())
+            usage_details_response
+                .caller_name
+                .unwrap_or_else(|| "N\\A".to_string())
         ),
-        format!("**Caller IP**: {}", usage_details_response.remote_ip.unwrap_or_else(|| "N\\A".to_string())),
+        format!(
+            "**Caller IP**: {}",
+            usage_details_response
+                .remote_ip
+                .unwrap_or_else(|| "N\\A".to_string())
+        ),
         format!(
             "**Date**     : {}",
             format!(
@@ -104,7 +111,11 @@ pub fn usage_details(args: &ProjectsUsageDetailsArgs) {
                 style(format!(
                     "{}/projects/{}",
                     webapp_url,
-                    usage_details_response.project.id.to_string().replace("-", "")
+                    usage_details_response
+                        .project
+                        .id
+                        .to_string()
+                        .replace("-", "")
                 ))
                 .with(Color::Rgb {
                     r: 0,
@@ -172,7 +183,11 @@ pub fn usage_details(args: &ProjectsUsageDetailsArgs) {
                 style(format!(
                     "{}/projects/{}/secrets/{}",
                     webapp_url,
-                    usage_details_response.project.id.to_string().replace("-", ""),
+                    usage_details_response
+                        .project
+                        .id
+                        .to_string()
+                        .replace("-", ""),
                     secret.id.to_string().replace("-", "")
                 ))
                 .with(Color::Rgb {

@@ -83,11 +83,9 @@ pub fn view(args: &ProjectsViewArgs) {
     };
 
     let markdown_text = format!(
-        "**Name**: {} ({})\n**Owner**: {} ({})\n**Secrets**: {}\n**Integrations**: {}\n**Teams**: {}\n**URL**: {}\n**Last used**: {}",
+        "**Name**: {} ({})\n**Secrets**: {}\n**Integrations**: {}\n**Team**: {}\n**URL**: {}\n**Last used**: {}",
         &current_project_info.name,
         &current_project_info.id,
-        &current_project_info.owner.name,
-        &current_project_info.owner.email,
         if let Some(secret_count) = &current_project_info.user_secrets_aggregate.aggregate {
             secret_count.count
         } else {
@@ -98,10 +96,10 @@ pub fn view(args: &ProjectsViewArgs) {
         } else {
             0
         },
-        if let Some(teams_count) = &current_project_info.teams_aggregate.aggregate {
-            teams_count.count
+        if let Some(team) = &current_project_info.team {
+            String::from(team.name.clone())
         } else {
-            0
+            String::from("-")
         },
         style(format!("{}/projects/{}", Config::new().webapp_url, &current_project_info.id.to_string().replace("-", ""))).with(Color::Rgb {
             r: 0,

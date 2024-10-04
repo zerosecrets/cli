@@ -1,23 +1,15 @@
 query ProjectDetails($id: uuid!) {
-  project(where: {id: {_eq: $id}}) {
+  project(where: { id: { _eq: $id } }) {
     id
     name
     description
 
-    owner {
-      id
-      name
-      email
-    }
-
-    usageHistories(limit: 1, order_by: {createdAt: desc}) {
+    usageHistories(limit: 1, order_by: { createdAt: desc }) {
       createdAt
     }
 
-    teams_aggregate {
-      aggregate {
-        count
-      }
+    team {
+      name
     }
 
     integrationInstallations_aggregate {

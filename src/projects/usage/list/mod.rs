@@ -84,7 +84,7 @@ pub fn usage(args: &ProjectsUsageListArgs) {
         if let Some(name) = &history.caller_name {
             column_width_size.caller_name = column_width_size.caller_name.max(name.len());
         }
-        
+
         let unwrapped_history = history.remote_ip.clone().unwrap_or("N\\A".to_string());
         column_width_size.remote_ip = column_width_size.remote_ip.max(unwrapped_history.len());
         let created_at_data = &history.created_at.format(date_format);
@@ -138,10 +138,7 @@ pub fn usage(args: &ProjectsUsageListArgs) {
             } else {
                 String::from("")
             },
-            pad_to_column_width(
-                unwrapped_history,
-                column_width_size.remote_ip + indentation,
-            )
+            pad_to_column_width(unwrapped_history, column_width_size.remote_ip + indentation,)
         ));
     }
 

@@ -2,12 +2,12 @@ query SharedTeams($userId: uuid!) {
   team(
     where: {
       _and: [
-        {members: {member: {id: {_eq: $userId}}}}
-        {ownerUserId: {_neq: $userId}}
-        {owner: {userSubscription: {subscriptionPlan: {_neq: free}}}}
+        { members: { member: { id: { _eq: $userId } } } }
+        { ownerUserId: { _neq: $userId } }
+        { owner: { userSubscription: { subscriptionPlan: { _neq: free } } } }
       ]
     }
-    order_by: {lastUpdatedAt: desc}
+    order_by: { lastUpdatedAt: desc }
     limit: 1000
   ) {
     id

@@ -1,1 +1,1 @@
-pub mod remove_team;
+pub mod delete_team;

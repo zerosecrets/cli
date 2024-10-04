@@ -2,8 +2,8 @@
 pub struct TokenList;
 pub mod token_list {
     #![allow(dead_code)]
-    use chrono::DateTime;
     use chrono::offset::Utc;
+    use chrono::DateTime;
     pub const OPERATION_NAME: &str = "TokenList";
     pub const QUERY : & str = "query TokenList($id: uuid!) {\n  project(where: {id: {_eq: $id}}) {\n    id\n    name\n\n    tokens {\n      id\n      name\n      expiresAt\n    }\n  }\n}\n" ;
     use serde::{Deserialize, Serialize};

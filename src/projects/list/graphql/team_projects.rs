@@ -2,8 +2,10 @@
 pub struct TeamProjects;
 pub mod team_projects {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "TeamProjects";
-    pub const QUERY : & str = "query TeamProjects($id: uuid!, $userId: uuid!) {\n  project(where: {_and: [\n    {teams: {team: {id: {_eq: $id}}}},\n    {teams: {team: {members: {member: {id: {_eq: $userId}}}}}}\n  ]}, limit: 1000) {\n    id\n    name\n\n    owner {\n      name\n      email\n    }\n\n    usageHistories(order_by: {updatedAt: desc}, limit: 1) {\n      updatedAt\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query TeamProjects($id: uuid!, $userId: uuid!) {\n  project(\n    where: {\n      _and: [\n        { team: { id: { _eq: $id } } }\n        { team: { members: { member: { id: { _eq: $userId } } } } }\n      ]\n    }\n    limit: 1000\n  ) {\n    id\n    name\n\n    usageHistories(order_by: { updatedAt: desc }, limit: 1) {\n      updatedAt\n    }\n  }\n}\n" ;
+    use super::*;
     use chrono::offset::Utc;
     use chrono::DateTime;
     use serde::{Deserialize, Serialize};
@@ -32,14 +34,8 @@ pub mod team_projects {
     pub struct TeamProjectsProject {
         pub id: uuid,
         pub name: String,
-        pub owner: TeamProjectsProjectOwner,
         #[serde(rename = "usageHistories")]
         pub usage_histories: Vec<TeamProjectsProjectUsageHistories>,
-    }
-    #[derive(Deserialize)]
-    pub struct TeamProjectsProjectOwner {
-        pub name: String,
-        pub email: String,
     }
     #[derive(Deserialize)]
     pub struct TeamProjectsProjectUsageHistories {

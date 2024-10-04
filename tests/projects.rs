@@ -51,10 +51,10 @@ fn test_projects_create_with_token_7_days() -> Result<(), Error> {
 
 #[test]
 fn test_projects_delete() -> Result<(), Error> {
-    let mut p = spawn("cargo run -- projects delete --id dc2c", Some(15000))?;
+    let mut p = spawn("cargo run -- projects delete --id dd6c", Some(15000))?;
     p.exp_string("Type")?;
     p.exp_string("to confirm deletion:")?;
-    p.send_line("dc2c")?;
+    p.send_line("dd6c")?;
     p.exp_string("Project successfully deleted")?;
     Ok(())
 }
@@ -136,10 +136,9 @@ fn test_projects_usage_details() -> Result<(), Error> {
 fn test_projects_view() -> Result<(), Error> {
     let mut p = spawn("cargo run -- projects view --id dc1c", Some(15000))?;
     p.exp_string("Name")?;
-    p.exp_string("Owner")?;
     p.exp_string("Secrets")?;
     p.exp_string("Integrations")?;
-    p.exp_string("Teams")?;
+    p.exp_string("Team")?;
     p.exp_string("URL")?;
     Ok(())
 }

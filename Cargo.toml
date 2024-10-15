@@ -17,6 +17,7 @@ clap = { version = "4.5.4", features = ["derive"] }
 dialoguer = "0.11.0"
 graphql_client = "0.14.0"
 keyring = "2.3.2"
+lazy_static = "1.5.0"
 open = "5.1.2"
 rand = "0.8.5"
 regex = "1.10.4"
@@ -31,3 +32,7 @@ uuid = { version = "1.8.0", features = ["serde"]}
 
 [dev-dependencies]
 rexpect = "0.5.0"
+
+[features]
+default = []
+mock-keyring = []

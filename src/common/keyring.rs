@@ -19,6 +19,7 @@
 /// // Delete the key-value pair from the keyring
 /// keyring::delete("my_key");
 /// ```
+#[cfg(not(feature = "mock-keyring"))]
 pub mod keyring {
     use crate::common::print_formatted_error::print_formatted_error;
     use keyring::Entry;
@@ -87,5 +88,58 @@ pub mod keyring {
                 std::process::exit(1);
             }
         }
+    }
+}
+
+#[cfg(feature = "mock-keyring")]
+pub mod keyring {
+    use super::*;
+    use std::collections::HashMap;
+    use std::sync::RwLock;
+    use std::sync::Arc;
+    const SERVICE_NAME: &str = "zero-cli";
+
+    struct KeyringState {
+        storage: RwLock<HashMap<String, String>>,
+    }
+
+    impl KeyringState {
+        fn new() -> Self {
+            let mut initial_storage = HashMap::new();
+
+            // FIXME move token and user ID to ENV
+            initial_storage.insert(
+                "access_token".to_string(),
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJlbWFpbCI6ImNsaUB0ZXN0LmNvbSIsInJvbGUiOiJ1c2VyIiwidXNlcklkIjoiYzU0MThlZDItZmQ3Mi00NjFjLTk0NGUtNjY5YTI3NGNjMjAxIiwiaHR0cHM6Ly9oYXN1cmEuaW8vand0L2NsYWltcyI6eyJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInVzZXIiXSwieC1oYXN1cmEtZGVmYXVsdC1yb2xlIjoidXNlciIsIngtaGFzdXJhLXVzZXItaWQiOiJjNTQxOGVkMi1mZDcyLTQ2MWMtOTQ0ZS02NjlhMjc0Y2MyMDEifSwiaWF0IjoxNzI3OTYxNDc4LCJleHAiOjE3Mjk5NDg2Mzk4NzYsImlzcyI6Inplcm8tYXBwIn0.yNbgNF-ZPa-qjfYZqLIGwzxQ9CDy_fwJted1wpqzyUI".to_string(),
+            );
+
+            initial_storage.insert(
+                "user_id".to_string(),
+                "c5418ed2-fd72-461c-944e-669a274cc201".to_string(),
+            );
+
+            KeyringState {
+                storage: RwLock::new(initial_storage),
+            }
+        }
+    }
+
+    lazy_static::lazy_static! {
+        static ref STATE: Arc<KeyringState> = Arc::new(KeyringState::new());
+    }
+
+    pub fn set(key: &str, value: &str) {
+        let mut storage = STATE.storage.write().unwrap();
+        storage.insert(key.to_string(), value.to_string());
+    }
+
+    pub fn get(key: &str) -> String {
+        let storage = STATE.storage.read().unwrap();
+        storage.get(key).cloned().unwrap_or_default()
+    }
+
+    pub fn delete(key: &str) {
+        let mut storage = STATE.storage.write().unwrap();
+        storage.remove(key);
     }
 }

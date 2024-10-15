@@ -1,62 +1,37 @@
 name: integration-tests
 on:
-  workflow_dispatch:
-    inputs:
-      user_token:
-        description: User token
-        type: string
-      user_id:
-        description: User id
-        type: string
-  schedule:
-    - cron: 0 11 * * 1-5
+  push:
+    branches:
+      - andreypakhomov/zero-2890-run-cli-tests-in-github-actions-every-day
 jobs:
-  apply-seeds:
-    name: apply-seeds
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    concurrency:
-      group: staging-environment
-      cancel-in-progress: false
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: use-node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: install-hasura-cli
-        run: |-
-          yarn global add hasura-cli@2.36.2
-          echo "$(yarn global bin)" >> $GITHUB_PATH
-      - name: apply-seeds
-        run: |-
-          cd src/hasura/app
-          hasura seeds apply --endpoint https://api.staging-tryzero.com --admin-secret='${{ secrets.STAGING_HASURA_GRAPHQL_ADMIN_SECRET }}' --database-name default
   integration-tests:
     name: integration-tests
-    needs:
-      - apply-seeds
     runs-on: ubuntu-latest
     permissions:
       contents: read
     environment: Integration tests
     steps:
-      - name: run test
-        uses: ottofeller/github-actions/npm-run@main
-        env:
-          INTEGRATION_TEST_USER_ID: ${{github.event.inputs.user_id}}
-          INTEGRATION_TEST_USER_TOKEN: ${{github.event.inputs.user_token}}
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        run: rustup update stable && rustup default stable
+
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v4
         with:
-          node-version: 20
-          command: cargo run test --features mock-keyring
-    #   - name: report-status-to-slack
-    #     if: ${{ failure() && github.event.inputs.slack != 'false' }}
-    #     uses: 8398a7/action-slack@v3
-    #     env:
-    #       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    #     with:
-    #       fields: workflow
-    #       status: ${{ job.status }}
-    #       author_name: CLI integration tests
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Build the project with test feature flag
+        run: cargo build --verbose --features mock-keyring
+
+      - name: Run integration tests
+        run: cargo test --no-build --verbose --features mock-keyring
+        env:
+          INTEGRATION_TEST_USER_ID: c5418ed2-fd72-461c-944e-669a274cc201
+          INTEGRATION_TEST_USER_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJlbWFpbCI6ImNsaUB0ZXN0LmNvbSIsInJvbGUiOiJ1c2VyIiwidXNlcklkIjoiYzU0MThlZDItZmQ3Mi00NjFjLTk0NGUtNjY5YTI3NGNjMjAxIiwiaHR0cHM6Ly9oYXN1cmEuaW8vand0L2NsYWltcyI6eyJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInVzZXIiXSwieC1oYXN1cmEtZGVmYXVsdC1yb2xlIjoidXNlciIsIngtaGFzdXJhLXVzZXItaWQiOiJjNTQxOGVkMi1mZDcyLTQ2MWMtOTQ0ZS02NjlhMjc0Y2MyMDEifSwiaWF0IjoxNzI3OTYxNDc4LCJleHAiOjE3Mjk5NDg2Mzk4NzYsImlzcyI6Inplcm8tYXBwIn0.yNbgNF-ZPa-qjfYZqLIGwzxQ9CDy_fwJted1wpqzyUI

@@ -93,11 +93,9 @@ pub mod keyring {
 
 #[cfg(feature = "mock-keyring")]
 pub mod keyring {
-    use super::*;
     use std::collections::HashMap;
-    use std::sync::Arc;
-    use std::sync::RwLock;
-    const SERVICE_NAME: &str = "zero-cli";
+    use std::sync::{Arc, RwLock};
+    use std::env;
 
     struct KeyringState {
         storage: RwLock<HashMap<String, String>>,

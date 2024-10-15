@@ -1,0 +1,54 @@
+name: integration-tests
+on:
+  schedule:
+    - cron: 0 11 * * 1-5
+jobs:
+  apply-seeds:
+    name: apply-seeds
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: staging-environment
+      cancel-in-progress: false
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: use-node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: install-hasura-cli
+        run: |-
+          yarn global add hasura-cli@2.36.2
+          echo "$(yarn global bin)" >> $GITHUB_PATH
+      - name: apply-seeds
+        run: |-
+          cd src/hasura/app
+          hasura seeds apply --endpoint https://api.staging-tryzero.com --admin-secret='${{ secrets.STAGING_HASURA_GRAPHQL_ADMIN_SECRET }}' --database-name default
+  integration-tests:
+    name: integration-tests
+    needs:
+      - apply-seeds
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment: Integration tests
+    steps:
+      - name: run test
+        uses: ottofeller/github-actions/npm-run@main
+        env:
+          INTEGRATION_TEST_USER_ID: d8438ed5-fd77-463c-942e-669a774dd0eb
+          INTEGRATION_TEST_USER_TOKEN: d8438ed5-fd77-463c-942e-669a774dd0eb
+        with:
+          node-version: 20
+          command: cargo run test --features mock-keyring
+    #   - name: report-status-to-slack
+    #     if: ${{ failure() && github.event.inputs.slack != 'false' }}
+    #     uses: 8398a7/action-slack@v3
+    #     env:
+    #       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    #     with:
+    #       fields: workflow
+    #       status: ${{ job.status }}
+    #       author_name: CLI integration tests

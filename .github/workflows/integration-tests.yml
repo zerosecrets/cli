@@ -1,5 +1,13 @@
 name: integration-tests
 on:
+  workflow_dispatch:
+    inputs:
+      user_token:
+        description: User token
+        type: string
+      user_id:
+        description: User id
+        type: string
   schedule:
     - cron: 0 11 * * 1-5
 jobs:
@@ -38,8 +46,8 @@ jobs:
       - name: run test
         uses: ottofeller/github-actions/npm-run@main
         env:
-          INTEGRATION_TEST_USER_ID: d8438ed5-fd77-463c-942e-669a774dd0eb
-          INTEGRATION_TEST_USER_TOKEN: d8438ed5-fd77-463c-942e-669a774dd0eb
+          INTEGRATION_TEST_USER_ID: ${{github.event.inputs.user_id}}
+          INTEGRATION_TEST_USER_TOKEN: ${{github.event.inputs.user_token}}
         with:
           node-version: 20
           command: cargo run test --features mock-keyring

@@ -95,8 +95,8 @@ pub mod keyring {
 pub mod keyring {
     use super::*;
     use std::collections::HashMap;
-    use std::sync::RwLock;
     use std::sync::Arc;
+    use std::sync::RwLock;
     const SERVICE_NAME: &str = "zero-cli";
 
     struct KeyringState {
@@ -107,15 +107,20 @@ pub mod keyring {
         fn new() -> Self {
             let mut initial_storage = HashMap::new();
 
-            // FIXME move token and user ID to ENV
+            let access_token = env::var("INTEGRATION_TEST_USER_TOKEN")
+                .expect("Env INTEGRATION_TEST_USER_TOKEN is missing");
+
+            let user_id = env::var("INTEGRATION_TEST_USER_ID")
+                .expect("Env INTEGRATION_TEST_USER_ID is missing");
+
             initial_storage.insert(
                 "access_token".to_string(),
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJlbWFpbCI6ImNsaUB0ZXN0LmNvbSIsInJvbGUiOiJ1c2VyIiwidXNlcklkIjoiYzU0MThlZDItZmQ3Mi00NjFjLTk0NGUtNjY5YTI3NGNjMjAxIiwiaHR0cHM6Ly9oYXN1cmEuaW8vand0L2NsYWltcyI6eyJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInVzZXIiXSwieC1oYXN1cmEtZGVmYXVsdC1yb2xlIjoidXNlciIsIngtaGFzdXJhLXVzZXItaWQiOiJjNTQxOGVkMi1mZDcyLTQ2MWMtOTQ0ZS02NjlhMjc0Y2MyMDEifSwiaWF0IjoxNzI3OTYxNDc4LCJleHAiOjE3Mjk5NDg2Mzk4NzYsImlzcyI6Inplcm8tYXBwIn0.yNbgNF-ZPa-qjfYZqLIGwzxQ9CDy_fwJted1wpqzyUI".to_string(),
+                access_token.to_string(),
             );
 
             initial_storage.insert(
                 "user_id".to_string(),
-                "c5418ed2-fd72-461c-944e-669a274cc201".to_string(),
+                user_id.to_string(),
             );
 
             KeyringState {

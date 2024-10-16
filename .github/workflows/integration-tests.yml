@@ -1,0 +1,41 @@
+name: integration-tests
+on:
+  schedule:
+    - cron: 0 13 * * 1-5
+jobs:
+  integration-tests:
+    name: integration-tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        run: rustup update stable && rustup default stable
+
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Run integration tests
+        run: cargo test --features "integration-test"
+        env:
+          INTEGRATION_TEST_USER_ID: ${{secrets.INTEGRATION_TEST_USER_ID}}
+          INTEGRATION_TEST_USER_TOKEN: ${{secrets.INTEGRATION_TEST_USER_TOKEN}}
+      - name: report-status-to-slack
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          fields: workflow
+          status: ${{ job.status }}
+          author_name: CLI tests

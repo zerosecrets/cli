@@ -3,7 +3,11 @@ use rexpect::spawn;
 
 #[test]
 fn test_secrets_create_with_one_field() -> Result<(), Error> {
-    let mut p = spawn("cargo run -- secrets create --id dc1c", Some(15000))?;
+    let mut p = spawn(
+        "./target/debug/zero-cli secrets create --id dc1c",
+        Some(15000),
+    )?;
+
     p.exp_string("Type a name for the secret")?;
     p.send_line("test secret one field")?;
     p.send("\x1B[B")?;
@@ -24,7 +28,11 @@ fn test_secrets_create_with_one_field() -> Result<(), Error> {
 
 #[test]
 fn test_secrets_create_with_many_fields() -> Result<(), Error> {
-    let mut p = spawn("cargo run -- secrets create --id dc1c", Some(15000))?;
+    let mut p = spawn(
+        "./target/debug/zero-cli secrets create --id dc1c",
+        Some(15000),
+    )?;
+
     p.exp_string("Type a name for the secret")?;
     p.send_line("new_secret_many_fields")?;
     p.send("\x1B[B")?;
@@ -56,7 +64,11 @@ fn test_secrets_create_with_many_fields() -> Result<(), Error> {
 
 #[test]
 fn test_secrets_delete() -> Result<(), Error> {
-    let mut p = spawn("cargo run -- secrets delete --id fc2d", Some(15000))?;
+    let mut p = spawn(
+        "./target/debug/zero-cli secrets delete --id fc2d",
+        Some(15000),
+    )?;
+
     p.exp_string("Type fc2d to confirm deletion")?;
     p.send_line("fc2d")?;
     p.exp_string("Secret successfully deleted")?;
@@ -65,7 +77,11 @@ fn test_secrets_delete() -> Result<(), Error> {
 
 #[test]
 fn test_secrets_edit() -> Result<(), Error> {
-    let mut p = spawn("cargo run -- secrets edit --id fc1d5", Some(15000))?;
+    let mut p = spawn(
+        "./target/debug/zero-cli secrets edit --id fc1d5",
+        Some(15000),
+    )?;
+
     p.exp_string("Type a new secret name")?;
     p.send_line("edited secret")?;
     p.send("\x1B[B")?;
@@ -76,7 +92,11 @@ fn test_secrets_edit() -> Result<(), Error> {
 
 #[test]
 fn test_secrets_list() -> Result<(), Error> {
-    let mut p = spawn("cargo run -- secrets list --id dc1c", Some(15000))?;
+    let mut p = spawn(
+        "./target/debug/zero-cli secrets list --id dc1c",
+        Some(15000),
+    )?;
+
     p.exp_string("#fc3d")?;
     p.exp_string("list secret")?;
     Ok(())
@@ -84,7 +104,11 @@ fn test_secrets_list() -> Result<(), Error> {
 
 #[test]
 fn test_secrets_share() -> Result<(), Error> {
-    let mut p = spawn("cargo run -- secrets share --id fc4d", Some(15000))?;
+    let mut p = spawn(
+        "./target/debug/zero-cli secrets share --id fc4d",
+        Some(15000),
+    )?;
+
     p.exp_string("Type a passphrase of at least 6 character")?;
     p.send_line("123Qwe")?;
     p.exp_string("Expires in")?;
@@ -99,7 +123,11 @@ fn test_secrets_share() -> Result<(), Error> {
 
 #[test]
 fn test_secrets_view() -> Result<(), Error> {
-    let mut p = spawn("cargo run -- secrets view --id fc4d", Some(15000))?;
+    let mut p = spawn(
+        "./target/debug/zero-cli secrets view --id fc4d",
+        Some(15000),
+    )?;
+
     p.exp_string("URL")?;
     p.exp_string("Name")?;
     p.exp_string("Vendor")?;

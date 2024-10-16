@@ -9,6 +9,7 @@ pub struct Config {
 }
 
 /// Default implementation for the Config struct
+#[cfg(not(feature = "integration-test"))]
 impl Config {
     pub fn new() -> Self {
         Self {
@@ -18,6 +19,20 @@ impl Config {
             min_id_length: 4,
             webapp_cli_auth_url: String::from("https://app.tryzero.com/cli-success-login"),
             webapp_url: String::from("https://app.tryzero.com"),
+        }
+    }
+}
+
+#[cfg(feature = "integration-test")]
+impl Config {
+    pub fn new() -> Self {
+        Self {
+            date_format: String::from("%B %d %Y, %H:%M:%S"),
+            graphql_url: String::from("https://api.staging-tryzero.com/v1/graphql"),
+            items_per_page: 10,
+            min_id_length: 4,
+            webapp_cli_auth_url: String::from("https://app.staging-tryzero.com/cli-success-login"),
+            webapp_url: String::from("https://app.staging-tryzero.com"),
         }
     }
 }

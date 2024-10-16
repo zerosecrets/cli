@@ -36,4 +36,4 @@ rexpect = "0.5.0"
 
 [features]
 default = []
-mock-keyring = []
+integration-test = []

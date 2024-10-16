@@ -1,6 +1,15 @@
 use rexpect::error::Error;
 use rexpect::spawn;
 
+
+#[test]
+fn test_projects_list() -> Result<(), Error> {
+    let mut p = spawn("./target/debug/zero-cli projects list", Some(15000))?;
+    p.exp_string("Showing projects")?;
+    p.exp_string("#dc1c")?;
+    Ok(())
+}
+
 #[test]
 fn test_projects_create_without_token() -> Result<(), Error> {
     let mut p = spawn("./target/debug/zero-cli projects create", Some(15000))?;
@@ -69,14 +78,6 @@ fn test_projects_edit() -> Result<(), Error> {
     p.exp_string("Type a new project description")?;
     p.send_line("description")?;
     p.exp_string("The project has been successfully updated.")?;
-    Ok(())
-}
-
-#[test]
-fn test_projects_list() -> Result<(), Error> {
-    let mut p = spawn("./target/debug/zero-cli projects list", Some(15000))?;
-    p.exp_string("Showing projects")?;
-    p.exp_string("#dc3c")?;
     Ok(())
 }
 

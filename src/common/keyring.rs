@@ -19,7 +19,7 @@
 /// // Delete the key-value pair from the keyring
 /// keyring::delete("my_key");
 /// ```
-#[cfg(not(feature = "mock-keyring"))]
+#[cfg(not(feature = "integration-test"))]
 pub mod keyring {
     use crate::common::print_formatted_error::print_formatted_error;
     use keyring::Entry;
@@ -49,6 +49,7 @@ pub mod keyring {
     }
 
     pub fn get(key: &str) -> String {
+        println!("REAL keychain is active");
         let entry = Entry::new(SERVICE_NAME, key);
         let get_error_message = "You are not logged in, please enter the command 'zero-cli auth login', and log in using your tryzero.com account.";
 
@@ -91,11 +92,12 @@ pub mod keyring {
     }
 }
 
-#[cfg(feature = "mock-keyring")]
+#[cfg(feature = "integration-test")]
 pub mod keyring {
+
     use std::collections::HashMap;
-    use std::sync::{Arc, RwLock};
     use std::env;
+    use std::sync::{Arc, RwLock};
 
     struct KeyringState {
         storage: RwLock<HashMap<String, String>>,
@@ -111,15 +113,8 @@ pub mod keyring {
             let user_id = env::var("INTEGRATION_TEST_USER_ID")
                 .expect("Env INTEGRATION_TEST_USER_ID is missing");
 
-            initial_storage.insert(
-                "access_token".to_string(),
-                access_token.to_string(),
-            );
-
-            initial_storage.insert(
-                "user_id".to_string(),
-                user_id.to_string(),
-            );
+            initial_storage.insert("access_token".to_string(), access_token.to_string());
+            initial_storage.insert("user_id".to_string(), user_id.to_string());
 
             KeyringState {
                 storage: RwLock::new(initial_storage),

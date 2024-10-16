@@ -9,7 +9,7 @@ pub struct Config {
 }
 
 /// Default implementation for the Config struct
-#[cfg(not(feature = "mock-keyring"))]
+#[cfg(not(feature = "integration-test"))]
 impl Config {
     pub fn new() -> Self {
         Self {
@@ -23,7 +23,7 @@ impl Config {
     }
 }
 
-#[cfg(feature = "mock-keyring")]
+#[cfg(feature = "integration-test")]
 impl Config {
     pub fn new() -> Self {
         Self {

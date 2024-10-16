@@ -49,7 +49,6 @@ pub mod keyring {
     }
 
     pub fn get(key: &str) -> String {
-        println!("REAL keychain is active");
         let entry = Entry::new(SERVICE_NAME, key);
         let get_error_message = "You are not logged in, please enter the command 'zero-cli auth login', and log in using your tryzero.com account.";
 
@@ -94,7 +93,6 @@ pub mod keyring {
 
 #[cfg(feature = "integration-test")]
 pub mod keyring {
-
     use std::collections::HashMap;
     use std::env;
     use std::sync::{Arc, RwLock};

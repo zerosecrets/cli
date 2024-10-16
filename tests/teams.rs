@@ -13,7 +13,11 @@ fn test_teams_create() -> Result<(), Error> {
 
 #[test]
 fn test_teams_delete() -> Result<(), Error> {
-    let mut p = spawn("./target/debug/zero-cli teams delete --id 1cae", Some(15000))?;
+    let mut p = spawn(
+        "./target/debug/zero-cli teams delete --id 1cae",
+        Some(15000),
+    )?;
+
     p.exp_string("Type 1cae to confirm deletion")?;
     p.send_line("1cae")?;
     p.exp_string("Team successfully deleted")?;
@@ -77,6 +81,7 @@ fn test_teams_user_invite() -> Result<(), Error> {
         "./target/debug/zero-cli teams user invite --email test@test.com --id 2cae",
         Some(15000),
     )?;
+
     p.exp_string("The invitation was successfully sent to the user. test@test.com")?;
     Ok(())
 }
@@ -87,6 +92,7 @@ fn test_teams_user_remove() -> Result<(), Error> {
         "./target/debug/zero-cli teams user remove --id 2cae --user-id d541",
         Some(15000),
     )?;
+
     p.exp_string("Type 2cae to confirm deletion")?;
     p.send_line("2cae")?;
     p.exp_string("User successfully removed from the team")?;

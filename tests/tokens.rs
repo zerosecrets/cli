@@ -3,7 +3,11 @@ use rexpect::spawn;
 
 #[test]
 fn test_tokens_create() -> Result<(), Error> {
-    let mut p = spawn("./target/debug/zero-cli tokens create --id dc1c", Some(15000))?;
+    let mut p = spawn(
+        "./target/debug/zero-cli tokens create --id dc1c",
+        Some(15000),
+    )?;
+
     p.exp_string("Type a name for the token")?;
     p.send_line("project_token")?;
     p.exp_string("Expires in")?;
@@ -17,7 +21,11 @@ fn test_tokens_create() -> Result<(), Error> {
 
 #[test]
 fn test_tokens_delete() -> Result<(), Error> {
-    let mut p = spawn("./target/debug/zero-cli tokens delete --id d1bd", Some(15000))?;
+    let mut p = spawn(
+        "./target/debug/zero-cli tokens delete --id d1bd",
+        Some(15000),
+    )?;
+
     p.exp_string("confirm deletion")?;
     p.send_line("d1bd")?;
     p.exp_string("Token successfully deleted")?;
@@ -36,7 +44,11 @@ fn test_tokens_list() -> Result<(), Error> {
 
 #[test]
 fn test_tokens_regenerate_endless() -> Result<(), Error> {
-    let mut p = spawn("./target/debug/zero-cli tokens regenerate --id d2bd", Some(15000))?;
+    let mut p = spawn(
+        "./target/debug/zero-cli tokens regenerate --id d2bd",
+        Some(15000),
+    )?;
+
     p.exp_string("Expires in")?;
     p.exp_string("Endless")?;
     p.send_line("")?;
@@ -46,7 +58,11 @@ fn test_tokens_regenerate_endless() -> Result<(), Error> {
 
 #[test]
 fn test_tokens_regenerate_7_days() -> Result<(), Error> {
-    let mut p = spawn("./target/debug/zero-cli tokens regenerate --id d2bd", Some(15000))?;
+    let mut p = spawn(
+        "./target/debug/zero-cli tokens regenerate --id d2bd",
+        Some(15000),
+    )?;
+
     p.exp_string("Expires in")?;
     p.exp_string("Endless")?;
     p.send("\x1B[B")?;

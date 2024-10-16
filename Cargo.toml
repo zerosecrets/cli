@@ -15,6 +15,7 @@ exclude = ["docs/*"]
 chrono = { version = "0.4.38", features = ["serde"] }
 clap = { version = "4.5.4", features = ["derive"] }
 dialoguer = "0.11.0"
+dotenv = "0.15"
 graphql_client = "0.14.0"
 keyring = "2.3.2"
 lazy_static = "1.5.0"

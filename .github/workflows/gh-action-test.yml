@@ -12,9 +12,7 @@ jobs:
     - uses: zerosecrets/github-actions/token-to-secrets@main
       id: zero
       with:
-        # zero-token: ${{ secrets.ZERO_TOKEN }}
-        zero-token: 7666d09b650db5fdf624288f941403940aaf03bf
-        # apis: aws-production,stripe-production
+        zero-token: ${{ secrets.ZERO_TOKEN }}
         apis: aws-production,docker
         caller-name: CI/CD
     - name: echo secrets
@@ -23,15 +21,15 @@ jobs:
         env | grep ZERO_SECRET
     - name: Compare secrets
       run: |
-        EXPECTED_VALUE="123"
         ACTUAL_VALUE="${{ steps.zero.outputs.zero-secrets }}"
+        EXPECTED_VALUE='{docker:{docker_api_token:test-docker-token},aws-production:{access_key_id:test-acess-key-id}}'
 
         if [ "$ACTUAL_VALUE" = "$EXPECTED_VALUE" ]; then
           echo "Secrets match!"
         else
           echo "Secrets do not match!"
           echo "Actual value: $ACTUAL_VALUE"
-          exit 1  # возвращает статус код 1, чтобы упало
+          exit 1
         fi
     - name: report-status-to-slack
       if: failure()

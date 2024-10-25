@@ -1,4 +1,5 @@
 pub mod graphql;
+mod take_user_id_from_token;
 use crate::auth::login::graphql::cli_access_tokens::{cli_access_tokens, CliAccessTokens};
 use crate::auth::login::graphql::user_by_pk::{user_by_pk, UserByPk};
 use crate::common::{
@@ -11,6 +12,7 @@ use dialoguer::Input;
 use graphql_client::GraphQLQuery;
 use reqwest::{header, Client};
 use std::io;
+use take_user_id_from_token::take_user_id_from_token;
 use termimad::crossterm::style::Stylize;
 use uuid::Uuid;
 
@@ -87,14 +89,15 @@ pub fn login(args: &AuthLoginArgs) {
                     cli_access_tokens::Variables::new(code),
                 ).cli_access_tokens;
 
-                let user_id = match Uuid::parse_str(&user_auth.user_id) {
-                    Ok(uuid) => uuid,
+                let user_id =
+                    match Uuid::parse_str(&take_user_id_from_token(&user_auth.access_token)) {
+                        Ok(uuid) => uuid,
 
-                    Err(err) => {
-                        print_formatted_error(&format!("Invalid user id: {}", err));
-                        std::process::exit(1);
-                    }
-                };
+                        Err(err) => {
+                            print_formatted_error(&format!("Invalid user id: {}", err));
+                            std::process::exit(1);
+                        }
+                    };
 
                 let user_info_error_message =
                     "Authorization error. Failed to retrieve a user info.";

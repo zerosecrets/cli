@@ -1,3 +1,21 @@
+/// # Take user_id from token
+///
+/// Module provides functionality for parsing JSON Web Tokens (JWT)
+/// to extract user-specific information, such as the user ID. It includes utility
+/// functions for base64 padding and decoding token payloads.
+///
+/// **Security Note:** This module does **not** verify the token's signature or expiration.
+/// It assumes that the token is trusted and has been validated on backend side.
+///
+/// ## Example
+///
+/// ```rust
+///
+/// let token = "your_jwt_token_here";
+/// let user_id = take_user_id_from_token(&token);
+/// println!("User ID: {}", user_id);
+/// ```
+///
 use crate::common::print_formatted_error::print_formatted_error;
 use base64::{engine::general_purpose, Engine as _};
 use serde::{Deserialize, Serialize};

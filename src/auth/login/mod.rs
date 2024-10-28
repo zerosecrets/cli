@@ -1,18 +1,16 @@
 pub mod graphql;
-mod take_user_id_from_token;
 use crate::auth::login::graphql::cli_access_tokens::{cli_access_tokens, CliAccessTokens};
 use crate::auth::login::graphql::user_by_pk::{user_by_pk, UserByPk};
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
-    print_formatted_error::print_formatted_error,
+    print_formatted_error::print_formatted_error, take_user_id_from_token::take_user_id_from_token,
 };
 use clap::Args;
 use dialoguer::Input;
 use graphql_client::GraphQLQuery;
 use reqwest::{header, Client};
 use std::io;
-use take_user_id_from_token::take_user_id_from_token;
 use termimad::crossterm::style::Stylize;
 use uuid::Uuid;
 
@@ -141,7 +139,6 @@ pub fn login(args: &AuthLoginArgs) {
 
                     false => {
                         keyring::set("access_token", &user_auth.access_token);
-                        keyring::set("user_id", &user_auth.user_id);
                         println!("{} You are authorized as {}", "✓".green(), user_info.name);
                         std::process::exit(0);
                     }

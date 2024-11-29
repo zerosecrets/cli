@@ -190,12 +190,11 @@ pub fn share(args: &ProjectsShareArgs) {
             "Sharing failed. Failed to generate a secret sharing url for the project '{}'.",
             &args.id.clone()
         ),
-        generate_secret_sharing_url::Variables::new(
-            Utc::now() + Duration::minutes(expires_at_minutes),
-            Some(passphrase),
-            user_secret_fields_ids_vec,
-            project_id,
-        ),
+        generate_secret_sharing_url::Variables {
+            expires_at: (Utc::now() + Duration::minutes(expires_at_minutes)).to_rfc3339(),
+            pass_phrase: passphrase,
+            secrets_field_ids: user_secret_fields_ids_vec,
+        },
     )
     .generate_secret_sharing_url
     .url;

@@ -2,10 +2,10 @@
 pub struct GenerateSecretSharingUrl;
 pub mod generate_secret_sharing_url {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "GenerateSecretSharingUrl";
-    pub const QUERY : & str = "mutation GenerateSecretSharingUrl($object: GenerateSecretSharingUrlInput!) {\n    generateSecretSharingUrl(object: $object) {\n        url\n    }\n}\n" ;
-
-    use chrono::{DateTime, Utc};
+    pub const QUERY : & str = "mutation GenerateSecretSharingUrl(\n  $expiresAt: String!\n  $passPhrase: String!\n  $secretsFieldIds: [String!]!\n) {\n  generateSecretSharingUrl(\n    expiresAt: $expiresAt\n    passPhrase: $passPhrase\n    secretsFieldIds: $secretsFieldIds\n  ) {\n    url\n  }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -16,36 +16,15 @@ pub mod generate_secret_sharing_url {
     #[allow(dead_code)]
     type ID = String;
     #[derive(Serialize)]
-    pub struct GenerateSecretSharingUrlInput {
-        #[serde(rename = "expiresAt")]
-        pub expires_at: DateTime<Utc>,
-        #[serde(rename = "passPhrase")]
-        pub pass_phrase: Option<String>,
-        #[serde(rename = "projectId")]
-        pub project_id: uuid::Uuid,
-        #[serde(rename = "secretsFieldsIds")]
-        pub secrets_fields_ids: Vec<String>,
-    }
-    #[derive(Serialize)]
     pub struct Variables {
-        pub object: GenerateSecretSharingUrlInput,
+        #[serde(rename = "expiresAt")]
+        pub expires_at: String,
+        #[serde(rename = "passPhrase")]
+        pub pass_phrase: String,
+        #[serde(rename = "secretsFieldIds")]
+        pub secrets_field_ids: Vec<String>,
     }
-    impl Variables {
-        pub fn new(
-            expires_at: DateTime<Utc>,
-            pass_phrase: Option<String>,
-            secrets_fields_ids: Vec<String>,
-            project_id: uuid::Uuid,
-        ) -> Self {
-            let object = GenerateSecretSharingUrlInput {
-                expires_at,
-                pass_phrase,
-                secrets_fields_ids,
-                project_id,
-            };
-            Self { object }
-        }
-    }
+    impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
         #[serde(rename = "generateSecretSharingUrl")]
@@ -59,7 +38,7 @@ pub mod generate_secret_sharing_url {
 impl graphql_client::GraphQLQuery for GenerateSecretSharingUrl {
     type Variables = generate_secret_sharing_url::Variables;
     type ResponseData = generate_secret_sharing_url::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: generate_secret_sharing_url::QUERY,

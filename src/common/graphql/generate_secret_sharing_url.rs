@@ -4,7 +4,7 @@ pub mod generate_secret_sharing_url {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "GenerateSecretSharingUrl";
-    pub const QUERY : & str = "mutation GenerateSecretSharingUrl(\n  $expiresAt: String!\n  $passPhrase: String!\n  $secretsFieldIds: [String!]!\n) {\n  generateSecretSharingUrl(\n    expiresAt: $expiresAt\n    passPhrase: $passPhrase\n    secretsFieldIds: $secretsFieldIds\n  ) {\n    url\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation GenerateSecretSharingUrl(\n  $expiresAt: String!\n  $passphrase: String!\n  $secretsFieldIds: [String!]!\n) {\n  generateSecretSharingUrl(\n    expiresAt: $expiresAt\n    passphrase: $passphrase\n    secretsFieldIds: $secretsFieldIds\n  ) {\n    url\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -19,8 +19,7 @@ pub mod generate_secret_sharing_url {
     pub struct Variables {
         #[serde(rename = "expiresAt")]
         pub expires_at: String,
-        #[serde(rename = "passPhrase")]
-        pub pass_phrase: String,
+        pub passphrase: String,
         #[serde(rename = "secretsFieldIds")]
         pub secrets_field_ids: Vec<String>,
     }

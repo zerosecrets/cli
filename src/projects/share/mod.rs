@@ -192,7 +192,7 @@ pub fn share(args: &ProjectsShareArgs) {
         ),
         generate_secret_sharing_url::Variables {
             expires_at: (Utc::now() + Duration::minutes(expires_at_minutes)).to_rfc3339(),
-            pass_phrase: passphrase,
+            passphrase: passphrase,
             secrets_field_ids: user_secret_fields_ids_vec,
         },
     )

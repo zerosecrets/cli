@@ -170,7 +170,7 @@ pub fn share(args: &SecretShareArgs) {
         ),
         generate_secret_sharing_url::Variables {
             expires_at: (Utc::now() + Duration::minutes(expires_at_minutes)).to_rfc3339(),
-            pass_phrase: passphrase,
+            passphrase: passphrase,
             secrets_field_ids: selected_secrets,
         },
     )

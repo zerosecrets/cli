@@ -23,12 +23,6 @@ input AWSUpdateSecretsInputZero {
   secretsIds: [String!]!
 }
 
-input AcceptTeamInviteInput {
-  failureAcceptInviteMessage: String!
-  successfulAcceptInviteMessage: String!
-  teamId: String!
-}
-
 input BitbucketDownloadSecretsInput {
   isDownloadSecretsEnabled: Boolean!
   isDownloadVendorPriority: Boolean!
@@ -269,11 +263,6 @@ type CurrentPlanOutput {
   cancelAt: Int
   currentPlan: String
   interval: String
-}
-
-input DecodeSharingSecretsInput {
-  id: String!
-  passPhrase: String!
 }
 
 type DecodeSharingSecretsOutput {
@@ -521,10 +510,6 @@ input RegisterInput {
   email: String!
   isMarketingEmailsRequested: Boolean
   password: String!
-}
-
-input RejectTeamInvitationInput {
-  invitationId: String!
 }
 
 input RemoveTeamInput {
@@ -1479,7 +1464,7 @@ input listIdEnum_enum_comparison_exp {
 
 """mutation root"""
 type mutation_root {
-  acceptTeamInvite(object: AcceptTeamInviteInput!): SuccessOutput!
+  acceptInvitation(id: String!): SuccessOutput!
   awsUpdateSecrets(integrationInstallation: AWSUpdateSecretsInputIntegration!, zero: AWSUpdateSecretsInputZero!): SuccessOutput!
   bitbucketInstall(downloadSecrets: BitbucketDownloadSecretsInput!, integrationInstallation: BitbucketInstallInputIntegration!, zero: BitbucketInputZero!): SuccessOutput!
   bitbucketUpdateSecrets(integrationInstallation: BitbucketUpdateSecretsInputIntegration!, zero: BitbucketUpdateSecretsInputZero!): SuccessOutput!
@@ -1495,7 +1480,7 @@ type mutation_root {
   createProjectToken(object: CreateProjectTokenInput!): CreateProjectTokenOutput!
   createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!, userId: String!): CreateSecretOutput!
   createTeam(object: CreateTeamInput!): CreateTeamOutput!
-  decodeSharingSecrets(object: DecodeSharingSecretsInput!): DecodeSharingSecretsOutput!
+  decodeSharingSecrets(id: String!, passphrase: String!): DecodeSharingSecretsOutput!
   deleteIntegration(integrationInstallation: DeleteIntegrationInput!): SuccessOutput!
   deleteProject(input: DeleteProjectInput!): DeleteProjectOutput!
 
@@ -1628,7 +1613,7 @@ type mutation_root {
   delete single row from the table: "userSecret"
   """
   delete_userSecret_by_pk(id: uuid!): userSecret
-  generateSecretSharingUrl(expiresAt: String!, passPhrase: String!, secretsFieldIds: [String!]!): GenerateSecretSharingUrlOutput!
+  generateSecretSharingUrl(expiresAt: String!, passphrase: String!, secretsFieldIds: [String!]!): GenerateSecretSharingUrlOutput!
   githubInstall(integrationInstallation: GitHubInstallInputIntegration!, zero: GitHubInputZero!): SuccessOutput!
   githubUpdateSecrets(integrationInstallation: GitHubUpdateSecretsInputIntegration!, zero: GitHubUpdateSecretsInputZero!): SuccessOutput!
   gitlabInstall(integrationInstallation: GitLabInstallInputIntegration!, zero: GitLabInputZero!): SuccessOutput!
@@ -1867,7 +1852,7 @@ type mutation_root {
 
   """Register api action"""
   register(object: RegisterInput!): SuccessOutput!
-  rejectTeamInvitation(object: RejectTeamInvitationInput!): SuccessOutput!
+  rejectInvitation(id: String!): SuccessOutput!
   removeTeam(object: RemoveTeamInput!): SuccessOutput!
   removeUserFromTeam(object: RemoveUserFromTeamInput!): SuccessOutput!
   requestEmailChange(object: RequestEmailChangeInput!): SuccessOutput!
@@ -7289,7 +7274,6 @@ type userSecretField {
   id: uuid!
   name: String!
   slug: String!
-  sortId: Int
   updatedAt: timestamptz!
 
   """An object relationship"""
@@ -7302,17 +7286,9 @@ type userSecretField {
 order by aggregate values of table "userSecretField"
 """
 input userSecretField_aggregate_order_by {
-  avg: userSecretField_avg_order_by
   count: order_by
   max: userSecretField_max_order_by
   min: userSecretField_min_order_by
-  stddev: userSecretField_stddev_order_by
-  stddev_pop: userSecretField_stddev_pop_order_by
-  stddev_samp: userSecretField_stddev_samp_order_by
-  sum: userSecretField_sum_order_by
-  var_pop: userSecretField_var_pop_order_by
-  var_samp: userSecretField_var_samp_order_by
-  variance: userSecretField_variance_order_by
 }
 
 """
@@ -7326,13 +7302,6 @@ input userSecretField_arr_rel_insert_input {
 }
 
 """
-order by avg() on columns of table "userSecretField"
-"""
-input userSecretField_avg_order_by {
-  sortId: order_by
-}
-
-"""
 Boolean expression to filter rows from the table "userSecretField". All fields are combined with a logical 'AND'.
 """
 input userSecretField_bool_exp {
@@ -7343,7 +7312,6 @@ input userSecretField_bool_exp {
   id: uuid_comparison_exp
   name: String_comparison_exp
   slug: String_comparison_exp
-  sortId: Int_comparison_exp
   updatedAt: timestamptz_comparison_exp
   userSecret: userSecret_bool_exp
   userSecretId: uuid_comparison_exp
@@ -7379,7 +7347,6 @@ input userSecretField_max_order_by {
   id: order_by
   name: order_by
   slug: order_by
-  sortId: order_by
   updatedAt: order_by
   userSecretId: order_by
   value: order_by
@@ -7393,7 +7360,6 @@ input userSecretField_min_order_by {
   id: order_by
   name: order_by
   slug: order_by
-  sortId: order_by
   updatedAt: order_by
   userSecretId: order_by
   value: order_by
@@ -7425,7 +7391,6 @@ input userSecretField_order_by {
   id: order_by
   name: order_by
   slug: order_by
-  sortId: order_by
   updatedAt: order_by
   userSecret: userSecret_order_by
   userSecretId: order_by
@@ -7454,9 +7419,6 @@ enum userSecretField_select_column {
   slug
 
   """column name"""
-  sortId
-
-  """column name"""
   updatedAt
 
   """column name"""
@@ -7477,27 +7439,6 @@ input userSecretField_set_input {
 }
 
 """
-order by stddev() on columns of table "userSecretField"
-"""
-input userSecretField_stddev_order_by {
-  sortId: order_by
-}
-
-"""
-order by stddev_pop() on columns of table "userSecretField"
-"""
-input userSecretField_stddev_pop_order_by {
-  sortId: order_by
-}
-
-"""
-order by stddev_samp() on columns of table "userSecretField"
-"""
-input userSecretField_stddev_samp_order_by {
-  sortId: order_by
-}
-
-"""
 Streaming cursor of the table "userSecretField"
 """
 input userSecretField_stream_cursor_input {
@@ -7514,17 +7455,9 @@ input userSecretField_stream_cursor_value_input {
   id: uuid
   name: String
   slug: String
-  sortId: Int
   updatedAt: timestamptz
   userSecretId: uuid
   value: String
-}
-
-"""
-order by sum() on columns of table "userSecretField"
-"""
-input userSecretField_sum_order_by {
-  sortId: order_by
 }
 
 """
@@ -7550,27 +7483,6 @@ input userSecretField_updates {
 
   """filter the rows which have to be updated"""
   where: userSecretField_bool_exp!
-}
-
-"""
-order by var_pop() on columns of table "userSecretField"
-"""
-input userSecretField_var_pop_order_by {
-  sortId: order_by
-}
-
-"""
-order by var_samp() on columns of table "userSecretField"
-"""
-input userSecretField_var_samp_order_by {
-  sortId: order_by
-}
-
-"""
-order by variance() on columns of table "userSecretField"
-"""
-input userSecretField_variance_order_by {
-  sortId: order_by
 }
 
 """

@@ -135,7 +135,7 @@ fn test_projects_usage_list() -> Result<(), Error> {
         Some(15000),
     )?;
 
-    p.exp_string("Usage statistics for the projec")?;
+    p.exp_string("Usage statistics for the project named 'Cli secrets'")?;
     p.exp_string("Use <Esc>/<q> to exit")?;
     p.exp_string("#7c15")?;
     Ok(())

@@ -1,10 +1,12 @@
 mod graphql;
+
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme,
     execute_graphql_request::execute_graphql_request, keyring::keyring, lengify::lengify,
     pad_to_column_width::pad_to_column_width, print_formatted_error::print_formatted_error,
-    table::table,
+    table::table, take_user_id_from_token::take_user_id_from_token,
 };
+
 use clap::Args;
 use dialoguer::Select;
 use graphql::my_teams::{my_teams, MyTeams};
@@ -73,7 +75,7 @@ pub fn list(args: &TeamListArgs) {
     let teams_error_message = "Failed to retrieve teams.";
     let client = Client::new();
 
-    let user_id = match Uuid::parse_str(&keyring::get("user_id")) {
+    let user_id = match Uuid::parse_str(&take_user_id_from_token(&access_token)) {
         Ok(uuid) => uuid,
 
         Err(err) => {

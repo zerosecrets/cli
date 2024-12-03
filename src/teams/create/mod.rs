@@ -3,7 +3,7 @@ mod graphql;
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
-    print_formatted_error::print_formatted_error,
+    print_formatted_error::print_formatted_error, take_user_id_from_token::take_user_id_from_token,
 };
 use crate::teams::create::graphql::create_team::{create_team, CreateTeam};
 use crate::teams::create::graphql::user_info_and_team_names::{
@@ -63,7 +63,7 @@ pub fn create(args: &TeamsCreateArgs) {
     let client = Client::new();
     let headers = authorization_headers(&access_token);
 
-    let user_id = match Uuid::parse_str(&keyring::get("user_id")) {
+    let user_id = match Uuid::parse_str(&take_user_id_from_token(&access_token)) {
         Ok(uuid) => uuid,
 
         Err(err) => {

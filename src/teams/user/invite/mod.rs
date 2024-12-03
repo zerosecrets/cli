@@ -5,6 +5,7 @@ use crate::common::{
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
+    take_user_id_from_token::take_user_id_from_token,
 };
 use crate::teams::common::team_info::team_info;
 use clap::Args;
@@ -34,7 +35,7 @@ pub fn invite(args: &UserInviteArgs) {
         None => keyring::get("access_token"),
     };
 
-    let user_id = match Uuid::parse_str(&keyring::get("user_id")) {
+    let user_id = match Uuid::parse_str(&take_user_id_from_token(&access_token)) {
         Ok(uuid) => uuid,
 
         Err(err) => {

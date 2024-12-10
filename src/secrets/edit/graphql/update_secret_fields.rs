@@ -2,8 +2,10 @@
 pub struct UpdateSecretFields;
 pub mod update_secret_fields {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "UpdateSecretFields";
-    pub const QUERY : & str = "mutation UpdateSecretFields($userSecretFields: [UpdateUserSecretFieldsInput!]!, $userSecret: UpdateUserSecretInput!) {\n  updateSecret(userSecretFields: $userSecretFields, userSecret: $userSecret) {\n    success\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation UpdateSecretFields(\n  $id: String!\n  $name: String!\n  $userSecretFields: [UpdateUserSecretFieldsInput!]!\n) {\n  updateSecret(fields: $userSecretFields, id: $id, name: $name) {\n    success\n  }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -16,24 +18,16 @@ pub mod update_secret_fields {
     #[derive(Serialize)]
     pub struct UpdateUserSecretFieldsInput {
         #[serde(rename = "decryptedValue")]
-        pub decrypted_value: Option<String>,
-        #[serde(rename = "encryptedValue")]
-        pub encrypted_value: Option<String>,
-        pub name: String,
-        #[serde(rename = "userSecretId")]
-        pub user_secret_id: String,
-    }
-    #[derive(Serialize)]
-    pub struct UpdateUserSecretInput {
-        pub id: String,
+        pub decrypted_value: String,
+        pub id: Option<String>,
         pub name: String,
     }
     #[derive(Serialize)]
     pub struct Variables {
+        pub id: String,
+        pub name: String,
         #[serde(rename = "userSecretFields")]
         pub user_secret_fields: Vec<UpdateUserSecretFieldsInput>,
-        #[serde(rename = "userSecret")]
-        pub user_secret: UpdateUserSecretInput,
     }
     impl Variables {}
     #[derive(Deserialize)]

@@ -134,3 +134,18 @@ fn test_secrets_view() -> Result<(), Error> {
     p.exp_string("Fields")?;
     Ok(())
 }
+
+#[test]
+fn test_secrets_field_edit() -> Result<(), Error> {
+    let mut p = spawn(
+        "./target/debug/zero-cli secrets edit --id fc1d5  --key API_key",
+        Some(15000),
+    )?;
+
+    p.exp_string("Type a new field key")?;
+    p.send_line("newApiKey")?;
+    p.exp_string("Type a new field value")?;
+    p.send_line("1234Ssg")?;
+    p.exp_string("The secret has been successfully updated.")?;
+    Ok(())
+}

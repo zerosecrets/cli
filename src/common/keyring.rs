@@ -108,11 +108,7 @@ pub mod keyring {
             let access_token = env::var("INTEGRATION_TEST_USER_TOKEN")
                 .expect("Env INTEGRATION_TEST_USER_TOKEN is missing");
 
-            let user_id = env::var("INTEGRATION_TEST_USER_ID")
-                .expect("Env INTEGRATION_TEST_USER_ID is missing");
-
             initial_storage.insert("access_token".to_string(), access_token.to_string());
-            initial_storage.insert("user_id".to_string(), user_id.to_string());
 
             KeyringState {
                 storage: RwLock::new(initial_storage),

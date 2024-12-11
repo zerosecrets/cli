@@ -13,6 +13,7 @@ pub mod query_full_id;
 pub mod read_env_file;
 pub mod slugify;
 pub mod table;
+pub mod take_user_id_from_token;
 pub mod tokio_runtime;
 pub mod validate_secret_field_name;
 pub mod validate_secret_name;

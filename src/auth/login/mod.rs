@@ -4,7 +4,7 @@ use crate::auth::login::graphql::user_by_pk::{user_by_pk, UserByPk};
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
-    print_formatted_error::print_formatted_error,
+    print_formatted_error::print_formatted_error, take_user_id_from_token::take_user_id_from_token,
 };
 use clap::Args;
 use dialoguer::Input;
@@ -87,14 +87,15 @@ pub fn login(args: &AuthLoginArgs) {
                     cli_access_tokens::Variables::new(code),
                 ).cli_access_tokens;
 
-                let user_id = match Uuid::parse_str(&user_auth.user_id) {
-                    Ok(uuid) => uuid,
+                let user_id =
+                    match Uuid::parse_str(&take_user_id_from_token(&user_auth.access_token)) {
+                        Ok(uuid) => uuid,
 
-                    Err(err) => {
-                        print_formatted_error(&format!("Invalid user id: {}", err));
-                        std::process::exit(1);
-                    }
-                };
+                        Err(err) => {
+                            print_formatted_error(&format!("Invalid user id: {}", err));
+                            std::process::exit(1);
+                        }
+                    };
 
                 let user_info_error_message =
                     "Authorization error. Failed to retrieve a user info.";
@@ -138,7 +139,6 @@ pub fn login(args: &AuthLoginArgs) {
 
                     false => {
                         keyring::set("access_token", &user_auth.access_token);
-                        keyring::set("user_id", &user_auth.user_id);
                         println!("{} You are authorized as {}", "✓".green(), user_info.name);
                         std::process::exit(0);
                     }

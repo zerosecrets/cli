@@ -168,12 +168,11 @@ pub fn share(args: &SecretShareArgs) {
             "Sharing error. Failed to generate secret sharing url for project '{}'.",
             &secret_details.project_id
         ),
-        generate_secret_sharing_url::Variables::new(
-            Utc::now() + Duration::minutes(expires_at_minutes),
-            Some(passphrase),
-            selected_secrets,
-            secret_details.project_id,
-        ),
+        generate_secret_sharing_url::Variables {
+            expires_at: (Utc::now() + Duration::minutes(expires_at_minutes)).to_rfc3339(),
+            passphrase: passphrase,
+            secrets_field_ids: selected_secrets,
+        },
     )
     .generate_secret_sharing_url
     .url;

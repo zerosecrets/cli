@@ -9,6 +9,7 @@ use crate::common::{
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
     table::table,
+    take_user_id_from_token::take_user_id_from_token,
 };
 use crate::projects::list::graphql::team_projects::{team_projects, TeamProjects};
 use crate::projects::list::graphql::user_personal_project_team_id::{
@@ -45,7 +46,7 @@ pub fn list(args: &ProjectsListArgs) {
     let client = Client::new();
     let authorization_headers = authorization_headers(&access_token);
 
-    let user_id = match Uuid::parse_str(&keyring::get("user_id")) {
+    let user_id = match Uuid::parse_str(&take_user_id_from_token(&access_token)) {
         Ok(uuid) => uuid,
 
         Err(err) => {

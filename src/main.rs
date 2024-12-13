@@ -5,6 +5,7 @@ mod secrets;
 mod teams;
 mod tokens;
 use clap::{Parser, Subcommand};
+use dotenv::dotenv;
 
 #[derive(Parser)]
 #[command(author="Ottofeller", version="2.6.0", about="CLI for the Zero service", long_about = None)]
@@ -29,6 +30,7 @@ enum Commands {
 }
 
 fn main() {
+    dotenv().ok();
     let cli = Cli::parse();
 
     match &cli.commands {

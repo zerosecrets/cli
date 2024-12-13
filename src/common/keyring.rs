@@ -19,6 +19,7 @@
 /// // Delete the key-value pair from the keyring
 /// keyring::delete("my_key");
 /// ```
+#[cfg(not(feature = "integration-test"))]
 pub mod keyring {
     use crate::common::print_formatted_error::print_formatted_error;
     use keyring::Entry;
@@ -87,5 +88,50 @@ pub mod keyring {
                 std::process::exit(1);
             }
         }
+    }
+}
+
+#[cfg(feature = "integration-test")]
+pub mod keyring {
+    use std::collections::HashMap;
+    use std::env;
+    use std::sync::{Arc, RwLock};
+
+    struct KeyringState {
+        storage: RwLock<HashMap<String, String>>,
+    }
+
+    impl KeyringState {
+        fn new() -> Self {
+            let mut initial_storage = HashMap::new();
+
+            let access_token = env::var("INTEGRATION_TEST_USER_TOKEN")
+                .expect("Env INTEGRATION_TEST_USER_TOKEN is missing");
+
+            initial_storage.insert("access_token".to_string(), access_token.to_string());
+
+            KeyringState {
+                storage: RwLock::new(initial_storage),
+            }
+        }
+    }
+
+    lazy_static::lazy_static! {
+        static ref STATE: Arc<KeyringState> = Arc::new(KeyringState::new());
+    }
+
+    pub fn set(key: &str, value: &str) {
+        let mut storage = STATE.storage.write().unwrap();
+        storage.insert(key.to_string(), value.to_string());
+    }
+
+    pub fn get(key: &str) -> String {
+        let storage = STATE.storage.read().unwrap();
+        storage.get(key).cloned().unwrap_or_default()
+    }
+
+    pub fn delete(key: &str) {
+        let mut storage = STATE.storage.write().unwrap();
+        storage.remove(key);
     }
 }

@@ -2,8 +2,11 @@
 pub struct ProjectSecretsIds;
 pub mod project_secrets_ids {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "ProjectSecretsIds";
-    pub const QUERY : & str = "query ProjectSecretsIds($projectId: uuid!) {\n  project_by_pk(id: $projectId) {\n    id\n\n    userSecrets{\n      id\n      name\n\n      fields {\n        id\n      }\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query ProjectSecretsIds($projectId: uuid!) {\n  project_by_pk(id: $projectId) {\n    id\n\n    userSecrets {\n      id\n      name\n\n      fields {\n        id\n      }\n    }\n  }\n}\n" ;
+    use super::*;
+    type uuid = ::uuid::Uuid;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -13,7 +16,6 @@ pub mod project_secrets_ids {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
-    type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct Variables {
         #[serde(rename = "projectId")]
@@ -44,7 +46,7 @@ pub mod project_secrets_ids {
 impl graphql_client::GraphQLQuery for ProjectSecretsIds {
     type Variables = project_secrets_ids::Variables;
     type ResponseData = project_secrets_ids::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: project_secrets_ids::QUERY,

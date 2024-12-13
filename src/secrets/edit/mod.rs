@@ -150,17 +150,15 @@ pub fn edit(args: &SecretsEditArgs) {
             .map(|field: &user_secret_and_already_taken_user_secret_names::UserSecretAndAlreadyTakenUserSecretNamesUserSecretByPkFields| {
                 if editable_secret_field.name == field.name {
                     update_secret_fields::UpdateUserSecretFieldsInput {
-                        decrypted_value: Some(new_field_value.to_string()),
-                        encrypted_value: Some(field.value.to_string()),
+                        id: Some(field.id.to_string()),
                         name: new_field_key_name.to_string(),
-                        user_secret_id: field.id.to_string(),
+                        decrypted_value: new_field_value.to_string()
                     }
                 } else {
                     update_secret_fields::UpdateUserSecretFieldsInput {
-                        decrypted_value: None,
-                        encrypted_value: Some(field.value.to_string()),
+                        id: Some(field.id.to_string()),
                         name: field.name.to_string(),
-                        user_secret_id: field.id.to_string(),
+                        decrypted_value: field.value.to_string()
                     }
                 }
             })
@@ -178,10 +176,8 @@ pub fn edit(args: &SecretsEditArgs) {
             &client,
             update_secret_field_error_message,
             update_secret_fields::Variables {
-                user_secret: update_secret_fields::UpdateUserSecretInput {
-                    id: secret_info.id.to_string(),
-                    name: secret_info.name,
-                },
+                id: secret_info.id.to_string(),
+                name: secret_info.name,
                 user_secret_fields: updated_user_secret_fields,
             },
         )

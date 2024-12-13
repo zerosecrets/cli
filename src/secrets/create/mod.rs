@@ -1,4 +1,5 @@
 mod graphql;
+
 use crate::common::{
     authorization_headers::authorization_headers,
     colorful_theme::theme,
@@ -7,20 +8,24 @@ use crate::common::{
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
+    take_user_id_from_token::take_user_id_from_token,
     validate_secret_field_name::validate_secret_field_name,
     validate_secret_name::validate_secret_name,
     vendors::Vendors,
 };
+
 use crate::secrets::create::graphql::create_secret::{create_secret, CreateSecret};
 use crate::secrets::create::graphql::secret_names::{secret_names, SecretNames};
 use clap::Args;
 use dialoguer::{Confirm, Input, Password, Select};
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
+
 use termimad::{
     crossterm::style::{style, Color, Stylize},
     minimad, MadSkin,
 };
+
 
 #[derive(Args, Debug)]
 pub struct SecretsCreateArgs {
@@ -55,7 +60,7 @@ pub fn create(args: &SecretsCreateArgs) {
     let client = Client::new();
     let headers = authorization_headers(&access_token);
     let project_id = query_full_id(QueryType::Project, args.id.clone(), &access_token);
-    let user_id = keyring::get("user_id");
+    let user_id = take_user_id_from_token(&access_token);
 
     let secret_names =
         match execute_graphql_request::<secret_names::Variables, secret_names::ResponseData>(

@@ -2915,6 +2915,7 @@ dependencies = [
  "reqwest",
  "rexpect",
  "serde",
+ "serde_json",
  "strum",
  "strum_macros",
  "termimad",

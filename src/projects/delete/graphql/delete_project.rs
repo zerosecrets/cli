@@ -4,7 +4,7 @@ pub mod delete_project {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "DeleteProject";
-    pub const QUERY : & str = "mutation DeleteProject($id: String!) {\n  deleteProject(input: { id: $id, isVendorSecretsDelete: true }) {\n    id\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation DeleteProject($id: String!) {\n  deleteProject( id: $id, isVendorSecretsMarkedAsDeleted: true ) {\n    id\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]

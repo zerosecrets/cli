@@ -2,8 +2,10 @@
 pub struct SendInvite;
 pub mod send_invite {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "SendInvite";
-    pub const QUERY : & str = "mutation SendInvite($teamId: String!, $email: String!) {\n    sendInviteUserTeam(object: {teamId: $teamId, email: $email}) {\n        success\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation SendInvite($teamId: String!, $email: String!) {\n  sendInviteUserTeam(teamId: $teamId, email: $email) {\n    teamId\n  }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -27,13 +29,14 @@ pub mod send_invite {
     }
     #[derive(Deserialize)]
     pub struct SendInviteSendInviteUserTeam {
-        pub success: Boolean,
+        #[serde(rename = "teamId")]
+        pub team_id: String,
     }
 }
 impl graphql_client::GraphQLQuery for SendInvite {
     type Variables = send_invite::Variables;
     type ResponseData = send_invite::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: send_invite::QUERY,

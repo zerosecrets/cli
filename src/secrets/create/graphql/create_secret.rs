@@ -2,8 +2,10 @@
 pub struct CreateSecret;
 pub mod create_secret {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "CreateSecret";
-    pub const QUERY : & str = "mutation CreateSecret($fields: [CreateSecretFieldInput!]!, $secret: CreateSecretInput!, $userId: String!) {\n    createSecret(fields: $fields, secret: $secret, userId: $userId) {\n        secretId\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation CreateSecret(\n  $fields: [CreateSecretFieldInput!]!\n  $secret: CreateSecretInput!\n) {\n  createSecret(fields: $fields, secret: $secret) {\n    id\n  }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -29,29 +31,6 @@ pub mod create_secret {
     pub struct Variables {
         pub fields: Vec<CreateSecretFieldInput>,
         pub secret: CreateSecretInput,
-        #[serde(rename = "userId")]
-        pub user_id: String,
-    }
-    impl Variables {
-        pub fn new(
-            name: String,
-            project_id: String,
-            vendor: String,
-            fields: Vec<CreateSecretFieldInput>,
-            user_id: String,
-        ) -> Self {
-            let secret = CreateSecretInput {
-                name,
-                project_id,
-                vendor,
-            };
-
-            Self {
-                secret,
-                fields,
-                user_id,
-            }
-        }
     }
     impl Variables {}
     #[derive(Deserialize)]
@@ -61,14 +40,13 @@ pub mod create_secret {
     }
     #[derive(Deserialize)]
     pub struct CreateSecretCreateSecret {
-        #[serde(rename = "secretId")]
-        pub secret_id: String,
+        pub id: String,
     }
 }
 impl graphql_client::GraphQLQuery for CreateSecret {
     type Variables = create_secret::Variables;
     type ResponseData = create_secret::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: create_secret::QUERY,

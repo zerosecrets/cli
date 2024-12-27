@@ -167,7 +167,7 @@ pub fn edit(args: &SecretsEditArgs) {
         let update_secret_field_error_message =
             "Editing failed. Failed to update the secret field.";
 
-        let is_update_secret_field_success = execute_graphql_request::<
+        let updated_secret_field_id = execute_graphql_request::<
             update_secret_fields::Variables,
             update_secret_fields::ResponseData,
         >(
@@ -182,9 +182,9 @@ pub fn edit(args: &SecretsEditArgs) {
             },
         )
         .update_secret
-        .success;
+        .id;
 
-        if !is_update_secret_field_success {
+        if updated_secret_field_id.is_empty() {
             print_formatted_error(update_secret_field_error_message);
             std::process::exit(1);
         }

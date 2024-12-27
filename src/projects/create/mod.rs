@@ -151,8 +151,9 @@ pub fn create(args: &ProjectsCreateArgs) {
         };
 
         token = Some(create_project::TokenObject {
-            token_expires_at,
-            token_name: Some(token_name),
+            id: None,
+            expires_at: token_expires_at,
+            name: Some(token_name),
         });
     } else {
         token = None;
@@ -178,17 +179,15 @@ pub fn create(args: &ProjectsCreateArgs) {
             &client,
             &create_project_error_message,
             create_project::Variables {
-                object: create_project::CreateProjectInput {
-                    project_icon: format!(
-                        ">{}#{:02x}{:02x}{:02x}",
-                        first_letters,
-                        rand::random::<u8>(),
-                        rand::random::<u8>(),
-                        rand::random::<u8>()
-                    ),
-                    project_name: project_name.clone(),
-                    token,
-                },
+                icon: format!(
+                    ">{}#{:02x}{:02x}{:02x}",
+                    first_letters,
+                    rand::random::<u8>(),
+                    rand::random::<u8>(),
+                    rand::random::<u8>()
+                ),
+                name: project_name.clone(),
+                token,
             },
         )
         .create_project;
@@ -220,7 +219,7 @@ pub fn create(args: &ProjectsCreateArgs) {
 
     let mut expander = text_template.expander();
 
-    let project_id = match project_response.project_id {
+    let project_id = match project_response.id {
         Some(id) => id,
 
         None => {

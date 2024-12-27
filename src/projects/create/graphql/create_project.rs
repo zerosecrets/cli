@@ -2,8 +2,10 @@
 pub struct CreateProject;
 pub mod create_project {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "CreateProject";
-    pub const QUERY : & str = "mutation CreateProject($object: CreateProjectInput!) {\n    createProject(object: $object) {\n        projectId\n        tokenValue\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation CreateProject($icon: String!, $name: String!, $token: TokenObject) {\n  createProject(icon: $icon, name: $name, token: $token) {\n    id\n    tokenValue\n  }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -14,23 +16,17 @@ pub mod create_project {
     #[allow(dead_code)]
     type ID = String;
     #[derive(Serialize)]
-    pub struct CreateProjectInput {
-        #[serde(rename = "projectIcon")]
-        pub project_icon: String,
-        #[serde(rename = "projectName")]
-        pub project_name: String,
-        pub token: Option<TokenObject>,
-    }
-    #[derive(Serialize)]
     pub struct TokenObject {
-        #[serde(rename = "tokenExpiresAt")]
-        pub token_expires_at: Option<String>,
-        #[serde(rename = "tokenName")]
-        pub token_name: Option<String>,
+        #[serde(rename = "expiresAt")]
+        pub expires_at: Option<String>,
+        pub id: Option<String>,
+        pub name: Option<String>,
     }
     #[derive(Serialize)]
     pub struct Variables {
-        pub object: CreateProjectInput,
+        pub icon: String,
+        pub name: String,
+        pub token: Option<TokenObject>,
     }
     impl Variables {}
     #[derive(Deserialize)]
@@ -40,8 +36,7 @@ pub mod create_project {
     }
     #[derive(Deserialize)]
     pub struct CreateProjectCreateProject {
-        #[serde(rename = "projectId")]
-        pub project_id: Option<String>,
+        pub id: Option<String>,
         #[serde(rename = "tokenValue")]
         pub token_value: Option<String>,
     }
@@ -49,7 +44,7 @@ pub mod create_project {
 impl graphql_client::GraphQLQuery for CreateProject {
     type Variables = create_project::Variables;
     type ResponseData = create_project::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: create_project::QUERY,

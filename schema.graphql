@@ -23,6 +23,10 @@ input AWSUpdateSecretsInputZero {
   secretsIds: [String!]!
 }
 
+type AcceptInviteOutput {
+  id: String!
+}
+
 input BitbucketDownloadSecretsInput {
   isDownloadSecretsEnabled: Boolean!
   isDownloadVendorPriority: Boolean!
@@ -89,24 +93,19 @@ input Boolean_comparison_exp {
   _nin: [Boolean!]
 }
 
-input CancelSubscriptionInput {
-  stripeCustomerId: String!
-}
-
 type CancelSubscriptionOutput {
   cancelAt: Int
   currentPlan: String
 }
 
-input ChangePasswordInput {
+type ChangePasswordOutput {
   email: String!
-  newPassword: String!
-  oldPassword: String!
+  id: String!
 }
 
-input ChangeSubscriptionInput {
-  priceId: String!
-  stripeCustomerId: String!
+type ChangeSubscriptionOutput {
+  newSubscriptionInterval: String!
+  newSubscriptionPlan: String!
 }
 
 input CheckIntegrationDeployInput {
@@ -130,10 +129,6 @@ type CheckPaymentMethodOutput {
   lastUpdated: Int
 }
 
-input CheckUserEmailExistInput {
-  email: String!
-}
-
 type CheckUserEmailExistOutput {
   isExist: Boolean!
 }
@@ -144,7 +139,6 @@ input CliAccessTokensInput {
 
 type CliAccessTokensOutput {
   accessToken: String!
-  userId: String!
 }
 
 input CloudflareAuthInput {
@@ -201,23 +195,14 @@ input CloudflareUpdateSecretsInputZero {
   secretsIds: [String!]!
 }
 
-input ConfirmEmailChangeInput {
-  code: String!
-}
-
 type ConfirmEmailChangeOutput {
   accessToken: String!
   userId: String!
 }
 
-input CreateProjectInput {
-  projectIcon: String!
-  projectName: String!
-  token: TokenObject
-}
-
 type CreateProjectOutput {
-  projectId: String
+  id: String
+  project: project
   tokenValue: String
 }
 
@@ -228,8 +213,8 @@ input CreateProjectTokenInput {
 }
 
 type CreateProjectTokenOutput {
-  tokenId: ID!
-  tokenValue: String!
+  id: ID!
+  value: String!
 }
 
 input CreateSecretFieldInput {
@@ -244,15 +229,11 @@ input CreateSecretInput {
 }
 
 type CreateSecretOutput {
-  secretId: String!
-}
-
-input CreateTeamInput {
-  teamName: String!
+  id: String!
 }
 
 type CreateTeamOutput {
-  teamId: String!
+  id: String!
 }
 
 input CurrentPlanInput {
@@ -278,11 +259,6 @@ type DecryptedSecretField {
 input DeleteIntegrationInput {
   installationId: String!
   isDeleteInRemoteSourceEnabled: Boolean
-}
-
-input DeleteProjectInput {
-  id: String!
-  isVendorSecretsDelete: Boolean!
 }
 
 type DeleteProjectOutput {
@@ -498,13 +474,9 @@ input RecalculateTeamSeatsSubscriptionInput {
   paidSeats: Int!
 }
 
-input RegenerateProjectTokenInput {
-  expiresAt: String
-  tokenId: String!
-}
-
 type RegenerateProjectTokenOutput {
-  tokenValue: String
+  id: String!
+  value: String!
 }
 
 input RegisterInput {
@@ -513,27 +485,32 @@ input RegisterInput {
   password: String!
 }
 
-input RemoveTeamInput {
-  teamId: String!
+type RejectInvitationOutput {
+  id: String!
 }
 
-input RemoveUserFromTeamInput {
-  ownerTeamUserId: String!
+type RemoveTeamOutput {
+  id: String!
+}
+
+type RemoveUserFromTeamOutput {
   teamId: String!
   userId: String!
 }
 
-input RequestEmailChangeInput {
-  newEmail: String!
+type RequestEmailChangeOutput {
+  isChanged: Boolean!
 }
 
-input RequestResetPasswordInput {
-  email: String!
-  isReset: Boolean
+type RequestResetPasswordOutput {
+  isRequested: Boolean!
 }
 
-input SendInviteUserTeamInput {
+type ResendSignUpEmailOutput {
   email: String!
+}
+
+type SendInviteUserTeamOutput {
   teamId: String!
 }
 
@@ -595,8 +572,9 @@ type SuccessOutput {
 }
 
 input TokenObject {
-  tokenExpiresAt: String
-  tokenName: String
+  expiresAt: String
+  id: String
+  name: String
 }
 
 input UpdatePaymentMethodInput {
@@ -607,11 +585,13 @@ type UpdatePaymentMethodOutput {
   paymentMethod: String
 }
 
-input UpdateProjectSettingsInput {
-  icon: String!
-  projectId: String!
-  projectName: String!
-  teamId: String!
+type UpdateProjectSettingsOutput {
+  id: String!
+  project: project
+}
+
+type UpdateSecretOutput {
+  id: String!
 }
 
 input UpdateUserSecretFieldsInput {
@@ -1459,25 +1439,25 @@ input listIdEnum_enum_comparison_exp {
 
 """mutation root"""
 type mutation_root {
-  acceptInvitation(id: String!): SuccessOutput!
+  acceptInvitation(id: String!): AcceptInviteOutput!
   awsUpdateSecrets(integrationInstallation: AWSUpdateSecretsInputIntegration!, zero: AWSUpdateSecretsInputZero!): SuccessOutput!
   bitbucketInstall(downloadSecrets: BitbucketDownloadSecretsInput!, integrationInstallation: BitbucketInstallInputIntegration!, zero: BitbucketInputZero!): SuccessOutput!
   bitbucketUpdateSecrets(integrationInstallation: BitbucketUpdateSecretsInputIntegration!, zero: BitbucketUpdateSecretsInputZero!): SuccessOutput!
-  cancelSubscription(object: CancelSubscriptionInput!): CancelSubscriptionOutput!
-  changePassword(object: ChangePasswordInput!): SuccessOutput!
-  changeSubscription(object: ChangeSubscriptionInput!): SuccessOutput!
+  cancelSubscription(stripeCustomerId: String!): CancelSubscriptionOutput!
+  changePassword(email: String!, newPassword: String!, oldPassword: String!): ChangePasswordOutput!
+  changeSubscription(priceId: String!, stripeCustomerId: String!): ChangeSubscriptionOutput!
   cliAccessTokens(object: CliAccessTokensInput!): CliAccessTokensOutput!
   cloudflareAuth(auth: CloudflareAuthInput!): CloudflareAuthOutput!
   cloudflareInstall(downloadSecrets: CloudflareDownloadSecretsInput!, integrationInstallation: CloudflareInstallInputIntegration!, zero: CloudflareInputZero!): SuccessOutput!
   cloudflareUpdateSecrets(integrationInstallation: CloudflareUpdateSecretsInputIntegration!, zero: CloudflareUpdateSecretsInputZero!): SuccessOutput!
-  confirmEmailChange(object: ConfirmEmailChangeInput!): ConfirmEmailChangeOutput!
-  createProject(object: CreateProjectInput!): CreateProjectOutput!
+  confirmEmailChange(code: String!): ConfirmEmailChangeOutput!
+  createProject(icon: String!, name: String!, token: TokenObject): CreateProjectOutput!
   createProjectToken(object: CreateProjectTokenInput!): CreateProjectTokenOutput!
-  createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!, userId: String!): CreateSecretOutput!
-  createTeam(object: CreateTeamInput!): CreateTeamOutput!
+  createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!): CreateSecretOutput!
+  createTeam(name: String!): CreateTeamOutput!
   decodeSharingSecrets(id: String!, passphrase: String!): DecodeSharingSecretsOutput!
   deleteIntegration(integrationInstallation: DeleteIntegrationInput!): SuccessOutput!
-  deleteProject(input: DeleteProjectInput!): DeleteProjectOutput!
+  deleteProject(id: String!, isVendorSecretsMarkedAsDeleted: Boolean!): DeleteProjectOutput!
 
   """
   delete data from the table: "integrationConnect"
@@ -1843,20 +1823,20 @@ type mutation_root {
   netlifyInstall(integrationInstallation: NetlifyInstallInputIntegration!, zero: NetlifyInstallInputZero!): NetlifyInstallOutput!
   netlifyUpdateSecrets(integrationInstallation: NetlifyUpdateSecretsInputIntegration!, zero: NetlifyUpdateSecretsInputZero!): NetlifyUpdateSecretsOutput!
   recalculateTeamSeatsSubscription(object: RecalculateTeamSeatsSubscriptionInput!): SuccessOutput!
-  regenerateProjectToken(object: RegenerateProjectTokenInput!): RegenerateProjectTokenOutput!
+  regenerateProjectToken(expiresAt: String, id: String!): RegenerateProjectTokenOutput!
 
   """Register api action"""
   register(object: RegisterInput!): SuccessOutput!
-  rejectInvitation(id: String!): SuccessOutput!
-  removeTeam(object: RemoveTeamInput!): SuccessOutput!
-  removeUserFromTeam(object: RemoveUserFromTeamInput!): SuccessOutput!
-  requestEmailChange(object: RequestEmailChangeInput!): SuccessOutput!
-  requestResetPassword(object: RequestResetPasswordInput!): SuccessOutput!
-  resendSignUpEmail: SuccessOutput!
-  sendInviteUserTeam(object: SendInviteUserTeamInput!): SuccessOutput!
+  rejectInvitation(id: String!): RejectInvitationOutput!
+  removeTeam(teamId: String!): RemoveTeamOutput!
+  removeUserFromTeam(ownerTeamUserId: String!, teamId: String!, userId: String!): RemoveUserFromTeamOutput!
+  requestEmailChange(newEmail: String!): RequestEmailChangeOutput!
+  requestResetPassword(email: String!, isReset: Boolean!): RequestResetPasswordOutput!
+  resendSignUpEmail: ResendSignUpEmailOutput!
+  sendInviteUserTeam(email: String!, teamId: String!): SendInviteUserTeamOutput!
   updatePaymentMethod(object: UpdatePaymentMethodInput!): UpdatePaymentMethodOutput!
-  updateProjectSettings(object: UpdateProjectSettingsInput!): SuccessOutput!
-  updateSecret(fields: [UpdateUserSecretFieldsInput!]!, id: String!, name: String!): SuccessOutput!
+  updateProjectSettings(icon: String!, projectId: String!, projectName: String!, teamId: String!): UpdateProjectSettingsOutput!
+  updateSecret(fields: [UpdateUserSecretFieldsInput!]!, id: String!, name: String!): UpdateSecretOutput!
 
   """
   update data of the table: "integrationConnect"
@@ -2064,6 +2044,34 @@ type mutation_root {
     """filter the rows which have to be updated"""
     where: team_bool_exp!
   ): team_mutation_response
+
+  """
+  update data of the table: "teamInvitation"
+  """
+  update_teamInvitation(
+    """sets the columns of the filtered rows to the given values"""
+    _set: teamInvitation_set_input
+
+    """filter the rows which have to be updated"""
+    where: teamInvitation_bool_exp!
+  ): teamInvitation_mutation_response
+
+  """
+  update single row of the table: "teamInvitation"
+  """
+  update_teamInvitation_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: teamInvitation_set_input
+    pk_columns: teamInvitation_pk_columns_input!
+  ): teamInvitation
+
+  """
+  update multiples rows of table: "teamInvitation"
+  """
+  update_teamInvitation_many(
+    """updates to execute, in order"""
+    updates: [teamInvitation_updates!]!
+  ): [teamInvitation_mutation_response]
 
   """
   update data of the table: "teamUser"
@@ -3135,6 +3143,8 @@ input project_set_input {
   description: String
   icon: String
   name: String
+  slug: String
+  teamId: uuid
 }
 
 """
@@ -3173,7 +3183,7 @@ type query_root {
   bitbucketWorkspaceProjects(where: BitbucketWorkspaceProjectsInput!): BitbucketWorkspaceProjectsOutput!
   checkIntegrationDeploy(integrationConnect: CheckIntegrationDeployInput!): CheckIntegrationDeployOutput!
   checkPaymentMethod(where: CheckPaymentMethodInput!): CheckPaymentMethodOutput!
-  checkUserEmailExist(object: CheckUserEmailExistInput!): CheckUserEmailExistOutput!
+  checkUserEmailExist(email: String!): CheckUserEmailExistOutput!
   cloudflareProjects(where: CloudflareProjectsInput!): CloudflareProjectsOutput!
   currentPlan(where: CurrentPlanInput!): CurrentPlanOutput!
   githubProjects(where: GitHubProjectsInput!): GitHubProjectsOutput!
@@ -5281,6 +5291,7 @@ type teamInvitation {
 
   """An object relationship"""
   invitedUser: user
+  isViewed: Boolean!
 
   """An object relationship"""
   ownerTeam: user!
@@ -5314,6 +5325,7 @@ input teamInvitation_bool_exp {
   id: uuid_comparison_exp
   invitedBy: uuid_comparison_exp
   invitedUser: user_bool_exp
+  isViewed: Boolean_comparison_exp
   ownerTeam: user_bool_exp
   team: team_bool_exp
   teamId: uuid_comparison_exp
@@ -5338,6 +5350,7 @@ input teamInvitation_insert_input {
   email: String
   expiredAt: timestamptz
   invitedBy: uuid
+  isViewed: Boolean
   teamId: uuid
   teamName: String
 }
@@ -5398,11 +5411,17 @@ input teamInvitation_order_by {
   id: order_by
   invitedBy: order_by
   invitedUser: user_order_by
+  isViewed: order_by
   ownerTeam: user_order_by
   team: team_order_by
   teamId: order_by
   teamName: order_by
   updatedAt: order_by
+}
+
+"""primary key columns input for table: teamInvitation"""
+input teamInvitation_pk_columns_input {
+  id: uuid!
 }
 
 """
@@ -5425,6 +5444,9 @@ enum teamInvitation_select_column {
   invitedBy
 
   """column name"""
+  isViewed
+
+  """column name"""
   teamId
 
   """column name"""
@@ -5432,6 +5454,13 @@ enum teamInvitation_select_column {
 
   """column name"""
   updatedAt
+}
+
+"""
+input type for updating data in table "teamInvitation"
+"""
+input teamInvitation_set_input {
+  isViewed: Boolean
 }
 
 """
@@ -5452,17 +5481,26 @@ input teamInvitation_stream_cursor_value_input {
   expiredAt: timestamptz
   id: uuid
   invitedBy: uuid
+  isViewed: Boolean
   teamId: uuid
   teamName: String
   updatedAt: timestamptz
 }
 
 """
-placeholder for update columns of table "teamInvitation" (current role has no relevant permissions)
+update columns of table "teamInvitation"
 """
 enum teamInvitation_update_column {
-  """placeholder (do not use)"""
-  _PLACEHOLDER
+  """column name"""
+  isViewed
+}
+
+input teamInvitation_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: teamInvitation_set_input
+
+  """filter the rows which have to be updated"""
+  where: teamInvitation_bool_exp!
 }
 
 """
@@ -6056,7 +6094,7 @@ type usageHistory {
   """An object relationship"""
   project: project!
   projectId: uuid!
-  remoteIp: String
+  remoteIp: String!
 
   """An array relationship"""
   secrets(

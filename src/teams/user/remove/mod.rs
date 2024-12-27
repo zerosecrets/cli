@@ -109,18 +109,18 @@ pub fn remove(args: &UserRemoveArgs) {
 
     if response_team_id.is_empty() {
         println!(
-            "{} {}",
-            "✔".green(),
-            "User successfully removed from the team"
+            "{} User '{}' has not been removed from the '{}' team.",
+            "❌".red(),
+            user_id_to_be_deleted.to_string(),
+            team_id.to_string()
         );
 
         std::process::exit(0);
     } else {
         println!(
-            "{} User '{}' has not been removed from the '{}' team.",
-            "❌".red(),
-            user_id_to_be_deleted.to_string(),
-            team_id.to_string()
+            "{} {}",
+            "✔".green(),
+            "User successfully removed from the team"
         );
 
         std::process::exit(0);

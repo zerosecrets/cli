@@ -90,7 +90,7 @@ pub fn remove(args: &UserRemoveArgs) {
 
     let remove_team_error_message = "Failed to remove the user from the team.";
 
-    match execute_graphql_request::<
+    let response_team_id = execute_graphql_request::<
         remove_user_from_team::Variables,
         remove_user_from_team::ResponseData,
     >(
@@ -105,27 +105,24 @@ pub fn remove(args: &UserRemoveArgs) {
         },
     )
     .remove_user_from_team
-    .success
-    {
-        true => {
-            println!(
-                "{} {}",
-                "✔".green(),
-                "User successfully removed from the team"
-            );
+    .team_id;
 
-            std::process::exit(0);
-        }
+    if response_team_id.is_empty() {
+        println!(
+            "{} {}",
+            "✔".green(),
+            "User successfully removed from the team"
+        );
 
-        _ => {
-            println!(
-                "{} User '{}' has not been removed from the '{}' team.",
-                "❌".red(),
-                user_id_to_be_deleted.to_string(),
-                team_id.to_string()
-            );
+        std::process::exit(0);
+    } else {
+        println!(
+            "{} User '{}' has not been removed from the '{}' team.",
+            "❌".red(),
+            user_id_to_be_deleted.to_string(),
+            team_id.to_string()
+        );
 
-            std::process::exit(0);
-        }
+        std::process::exit(0);
     }
 }

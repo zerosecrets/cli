@@ -93,7 +93,7 @@ pub fn regenerate(args: &TokenRegenerateArgs) {
         }
     };
 
-    let regenerate_token_response =
+    let new_token_value =
         execute_graphql_request::<regenerate_token::Variables, regenerate_token::ResponseData>(
             authorization_headers(&access_token),
             RegenerateToken::build_query,
@@ -104,15 +104,8 @@ pub fn regenerate(args: &TokenRegenerateArgs) {
                 expires_at: token_expires_at_value.clone(),
             },
         )
-        .regenerate_project_token;
-
-    let new_token_value = match regenerate_token_response.token_value {
-        Some(token) => token,
-        None => {
-            print_formatted_error("Failed to regenerate a token.");
-            std::process::exit(1);
-        }
-    };
+        .regenerate_project_token
+        .value;
 
     let success_message_template = minimad::TextTemplate::from(
         r#"

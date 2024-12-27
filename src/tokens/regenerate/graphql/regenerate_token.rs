@@ -4,7 +4,7 @@ pub mod regenerate_token {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "RegenerateToken";
-    pub const QUERY : & str = "mutation RegenerateToken($id: String!, $expiresAt: String) {\n  regenerateProjectToken(\n    object: { tokenId: $id expiresAt: $expiresAt }\n  ) {\n    tokenValue\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation RegenerateToken($id: String!, $expiresAt: String) {\n  regenerateProjectToken(id: $id, expiresAt: $expiresAt) {\n    value\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -29,14 +29,13 @@ pub mod regenerate_token {
     }
     #[derive(Deserialize)]
     pub struct RegenerateTokenRegenerateProjectToken {
-        #[serde(rename = "tokenValue")]
-        pub token_value: Option<String>,
+        pub value: String,
     }
 }
 impl graphql_client::GraphQLQuery for RegenerateToken {
     type Variables = regenerate_token::Variables;
     type ResponseData = regenerate_token::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: regenerate_token::QUERY,

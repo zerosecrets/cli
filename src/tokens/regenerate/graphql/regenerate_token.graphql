@@ -1,5 +1,5 @@
 mutation RegenerateToken($id: String!, $expiresAt: String) {
-  regenerateProjectToken(object: { tokenId: $id, expiresAt: $expiresAt }) {
-    tokenValue
+  regenerateProjectToken(id: $id, expiresAt: $expiresAt) {
+    value
   }
 }

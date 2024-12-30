@@ -144,7 +144,7 @@ pub fn create(args: &TokenCreateArgs) {
 
     let styled_short_id = format!(
         "{}",
-        &create_token_response.token_id[..4].with(Color::Green)
+        &create_token_response.id[..4].with(Color::Green)
     );
 
     expander
@@ -168,7 +168,7 @@ pub fn create(args: &TokenCreateArgs) {
         .item(format!(
             "{} '{}'. {}",
             "Your token:",
-            style(format!("{}", &create_token_response.token_value)).with(Color::Green),
+            style(format!("{}", &create_token_response.value)).with(Color::Green),
             "Copy this token and press 'Enter' to remove it from the screen."
         ))
         .clear(true)

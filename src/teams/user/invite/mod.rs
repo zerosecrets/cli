@@ -57,31 +57,29 @@ pub fn invite(args: &UserInviteArgs) {
 
     let error_message = "Failed to send the invitation.";
 
-    match execute_graphql_request::<send_invite::Variables, send_invite::ResponseData>(
-        authorization_headers(&access_token),
-        SendInvite::build_query,
-        &Client::new(),
-        &error_message,
-        send_invite::Variables {
-            team_id: team_info.id.to_string(),
-            email: args.email.to_string(),
-        },
-    )
-    .send_invite_user_team
-    .success
-    {
-        true => {
-            println!(
-                "{} {} {}",
-                "✔".green(),
-                "The invitation was successfully sent to the user.",
-                &args.email.to_string()
-            );
-        }
+    let invited_team_id =
+        execute_graphql_request::<send_invite::Variables, send_invite::ResponseData>(
+            authorization_headers(&access_token),
+            SendInvite::build_query,
+            &Client::new(),
+            &error_message,
+            send_invite::Variables {
+                team_id: team_info.id.to_string(),
+                email: args.email.to_string(),
+            },
+        )
+        .send_invite_user_team
+        .team_id;
 
-        _ => {
-            print_formatted_error(error_message);
-            std::process::exit(1);
-        }
-    };
+    if invited_team_id.is_empty() {
+        print_formatted_error(error_message);
+        std::process::exit(1);
+    } else {
+        println!(
+            "{} {} {}",
+            "✔".green(),
+            "The invitation was successfully sent to the user.",
+            &args.email.to_string()
+        );
+    }
 }

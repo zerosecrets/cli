@@ -4,7 +4,7 @@ pub mod cli_access_tokens {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "CliAccessTokens";
-    pub const QUERY : & str = "mutation CliAccessTokens($object: CliAccessTokensInput!) {\n  cliAccessTokens(object: $object) {\n    accessToken\n    userId\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation CliAccessTokens($object: CliAccessTokensInput!) {\n  cliAccessTokens(object: $object) {\n    accessToken\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -23,12 +23,7 @@ pub mod cli_access_tokens {
     pub struct Variables {
         pub object: CliAccessTokensInput,
     }
-    impl Variables {
-        pub fn new(code: String) -> Self {
-            let object = CliAccessTokensInput { code };
-            Self { object }
-        }
-    }
+    impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
         #[serde(rename = "cliAccessTokens")]
@@ -38,8 +33,6 @@ pub mod cli_access_tokens {
     pub struct CliAccessTokensCliAccessTokens {
         #[serde(rename = "accessToken")]
         pub access_token: String,
-        #[serde(rename = "userId")]
-        pub user_id: String,
     }
 }
 impl graphql_client::GraphQLQuery for CliAccessTokens {

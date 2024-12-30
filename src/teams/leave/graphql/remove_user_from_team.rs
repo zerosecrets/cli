@@ -2,8 +2,10 @@
 pub struct RemoveUserFromTeam;
 pub mod remove_user_from_team {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "RemoveUserFromTeam";
-    pub const QUERY : & str = "mutation RemoveUserFromTeam($teamId: String!, $userId: String!, $ownerTeamUserId: String!) {\n  removeUserFromTeam(object: {teamId: $teamId, userId: $userId, ownerTeamUserId: $ownerTeamUserId}) {\n    success\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation RemoveUserFromTeam(\n  $teamId: String!\n  $userId: String!\n  $ownerTeamUserId: String!\n) {\n  removeUserFromTeam(\n    teamId: $teamId\n    userId: $userId\n    ownerTeamUserId: $ownerTeamUserId\n  ) {\n    teamId\n  }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -30,13 +32,14 @@ pub mod remove_user_from_team {
     }
     #[derive(Deserialize)]
     pub struct RemoveUserFromTeamRemoveUserFromTeam {
-        pub success: Boolean,
+        #[serde(rename = "teamId")]
+        pub team_id: String,
     }
 }
 impl graphql_client::GraphQLQuery for RemoveUserFromTeam {
     type Variables = remove_user_from_team::Variables;
     type ResponseData = remove_user_from_team::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: remove_user_from_team::QUERY,

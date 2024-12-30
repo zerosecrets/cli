@@ -153,7 +153,7 @@ pub fn create(args: &TeamsCreateArgs) {
         create_team::Variables { team_name },
     )
     .create_team
-    .team_id;
+    .id;
 
     let text_template = minimad::TextTemplate::from(
         r#"

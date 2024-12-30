@@ -2,8 +2,10 @@
 pub struct CreateTeam;
 pub mod create_team {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "CreateTeam";
-    pub const QUERY : & str = "mutation CreateTeam($teamName: String!) {\n    createTeam(object: {teamName: $teamName}) {\n        teamId\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation CreateTeam($teamName: String!) {\n  createTeam(name: $teamName) {\n    id\n  }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -26,14 +28,13 @@ pub mod create_team {
     }
     #[derive(Deserialize)]
     pub struct CreateTeamCreateTeam {
-        #[serde(rename = "teamId")]
-        pub team_id: String,
+        pub id: String,
     }
 }
 impl graphql_client::GraphQLQuery for CreateTeam {
     type Variables = create_team::Variables;
     type ResponseData = create_team::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: create_team::QUERY,

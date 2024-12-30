@@ -8,7 +8,6 @@ use crate::common::{
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
-    take_user_id_from_token::take_user_id_from_token,
     validate_secret_field_name::validate_secret_field_name,
     validate_secret_name::validate_secret_name,
     vendors::Vendors,
@@ -25,7 +24,6 @@ use termimad::{
     crossterm::style::{style, Color, Stylize},
     minimad, MadSkin,
 };
-
 
 #[derive(Args, Debug)]
 pub struct SecretsCreateArgs {
@@ -60,7 +58,6 @@ pub fn create(args: &SecretsCreateArgs) {
     let client = Client::new();
     let headers = authorization_headers(&access_token);
     let project_id = query_full_id(QueryType::Project, args.id.clone(), &access_token);
-    let user_id = take_user_id_from_token(&access_token);
 
     let secret_names =
         match execute_graphql_request::<secret_names::Variables, secret_names::ResponseData>(
@@ -196,16 +193,17 @@ pub fn create(args: &SecretsCreateArgs) {
             CreateSecret::build_query,
             &client,
             "Failed to create a secret",
-            create_secret::Variables::new(
-                secret_name.clone(),
-                project_id.to_string(),
-                selected_vendor.to_string(),
-                secret_fields,
-                user_id,
-            ),
+            create_secret::Variables {
+                fields: secret_fields,
+                secret: create_secret::CreateSecretInput {
+                    name: secret_name.clone(),
+                    project_id: project_id.to_string(),
+                    vendor: selected_vendor.to_string(),
+                },
+            },
         )
         .create_secret
-        .secret_id;
+        .id;
 
     let text_template = minimad::TextTemplate::from(
         r#"

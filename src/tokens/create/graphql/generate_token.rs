@@ -4,7 +4,7 @@ pub mod generate_token {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "GenerateToken";
-    pub const QUERY : & str = "mutation GenerateToken($id: String!, $name: String!, $expiresAt: String) {\n  createProjectToken(\n    object: { projectId: $id, name: $name, expiresAt: $expiresAt }\n  ) {\n    tokenId\n    tokenValue\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation GenerateToken($id: String!, $name: String!, $expiresAt: String) {\n  createProjectToken(\n    object: { projectId: $id, name: $name, expiresAt: $expiresAt }\n  ) {\n    id\n    value\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -30,10 +30,8 @@ pub mod generate_token {
     }
     #[derive(Deserialize)]
     pub struct GenerateTokenCreateProjectToken {
-        #[serde(rename = "tokenId")]
-        pub token_id: ID,
-        #[serde(rename = "tokenValue")]
-        pub token_value: String,
+        pub id: ID,
+        pub value: String,
     }
 }
 impl graphql_client::GraphQLQuery for GenerateToken {

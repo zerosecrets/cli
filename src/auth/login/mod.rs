@@ -84,7 +84,9 @@ pub fn login(args: &AuthLoginArgs) {
                     CliAccessTokens::build_query,
                     &client,
                     "Failed to retrieve access token, please check if the code is correct and try again.",
-                    cli_access_tokens::Variables::new(code),
+                    cli_access_tokens::Variables {
+                        object: cli_access_tokens::CliAccessTokensInput { code }
+                    } ,
                 ).cli_access_tokens;
 
                 let user_id =

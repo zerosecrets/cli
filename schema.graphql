@@ -93,19 +93,14 @@ input Boolean_comparison_exp {
   _nin: [Boolean!]
 }
 
-type CancelSubscriptionOutput {
-  cancelAt: Int
-  currentPlan: String
-}
-
 type ChangePasswordOutput {
   email: String!
   id: String!
 }
 
-type ChangeSubscriptionOutput {
-  newSubscriptionInterval: String!
-  newSubscriptionPlan: String!
+type ChangeTeamOutput {
+  id: String!
+  project: project
 }
 
 input CheckIntegrationDeployInput {
@@ -115,18 +110,6 @@ input CheckIntegrationDeployInput {
 
 type CheckIntegrationDeployOutput {
   status: DeployStatusIntegration!
-}
-
-input CheckPaymentMethodInput {
-  stripeCustomerId: String!
-}
-
-type CheckPaymentMethodOutput {
-  brand: String
-  expirationMonth: Int
-  expirationYear: Int
-  last4: String
-  lastUpdated: Int
 }
 
 type CheckUserEmailExistOutput {
@@ -214,6 +197,7 @@ input CreateProjectTokenInput {
 
 type CreateProjectTokenOutput {
   id: ID!
+  token: token
   value: String!
 }
 
@@ -234,16 +218,6 @@ type CreateSecretOutput {
 
 type CreateTeamOutput {
   id: String!
-}
-
-input CurrentPlanInput {
-  sessionId: String!
-}
-
-type CurrentPlanOutput {
-  cancelAt: Int
-  currentPlan: String
-  interval: String
 }
 
 type DecodeSharingSecretsOutput {
@@ -447,35 +421,9 @@ type NetlifyUpdateSecretsOutput {
   success: Boolean!
 }
 
-type Payment {
-  amount: String!
-  card: String
-  createdAt: String!
-  description: String
-  id: ID!
-  paymentMethod: String
-  status: String!
-  url: String
-}
-
-input PaymentListInput {
-  endingBeforePaymentId: ID
-  limit: Int!
-  startingAfterPaymentId: ID
-  stripeCustomerId: String!
-}
-
-type PaymentListOutput {
-  hasMore: Boolean!
-  items: [Payment]!
-}
-
-input RecalculateTeamSeatsSubscriptionInput {
-  paidSeats: Int!
-}
-
 type RegenerateProjectTokenOutput {
   id: String!
+  token: token
   value: String!
 }
 
@@ -575,14 +523,6 @@ input TokenObject {
   expiresAt: String
   id: String
   name: String
-}
-
-input UpdatePaymentMethodInput {
-  stripeCustomerId: String!
-}
-
-type UpdatePaymentMethodOutput {
-  paymentMethod: String
 }
 
 type UpdateProjectSettingsOutput {
@@ -1443,9 +1383,8 @@ type mutation_root {
   awsUpdateSecrets(integrationInstallation: AWSUpdateSecretsInputIntegration!, zero: AWSUpdateSecretsInputZero!): SuccessOutput!
   bitbucketInstall(downloadSecrets: BitbucketDownloadSecretsInput!, integrationInstallation: BitbucketInstallInputIntegration!, zero: BitbucketInputZero!): SuccessOutput!
   bitbucketUpdateSecrets(integrationInstallation: BitbucketUpdateSecretsInputIntegration!, zero: BitbucketUpdateSecretsInputZero!): SuccessOutput!
-  cancelSubscription(stripeCustomerId: String!): CancelSubscriptionOutput!
   changePassword(email: String!, newPassword: String!, oldPassword: String!): ChangePasswordOutput!
-  changeSubscription(priceId: String!, stripeCustomerId: String!): ChangeSubscriptionOutput!
+  changeTeam(projectId: String!, teamId: String!): ChangeTeamOutput!
   cliAccessTokens(object: CliAccessTokensInput!): CliAccessTokensOutput!
   cloudflareAuth(auth: CloudflareAuthInput!): CloudflareAuthOutput!
   cloudflareInstall(downloadSecrets: CloudflareDownloadSecretsInput!, integrationInstallation: CloudflareInstallInputIntegration!, zero: CloudflareInputZero!): SuccessOutput!
@@ -1822,7 +1761,6 @@ type mutation_root {
   logout: SuccessOutput!
   netlifyInstall(integrationInstallation: NetlifyInstallInputIntegration!, zero: NetlifyInstallInputZero!): NetlifyInstallOutput!
   netlifyUpdateSecrets(integrationInstallation: NetlifyUpdateSecretsInputIntegration!, zero: NetlifyUpdateSecretsInputZero!): NetlifyUpdateSecretsOutput!
-  recalculateTeamSeatsSubscription(object: RecalculateTeamSeatsSubscriptionInput!): SuccessOutput!
   regenerateProjectToken(expiresAt: String, id: String!): RegenerateProjectTokenOutput!
 
   """Register api action"""
@@ -1834,7 +1772,6 @@ type mutation_root {
   requestResetPassword(email: String!, isReset: Boolean!): RequestResetPasswordOutput!
   resendSignUpEmail: ResendSignUpEmailOutput!
   sendInviteUserTeam(email: String!, teamId: String!): SendInviteUserTeamOutput!
-  updatePaymentMethod(object: UpdatePaymentMethodInput!): UpdatePaymentMethodOutput!
   updateProjectSettings(icon: String!, projectId: String!, projectName: String!, teamId: String!): UpdateProjectSettingsOutput!
   updateSecret(fields: [UpdateUserSecretFieldsInput!]!, id: String!, name: String!): UpdateSecretOutput!
 
@@ -2354,34 +2291,6 @@ type mutation_root {
   ): [userSecret_mutation_response]
 
   """
-  update data of the table: "userSubscription"
-  """
-  update_userSubscription(
-    """sets the columns of the filtered rows to the given values"""
-    _set: userSubscription_set_input
-
-    """filter the rows which have to be updated"""
-    where: userSubscription_bool_exp!
-  ): userSubscription_mutation_response
-
-  """
-  update single row of the table: "userSubscription"
-  """
-  update_userSubscription_by_pk(
-    """sets the columns of the filtered rows to the given values"""
-    _set: userSubscription_set_input
-    pk_columns: userSubscription_pk_columns_input!
-  ): userSubscription
-
-  """
-  update multiples rows of table: "userSubscription"
-  """
-  update_userSubscription_many(
-    """updates to execute, in order"""
-    updates: [userSubscription_updates!]!
-  ): [userSubscription_mutation_response]
-
-  """
   update single row of the table: "user"
   """
   update_user_by_pk(
@@ -2885,7 +2794,6 @@ type project {
   """
   lastUsedAt: timestamptz
   name: String!
-  slug: String!
 
   """An object relationship"""
   team: team
@@ -3026,7 +2934,6 @@ input project_bool_exp {
   lastUpdatedAt: timestamptz_comparison_exp
   lastUsedAt: timestamptz_comparison_exp
   name: String_comparison_exp
-  slug: String_comparison_exp
   team: team_bool_exp
   teamId: uuid_comparison_exp
   tokens: token_bool_exp
@@ -3048,7 +2955,6 @@ input project_max_order_by {
   id: order_by
   lastUpdatedAt: order_by
   name: order_by
-  slug: order_by
   teamId: order_by
   updatedAt: order_by
 }
@@ -3063,7 +2969,6 @@ input project_min_order_by {
   id: order_by
   lastUpdatedAt: order_by
   name: order_by
-  slug: order_by
   teamId: order_by
   updatedAt: order_by
 }
@@ -3089,7 +2994,6 @@ input project_order_by {
   lastUpdatedAt: order_by
   lastUsedAt: order_by
   name: order_by
-  slug: order_by
   team: team_order_by
   teamId: order_by
   tokens_aggregate: token_aggregate_order_by
@@ -3127,9 +3031,6 @@ enum project_select_column {
   name
 
   """column name"""
-  slug
-
-  """column name"""
   teamId
 
   """column name"""
@@ -3143,7 +3044,6 @@ input project_set_input {
   description: String
   icon: String
   name: String
-  slug: String
   teamId: uuid
 }
 
@@ -3166,7 +3066,6 @@ input project_stream_cursor_value_input {
   id: uuid
   lastUpdatedAt: timestamptz
   name: String
-  slug: String
   teamId: uuid
   updatedAt: timestamptz
 }
@@ -3182,10 +3081,8 @@ input project_updates {
 type query_root {
   bitbucketWorkspaceProjects(where: BitbucketWorkspaceProjectsInput!): BitbucketWorkspaceProjectsOutput!
   checkIntegrationDeploy(integrationConnect: CheckIntegrationDeployInput!): CheckIntegrationDeployOutput!
-  checkPaymentMethod(where: CheckPaymentMethodInput!): CheckPaymentMethodOutput!
   checkUserEmailExist(email: String!): CheckUserEmailExistOutput!
   cloudflareProjects(where: CloudflareProjectsInput!): CloudflareProjectsOutput!
-  currentPlan(where: CurrentPlanInput!): CurrentPlanOutput!
   githubProjects(where: GitHubProjectsInput!): GitHubProjectsOutput!
   gitlabProjects(where: GitLabProjectsInput!): GitLabProjectsOutput!
 
@@ -3352,7 +3249,6 @@ type query_root {
 
   """fetch data from the table: "notification" using primary key columns"""
   notification_by_pk(id: uuid!): notification
-  paymentList(where: PaymentListInput!): PaymentListOutput!
 
   """
   fetch data from the table: "project"
@@ -3958,31 +3854,6 @@ type query_root {
   """fetch data from the table: "userSecret" using primary key columns"""
   userSecret_by_pk(id: uuid!): userSecret
 
-  """
-  fetch data from the table: "userSubscription"
-  """
-  userSubscription(
-    """distinct select on columns"""
-    distinct_on: [userSubscription_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [userSubscription_order_by!]
-
-    """filter the rows returned"""
-    where: userSubscription_bool_exp
-  ): [userSubscription!]!
-
-  """
-  fetch data from the table: "userSubscription" using primary key columns
-  """
-  userSubscription_by_pk(id: uuid!): userSubscription
-
   """fetch data from the table: "user" using primary key columns"""
   user_by_pk(id: uuid!): user
   vercelProjects(where: VercelProjectsInput!): VercelProjectsOutput!
@@ -4054,57 +3925,6 @@ input search_user_by_id_args {
 
 input search_user_secret_by_id_args {
   match: String
-}
-
-scalar smallint
-
-"""
-Boolean expression to compare columns of type "smallint". All fields are combined with logical 'AND'.
-"""
-input smallint_comparison_exp {
-  _eq: smallint
-  _gt: smallint
-  _gte: smallint
-  _in: [smallint!]
-  _is_null: Boolean
-  _lt: smallint
-  _lte: smallint
-  _neq: smallint
-  _nin: [smallint!]
-}
-
-enum subscriptionIntervalEnum_enum {
-  month
-  year
-}
-
-"""
-Boolean expression to compare columns of type "subscriptionIntervalEnum_enum". All fields are combined with logical 'AND'.
-"""
-input subscriptionIntervalEnum_enum_comparison_exp {
-  _eq: subscriptionIntervalEnum_enum
-  _in: [subscriptionIntervalEnum_enum!]
-  _is_null: Boolean
-  _neq: subscriptionIntervalEnum_enum
-  _nin: [subscriptionIntervalEnum_enum!]
-}
-
-enum subscriptionPlanEnum_enum {
-  enterprise
-  free
-  lifetime
-  professional
-}
-
-"""
-Boolean expression to compare columns of type "subscriptionPlanEnum_enum". All fields are combined with logical 'AND'.
-"""
-input subscriptionPlanEnum_enum_comparison_exp {
-  _eq: subscriptionPlanEnum_enum
-  _in: [subscriptionPlanEnum_enum!]
-  _is_null: Boolean
-  _neq: subscriptionPlanEnum_enum
-  _nin: [subscriptionPlanEnum_enum!]
 }
 
 type subscription_root {
@@ -5098,45 +4918,6 @@ type subscription_root {
     """filter the rows returned"""
     where: userSecret_bool_exp
   ): [userSecret!]!
-
-  """
-  fetch data from the table: "userSubscription"
-  """
-  userSubscription(
-    """distinct select on columns"""
-    distinct_on: [userSubscription_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [userSubscription_order_by!]
-
-    """filter the rows returned"""
-    where: userSubscription_bool_exp
-  ): [userSubscription!]!
-
-  """
-  fetch data from the table: "userSubscription" using primary key columns
-  """
-  userSubscription_by_pk(id: uuid!): userSubscription
-
-  """
-  fetch data from the table in a streaming manner: "userSubscription"
-  """
-  userSubscription_stream(
-    """maximum number of rows returned in a single batch"""
-    batch_size: Int!
-
-    """cursor to stream the results returned by the query"""
-    cursor: [userSubscription_stream_cursor_input]!
-
-    """filter the rows returned"""
-    where: userSubscription_bool_exp
-  ): [userSubscription!]!
 
   """fetch data from the table: "user" using primary key columns"""
   user_by_pk(id: uuid!): user
@@ -6557,9 +6338,6 @@ type user {
   updatedAt: timestamptz!
 
   """An object relationship"""
-  userSubscription: userSubscription
-
-  """An object relationship"""
   user_activeTeam: team
 
   """An array relationship"""
@@ -7922,163 +7700,6 @@ input userSecret_updates {
   where: userSecret_bool_exp!
 }
 
-"""User subscription data"""
-type userSubscription {
-  availableSeats: smallint!
-  createdAt: timestamptz!
-  id: uuid!
-  isSubscriptionExpirationMessageRead: Boolean!
-  paidSeats: smallint!
-  stripeCustomerId: String!
-  subscriptionCancellationDate: timestamptz
-  subscriptionExpirationDate: timestamptz
-  subscriptionInterval: subscriptionIntervalEnum_enum
-  subscriptionPlan: subscriptionPlanEnum_enum!
-  updatedAt: timestamptz!
-
-  """An object relationship"""
-  user: user!
-  userId: uuid!
-}
-
-"""
-Boolean expression to filter rows from the table "userSubscription". All fields are combined with a logical 'AND'.
-"""
-input userSubscription_bool_exp {
-  _and: [userSubscription_bool_exp!]
-  _not: userSubscription_bool_exp
-  _or: [userSubscription_bool_exp!]
-  availableSeats: smallint_comparison_exp
-  createdAt: timestamptz_comparison_exp
-  id: uuid_comparison_exp
-  isSubscriptionExpirationMessageRead: Boolean_comparison_exp
-  paidSeats: smallint_comparison_exp
-  stripeCustomerId: String_comparison_exp
-  subscriptionCancellationDate: timestamptz_comparison_exp
-  subscriptionExpirationDate: timestamptz_comparison_exp
-  subscriptionInterval: subscriptionIntervalEnum_enum_comparison_exp
-  subscriptionPlan: subscriptionPlanEnum_enum_comparison_exp
-  updatedAt: timestamptz_comparison_exp
-  user: user_bool_exp
-  userId: uuid_comparison_exp
-}
-
-"""
-response of any mutation on the table "userSubscription"
-"""
-type userSubscription_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [userSubscription!]!
-}
-
-"""Ordering options when selecting data from "userSubscription"."""
-input userSubscription_order_by {
-  availableSeats: order_by
-  createdAt: order_by
-  id: order_by
-  isSubscriptionExpirationMessageRead: order_by
-  paidSeats: order_by
-  stripeCustomerId: order_by
-  subscriptionCancellationDate: order_by
-  subscriptionExpirationDate: order_by
-  subscriptionInterval: order_by
-  subscriptionPlan: order_by
-  updatedAt: order_by
-  user: user_order_by
-  userId: order_by
-}
-
-"""primary key columns input for table: userSubscription"""
-input userSubscription_pk_columns_input {
-  id: uuid!
-}
-
-"""
-select columns of table "userSubscription"
-"""
-enum userSubscription_select_column {
-  """column name"""
-  availableSeats
-
-  """column name"""
-  createdAt
-
-  """column name"""
-  id
-
-  """column name"""
-  isSubscriptionExpirationMessageRead
-
-  """column name"""
-  paidSeats
-
-  """column name"""
-  stripeCustomerId
-
-  """column name"""
-  subscriptionCancellationDate
-
-  """column name"""
-  subscriptionExpirationDate
-
-  """column name"""
-  subscriptionInterval
-
-  """column name"""
-  subscriptionPlan
-
-  """column name"""
-  updatedAt
-
-  """column name"""
-  userId
-}
-
-"""
-input type for updating data in table "userSubscription"
-"""
-input userSubscription_set_input {
-  isSubscriptionExpirationMessageRead: Boolean
-}
-
-"""
-Streaming cursor of the table "userSubscription"
-"""
-input userSubscription_stream_cursor_input {
-  """Stream column input with initial value"""
-  initial_value: userSubscription_stream_cursor_value_input!
-
-  """cursor ordering"""
-  ordering: cursor_ordering
-}
-
-"""Initial value of the column from where the streaming should start"""
-input userSubscription_stream_cursor_value_input {
-  availableSeats: smallint
-  createdAt: timestamptz
-  id: uuid
-  isSubscriptionExpirationMessageRead: Boolean
-  paidSeats: smallint
-  stripeCustomerId: String
-  subscriptionCancellationDate: timestamptz
-  subscriptionExpirationDate: timestamptz
-  subscriptionInterval: subscriptionIntervalEnum_enum
-  subscriptionPlan: subscriptionPlanEnum_enum
-  updatedAt: timestamptz
-  userId: uuid
-}
-
-input userSubscription_updates {
-  """sets the columns of the filtered rows to the given values"""
-  _set: userSubscription_set_input
-
-  """filter the rows which have to be updated"""
-  where: userSubscription_bool_exp!
-}
-
 """
 Boolean expression to filter rows from the table "user". All fields are combined with a logical 'AND'.
 """
@@ -8100,7 +7721,6 @@ input user_bool_exp {
   teams: teamUser_bool_exp
   teams_aggregate: teamUser_aggregate_bool_exp
   updatedAt: timestamptz_comparison_exp
-  userSubscription: userSubscription_bool_exp
   user_activeTeam: team_bool_exp
   user_teamInvitation: teamInvitation_bool_exp
   viewPreferences: viewPreferences_bool_exp
@@ -8132,7 +7752,6 @@ input user_order_by {
   registrationStep: order_by
   teams_aggregate: teamUser_aggregate_order_by
   updatedAt: order_by
-  userSubscription: userSubscription_order_by
   user_activeTeam: team_order_by
   user_teamInvitation_aggregate: teamInvitation_aggregate_order_by
   viewPreferences_aggregate: viewPreferences_aggregate_order_by

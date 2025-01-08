@@ -3,7 +3,7 @@ pub struct SharedTeams;
 pub mod shared_teams {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "SharedTeams";
-    pub const QUERY : & str = "query SharedTeams($userId: uuid!) {\n  team(\n    where: {\n      _and: [\n        {members: {member: {id: {_eq: $userId}}}}\n        {ownerUserId: {_neq: $userId}}\n        {owner: {userSubscription: {subscriptionPlan: {_neq: free}}}}\n      ]\n    }\n    order_by: {lastUpdatedAt: desc}\n    limit: 1000\n  ) {\n    id\n    name\n\n    owner {\n      id\n      name\n    }\n\n    members_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query SharedTeams($userId: uuid!) {\n  team(\n    where: {\n      _and: [\n        { members: { member: { id: { _eq: $userId } } } }\n        { ownerUserId: { _neq: $userId } }\n      ]\n    }\n    order_by: { lastUpdatedAt: desc }\n    limit: 1000\n  ) {\n    id\n    name\n\n    owner {\n      id\n      name\n    }\n\n    members_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -28,7 +28,7 @@ pub mod shared_teams {
     pub struct SharedTeamsTeam {
         pub id: uuid,
         pub name: String,
-        pub owner: Option<SharedTeamsTeamOwner>,
+        pub owner: SharedTeamsTeamOwner,
         pub members_aggregate: SharedTeamsTeamMembersAggregate,
     }
     #[derive(Deserialize)]

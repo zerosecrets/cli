@@ -4,7 +4,6 @@ query SharedTeams($userId: uuid!) {
       _and: [
         { members: { member: { id: { _eq: $userId } } } }
         { ownerUserId: { _neq: $userId } }
-        { owner: { userSubscription: { subscriptionPlan: { _neq: free } } } }
       ]
     }
     order_by: { lastUpdatedAt: desc }

@@ -1,0 +1,6 @@
+query TeamNames($userId: uuid!) {
+  team(where: { ownerUserId: { _eq: $userId } }) {
+    id
+    name
+  }
+}

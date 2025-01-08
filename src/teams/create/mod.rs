@@ -6,8 +6,8 @@ use crate::common::{
     print_formatted_error::print_formatted_error, take_user_id_from_token::take_user_id_from_token,
 };
 use crate::teams::create::graphql::create_team::{create_team, CreateTeam};
-use crate::teams::create::graphql::user_info_and_team_names::{
-    user_info_and_team_names, UserInfoAndTeamNames,
+use crate::teams::create::graphql::team_names::{
+    team_names, TeamNames,
 };
 use clap::Args;
 use dialoguer::Input;
@@ -73,44 +73,16 @@ pub fn create(args: &TeamsCreateArgs) {
     };
 
     let user_info = execute_graphql_request::<
-        user_info_and_team_names::Variables,
-        user_info_and_team_names::ResponseData,
+        team_names::Variables,
+        team_names::ResponseData,
     >(
         headers.clone(),
-        UserInfoAndTeamNames::build_query,
+        TeamNames::build_query,
         &client,
         "Failed to retrieve team names",
-        user_info_and_team_names::Variables { user_id },
+        team_names::Variables { user_id },
     );
-
-    let subscription_error = "Creation failed. Failed to retrieve subscription info.";
-
-    match user_info.user_by_pk {
-        Some(user) => match user.user_subscription {
-            Some(subscription) => match subscription.subscription_plan {
-                user_info_and_team_names::subscriptionPlanEnum_enum::free => {
-                    print_formatted_error(
-                        "Creation failed. A paid subscription is required to create a team.",
-                    );
-
-                    std::process::exit(1);
-                }
-
-                _ => (),
-            },
-
-            None => {
-                print_formatted_error(subscription_error);
-                std::process::exit(1);
-            }
-        },
-
-        None => {
-            print_formatted_error(subscription_error);
-            std::process::exit(1);
-        }
-    };
-
+    
     let existing_team_names = user_info
         .team
         .iter()

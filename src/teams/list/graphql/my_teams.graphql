@@ -1,12 +1,6 @@
 query MyTeams($userId: uuid!) {
   team(
-    where: {
-      _and: [
-        { members: { member: { id: { _eq: $userId } } } }
-        { ownerUserId: { _eq: $userId } }
-        { owner: { userSubscription: { subscriptionPlan: { _neq: free } } } }
-      ]
-    }
+    where: { ownerUserId: { _eq: $userId }}
     order_by: { lastUpdatedAt: desc }
     limit: 1000
   ) {

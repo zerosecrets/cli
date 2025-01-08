@@ -121,14 +121,7 @@ pub fn list(args: &TeamListArgs) {
                     },
                 );
 
-                column_width_size.owner =
-                    column_width_size
-                        .owner
-                        .max(if let Some(owner) = &team.owner {
-                            owner.name.len()
-                        } else {
-                            0
-                        });
+                column_width_size.owner = column_width_size.owner.max(team.owner.name.len());
             }
 
             for team in my_teams {
@@ -154,16 +147,7 @@ pub fn list(args: &TeamListArgs) {
                         column_width_size.members + indentation
                     ),
                     pad_to_column_width(
-                        match &team.owner {
-                            Some(owner) => {
-                                owner.name.clone()
-                            }
-
-                            None => {
-                                print_formatted_error(&teams_error_message);
-                                std::process::exit(1);
-                            }
-                        },
+                        team.owner.name.clone(),
                         column_width_size.owner + indentation
                     )
                 ))
@@ -191,14 +175,7 @@ pub fn list(args: &TeamListArgs) {
                     },
                 );
 
-                column_width_size.owner =
-                    column_width_size
-                        .owner
-                        .max(if let Some(owner) = &team.owner {
-                            owner.name.len()
-                        } else {
-                            0
-                        });
+                column_width_size.owner = column_width_size.owner.max(team.owner.name.len());
             }
 
             for team in shared_teams {
@@ -224,16 +201,7 @@ pub fn list(args: &TeamListArgs) {
                         column_width_size.members + indentation
                     ),
                     pad_to_column_width(
-                        match &team.owner {
-                            Some(owner) => {
-                                owner.name.clone()
-                            }
-
-                            None => {
-                                print_formatted_error(&teams_error_message);
-                                std::process::exit(1);
-                            }
-                        },
+                        team.owner.name.clone(),
                         column_width_size.owner + indentation
                     )
                 ))

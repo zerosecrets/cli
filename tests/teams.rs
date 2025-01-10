@@ -36,11 +36,19 @@ fn test_teams_edit() -> Result<(), Error> {
 }
 
 #[test]
-fn test_teams_leave() -> Result<(), Error> {
+fn test_teams_leave_and_teams_list_shared() -> Result<(), Error> {
     let mut p = spawn("./target/debug/zero-cli teams leave --id 4cae", Some(15000))?;
     p.exp_string("Type 4cae to confirm leaving the team")?;
     p.send_line("4cae")?;
     p.exp_string("You have successfully left")?;
+
+    // Check team list after leaving the team
+    let mut p = spawn("./target/debug/zero-cli teams list", Some(15000))?;
+    p.exp_string("Show teams from")?;
+    p.exp_string("Shared Teams")?;
+    p.send("\x1B[B")?;
+    p.send_line("")?;
+    p.exp_string("You don't have any teams yet.")?;
     Ok(())
 }
 
@@ -51,17 +59,6 @@ fn test_teams_list_my() -> Result<(), Error> {
     p.exp_string("My Teams")?;
     p.send_line("")?;
     p.exp_string("Personal projects")?;
-    Ok(())
-}
-
-#[test]
-fn test_teams_list_shared() -> Result<(), Error> {
-    let mut p = spawn("./target/debug/zero-cli teams list", Some(15000))?;
-    p.exp_string("Show teams from")?;
-    p.exp_string("Shared Teams")?;
-    p.send("\x1B[B")?;
-    p.send_line("")?;
-    p.exp_string("You don't have any teams yet.")?;
     Ok(())
 }
 

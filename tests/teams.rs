@@ -93,6 +93,7 @@ fn test_teams_user_remove() -> Result<(), Error> {
         Some(15000),
     )?;
 
+    p.send_line("")?;
     p.exp_string("Type 2cae to confirm deletion")?;
     p.send_line("2cae")?;
     p.exp_string("User successfully removed from the team")?;

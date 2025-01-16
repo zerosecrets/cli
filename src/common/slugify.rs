@@ -20,18 +20,50 @@
 ///
 /// A new formatted String.
 pub fn slugify(text: &str) -> String {
-    let replaced = text
+    // 1) convert everything to lowercase
+    let mut slug = text.to_lowercase();
+
+    slug = slug.trim().to_string();
+
+    // 3) remove everything that isn't in [a-z0-9, space, -, _]
+    //    (filter by characters)
+    let filtered: String = slug
         .chars()
-        .filter(|char| char.is_alphanumeric() || *char == ' ' || *char == '-')
-        .collect::<String>();
+        .filter(|c| {
+            c.is_ascii_alphanumeric() // [a-z, 0-9]
+                || *c == ' '
+                || *c == '-'
+                || *c == '_'
+        })
+        .collect();
 
-    let trimmed = replaced.trim();
+    // 4) split by any sequence of space, '_', or '-',
+    //    then join with "-"
+    //    this automatically removes consecutive characters
+    //    and leading/trailing hyphens
+    filtered
+        .split(|c: char| c == ' ' || c == '_' || c == '-')
+        .filter(|part| !part.is_empty())
+        .collect::<Vec<_>>()
+        .join("-")
+}
 
-    let slug = trimmed
-        .chars()
-        .map(|c| if c == ' ' { '-' } else { c })
-        .collect::<String>()
-        .to_lowercase();
+#[cfg(test)]
+mod tests {
+    use super::slugify;
 
-    slug
+    #[test]
+    fn test_slugify() {
+        assert_eq!(slugify("Hello World!"), "hello-world");
+
+        assert_eq!(
+            slugify("  multiple   spaces   here  "),
+            "multiple-spaces-here"
+        );
+
+        assert_eq!(slugify("__already-slugified__"), "already-slugified");
+        assert_eq!(slugify("UPPER_case---stuff###"), "upper-case-stuff");
+        assert_eq!(slugify("hello-_-world"), "hello-world");
+        assert_eq!(slugify("*****"), "");
+    }
 }

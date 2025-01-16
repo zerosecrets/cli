@@ -1,5 +1,5 @@
-mutation CreateTeam($teamName: String!) {
-  createTeam(name: $teamName) {
+mutation CreateTeam($teamName: String!, $slug: String!) {
+  createTeam(name: $teamName, slug: $slug) {
     id
   }
 }

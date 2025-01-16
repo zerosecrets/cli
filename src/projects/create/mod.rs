@@ -3,7 +3,7 @@ mod graphql;
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
-    print_formatted_error::print_formatted_error,
+    print_formatted_error::print_formatted_error, slugify::slugify,
 };
 use crate::projects::create::graphql::create_project::{create_project, CreateProject};
 use chrono::{Duration, Utc};
@@ -186,6 +186,7 @@ pub fn create(args: &ProjectsCreateArgs) {
                     rand::random::<u8>(),
                     rand::random::<u8>()
                 ),
+                slug: slugify(&project_name),
                 name: project_name.clone(),
                 token,
             },

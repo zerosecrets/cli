@@ -1,5 +1,12 @@
 query TeamNames($userId: uuid!) {
-  team(where: { ownerUserId: { _eq: $userId } }) {
+  team(
+    where: {
+      _or: [
+        { ownerUserId: { _eq: $userId } }
+        { members: { member: { id: { _eq: $userId } } } }
+      ]
+    }
+  ) {
     id
     name
   }

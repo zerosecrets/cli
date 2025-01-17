@@ -1,10 +1,10 @@
 mod graphql;
 
+use crate::common::slugify::slugify_prompt;
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
-    print_formatted_error::print_formatted_error, slugify::slugify,
-    take_user_id_from_token::take_user_id_from_token,
+    print_formatted_error::print_formatted_error, take_user_id_from_token::take_user_id_from_token,
 };
 use crate::teams::create::graphql::create_team::{create_team, CreateTeam};
 use crate::teams::create::graphql::team_names::{team_names, TeamNames};
@@ -32,7 +32,7 @@ pub struct TeamsCreateArgs {
 }
 
 fn validate_team_name(name: &String, existing_names: &Vec<String>) -> Result<(), String> {
-    let min_length = 2;
+    let min_length = 3;
     let name_regex = Regex::new(r"^[\w -]+$").unwrap();
 
     if name.trim().len() < min_length {
@@ -84,6 +84,8 @@ pub fn create(args: &TeamsCreateArgs) {
         .map(|team| team.name.to_owned())
         .collect::<Vec<String>>();
 
+    println!("{:?}", &existing_team_names);
+
     let team_name = if let Some(name) = &args.name {
         if let Err(err) = validate_team_name(&name, &existing_team_names) {
             eprintln!("Validation error: {}", err);
@@ -118,7 +120,11 @@ pub fn create(args: &TeamsCreateArgs) {
             team_name
         ),
         create_team::Variables {
-            slug: slugify(&team_name),
+            slug: slugify_prompt(
+                &team_name,
+                "Type a slug for the team:",
+                None::<fn(&str) -> Result<(), String>>,
+            ),
             team_name,
         },
     )

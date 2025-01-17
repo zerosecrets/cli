@@ -4,7 +4,7 @@ pub mod team_names {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "TeamNames";
-    pub const QUERY : & str = "query TeamNames($userId: uuid!) {\n  team(where: { ownerUserId: { _eq: $userId } }) {\n    id\n    name\n  }\n}\n" ;
+    pub const QUERY : & str = "query TeamNames($userId: uuid!) {\n  team(\n    where: {\n      _or: [\n        { ownerUserId: { _eq: $userId } }\n        { members: { member: { id: { _eq: $userId } } } }\n      ]\n    }\n  ) {\n    id\n    name\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]

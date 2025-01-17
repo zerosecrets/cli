@@ -4,7 +4,7 @@ pub mod update_secret_fields {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "UpdateSecretFields";
-    pub const QUERY : & str = "mutation UpdateSecretFields(\n  $id: String!\n  $name: String!\n  $userSecretFields: [UpdateUserSecretFieldsInput!]!\n) {\n  updateSecret(fields: $userSecretFields, id: $id, name: $name) {\n    id\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation UpdateSecretFields(\n  $id: String!\n  $name: String!\n  $slug: String!\n  $userSecretFields: [UpdateUserSecretFieldsInput!]!\n) {\n  updateSecret(fields: $userSecretFields, id: $id, name: $name, slug: $slug) {\n    id\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -26,6 +26,7 @@ pub mod update_secret_fields {
     pub struct Variables {
         pub id: String,
         pub name: String,
+        pub slug: String,
         #[serde(rename = "userSecretFields")]
         pub user_secret_fields: Vec<UpdateUserSecretFieldsInput>,
     }

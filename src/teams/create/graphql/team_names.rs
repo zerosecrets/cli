@@ -4,10 +4,9 @@ pub mod team_names {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "TeamNames";
-    pub const QUERY : & str = "query TeamNames($userId: uuid!) {\n  team(where: { ownerUserId: { _eq: $userId } }) {\n    id\n    name\n  }\n}\n" ;
+    pub const QUERY : & str = "query TeamNames($userId: uuid!) {\n  team(\n    where: {\n      _or: [\n        { ownerUserId: { _eq: $userId } }\n        { members: { member: { id: { _eq: $userId } } } }\n      ]\n    }\n  ) {\n    id\n    name\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
-
     #[allow(dead_code)]
     type Boolean = bool;
     #[allow(dead_code)]
@@ -16,10 +15,11 @@ pub mod team_names {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
+    type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct Variables {
         #[serde(rename = "userId")]
-        pub user_id: uuid::Uuid,
+        pub user_id: uuid,
     }
     impl Variables {}
     #[derive(Deserialize)]
@@ -28,7 +28,7 @@ pub mod team_names {
     }
     #[derive(Deserialize)]
     pub struct TeamNamesTeam {
-        pub id: uuid::Uuid,
+        pub id: uuid,
         pub name: String,
     }
 }

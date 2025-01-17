@@ -7,6 +7,7 @@ use crate::common::{
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
+    slugify::slugify_prompt,
 };
 use clap::Args;
 use dialoguer::Input;
@@ -25,6 +26,8 @@ pub struct TeamsEditArgs {
     name: Option<String>,
     #[clap(short, long, help = "The description of the team, not required")]
     description: Option<String>,
+    #[clap(short, long, help = "The slug of the team, not required")]
+    slug: Option<String>,
     #[clap(
         short,
         long,
@@ -130,7 +133,11 @@ pub fn edit(args: &TeamsEditArgs) -> () {
                 UpdateTeamName::build_query,
                 &client,
                 update_team_name_error_message,
-                update_team_name::Variables { id: team_id, name },
+                update_team_name::Variables {
+                    id: team_id,
+                    name: name.to_owned(),
+                    slug: slugify_prompt(&name, "Type a slug for the team:"),
+                },
             )
             .update_team_by_pk;
 

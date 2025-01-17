@@ -209,6 +209,7 @@ input CreateSecretFieldInput {
 input CreateSecretInput {
   name: String!
   projectId: String!
+  slug: String!
   vendor: String!
 }
 
@@ -1390,10 +1391,10 @@ type mutation_root {
   cloudflareInstall(downloadSecrets: CloudflareDownloadSecretsInput!, integrationInstallation: CloudflareInstallInputIntegration!, zero: CloudflareInputZero!): SuccessOutput!
   cloudflareUpdateSecrets(integrationInstallation: CloudflareUpdateSecretsInputIntegration!, zero: CloudflareUpdateSecretsInputZero!): SuccessOutput!
   confirmEmailChange(code: String!): ConfirmEmailChangeOutput!
-  createProject(icon: String!, name: String!, token: TokenObject): CreateProjectOutput!
+  createProject(icon: String!, name: String!, slug: String!, token: TokenObject): CreateProjectOutput!
   createProjectToken(object: CreateProjectTokenInput!): CreateProjectTokenOutput!
   createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!): CreateSecretOutput!
-  createTeam(name: String!): CreateTeamOutput!
+  createTeam(name: String!, slug: String!): CreateTeamOutput!
   decodeSharingSecrets(id: String!, passphrase: String!): DecodeSharingSecretsOutput!
   deleteIntegration(integrationInstallation: DeleteIntegrationInput!): SuccessOutput!
   deleteProject(id: String!, isVendorSecretsMarkedAsDeleted: Boolean!): DeleteProjectOutput!
@@ -1772,8 +1773,8 @@ type mutation_root {
   requestResetPassword(email: String!, isReset: Boolean!): RequestResetPasswordOutput!
   resendSignUpEmail: ResendSignUpEmailOutput!
   sendInviteUserTeam(email: String!, teamId: String!): SendInviteUserTeamOutput!
-  updateProjectSettings(icon: String!, projectId: String!, projectName: String!, teamId: String!): UpdateProjectSettingsOutput!
-  updateSecret(fields: [UpdateUserSecretFieldsInput!]!, id: String!, name: String!): UpdateSecretOutput!
+  updateProjectSettings(icon: String!, id: String!, name: String!, slug: String!, teamId: String!): UpdateProjectSettingsOutput!
+  updateSecret(fields: [UpdateUserSecretFieldsInput!]!, id: String!, name: String!, slug: String!): UpdateSecretOutput!
 
   """
   update data of the table: "integrationConnect"
@@ -2794,6 +2795,7 @@ type project {
   """
   lastUsedAt: timestamptz
   name: String!
+  slug: String!
 
   """An object relationship"""
   team: team
@@ -2934,6 +2936,7 @@ input project_bool_exp {
   lastUpdatedAt: timestamptz_comparison_exp
   lastUsedAt: timestamptz_comparison_exp
   name: String_comparison_exp
+  slug: String_comparison_exp
   team: team_bool_exp
   teamId: uuid_comparison_exp
   tokens: token_bool_exp
@@ -2955,6 +2958,7 @@ input project_max_order_by {
   id: order_by
   lastUpdatedAt: order_by
   name: order_by
+  slug: order_by
   teamId: order_by
   updatedAt: order_by
 }
@@ -2969,6 +2973,7 @@ input project_min_order_by {
   id: order_by
   lastUpdatedAt: order_by
   name: order_by
+  slug: order_by
   teamId: order_by
   updatedAt: order_by
 }
@@ -2994,6 +2999,7 @@ input project_order_by {
   lastUpdatedAt: order_by
   lastUsedAt: order_by
   name: order_by
+  slug: order_by
   team: team_order_by
   teamId: order_by
   tokens_aggregate: token_aggregate_order_by
@@ -3031,6 +3037,9 @@ enum project_select_column {
   name
 
   """column name"""
+  slug
+
+  """column name"""
   teamId
 
   """column name"""
@@ -3044,6 +3053,7 @@ input project_set_input {
   description: String
   icon: String
   name: String
+  slug: String
   teamId: uuid
 }
 
@@ -3066,6 +3076,7 @@ input project_stream_cursor_value_input {
   id: uuid
   lastUpdatedAt: timestamptz
   name: String
+  slug: String
   teamId: uuid
   updatedAt: timestamptz
 }
@@ -5057,6 +5068,7 @@ type team {
     """filter the rows returned"""
     where: project_bool_exp
   ): [project!]!
+  slug: String!
   updatedAt: timestamptz!
 }
 
@@ -5562,6 +5574,7 @@ input team_bool_exp {
   owner: user_bool_exp
   ownerUserId: uuid_comparison_exp
   projects: project_bool_exp
+  slug: String_comparison_exp
   updatedAt: timestamptz_comparison_exp
 }
 
@@ -5573,6 +5586,7 @@ type team_max_fields {
   lastUpdatedAt: timestamptz
   name: String
   ownerUserId: uuid
+  slug: String
   updatedAt: timestamptz
 }
 
@@ -5584,6 +5598,7 @@ type team_min_fields {
   lastUpdatedAt: timestamptz
   name: String
   ownerUserId: uuid
+  slug: String
   updatedAt: timestamptz
 }
 
@@ -5610,6 +5625,7 @@ input team_order_by {
   owner: user_order_by
   ownerUserId: order_by
   projects_aggregate: project_aggregate_order_by
+  slug: order_by
   updatedAt: order_by
 }
 
@@ -5641,6 +5657,9 @@ enum team_select_column {
   ownerUserId
 
   """column name"""
+  slug
+
+  """column name"""
   updatedAt
 }
 
@@ -5650,6 +5669,7 @@ input type for updating data in table "team"
 input team_set_input {
   description: String
   name: String
+  slug: String
 }
 
 """
@@ -5671,6 +5691,7 @@ input team_stream_cursor_value_input {
   lastUpdatedAt: timestamptz
   name: String
   ownerUserId: uuid
+  slug: String
   updatedAt: timestamptz
 }
 

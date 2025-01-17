@@ -1,5 +1,6 @@
 mod graphql;
 
+use crate::common::slugify::slugify_prompt;
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
@@ -186,6 +187,7 @@ pub fn create(args: &ProjectsCreateArgs) {
                     rand::random::<u8>(),
                     rand::random::<u8>()
                 ),
+                slug: slugify_prompt(&project_name, "Type a slug for the project:"),
                 name: project_name.clone(),
                 token,
             },

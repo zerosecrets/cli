@@ -2,8 +2,10 @@
 pub struct UpdateTeamName;
 pub mod update_team_name {
     #![allow(dead_code)]
+    use std::result::Result;
     pub const OPERATION_NAME: &str = "UpdateTeamName";
-    pub const QUERY : & str = "mutation UpdateTeamName($id: uuid!, $name: String!) {\n  update_team_by_pk(pk_columns: {id: $id}, _set: {name: $name}) {\n    id\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation UpdateTeamName($id: uuid!, $name: String!, $slug: String!) {\n  update_team_by_pk(pk_columns: { id: $id }, _set: { name: $name, slug: $slug }) {\n    id\n  }\n}\n" ;
+    use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -18,6 +20,7 @@ pub mod update_team_name {
     pub struct Variables {
         pub id: uuid,
         pub name: String,
+        pub slug: String,
     }
     impl Variables {}
     #[derive(Deserialize)]

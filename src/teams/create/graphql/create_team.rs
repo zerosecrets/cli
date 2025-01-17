@@ -4,7 +4,7 @@ pub mod create_team {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "CreateTeam";
-    pub const QUERY : & str = "mutation CreateTeam($teamName: String!) {\n  createTeam(name: $teamName) {\n    id\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation CreateTeam($teamName: String!, $slug: String!) {\n  createTeam(name: $teamName, slug: $slug) {\n    id\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -19,6 +19,7 @@ pub mod create_team {
     pub struct Variables {
         #[serde(rename = "teamName")]
         pub team_name: String,
+        pub slug: String,
     }
     impl Variables {}
     #[derive(Deserialize)]

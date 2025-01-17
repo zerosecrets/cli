@@ -1,14 +1,13 @@
 mod graphql;
 
+use crate::common::slugify::slugify_prompt;
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
     print_formatted_error::print_formatted_error, take_user_id_from_token::take_user_id_from_token,
 };
 use crate::teams::create::graphql::create_team::{create_team, CreateTeam};
-use crate::teams::create::graphql::team_names::{
-    team_names, TeamNames,
-};
+use crate::teams::create::graphql::team_names::{team_names, TeamNames};
 use clap::Args;
 use dialoguer::Input;
 use graphql_client::GraphQLQuery;
@@ -33,7 +32,7 @@ pub struct TeamsCreateArgs {
 }
 
 fn validate_team_name(name: &String, existing_names: &Vec<String>) -> Result<(), String> {
-    let min_length = 2;
+    let min_length = 3;
     let name_regex = Regex::new(r"^[\w -]+$").unwrap();
 
     if name.trim().len() < min_length {
@@ -72,17 +71,13 @@ pub fn create(args: &TeamsCreateArgs) {
         }
     };
 
-    let user_info = execute_graphql_request::<
-        team_names::Variables,
-        team_names::ResponseData,
-    >(
+    let user_info = execute_graphql_request::<team_names::Variables, team_names::ResponseData>(
         headers.clone(),
         TeamNames::build_query,
         &client,
         "Failed to retrieve team names",
         team_names::Variables { user_id },
     );
-    
     let existing_team_names = user_info
         .team
         .iter()
@@ -122,7 +117,10 @@ pub fn create(args: &TeamsCreateArgs) {
             "Creation failed. Failed to create a team with the name '{}'.",
             team_name
         ),
-        create_team::Variables { team_name },
+        create_team::Variables {
+            slug: slugify_prompt(&team_name, "Type a slug for the team:"),
+            team_name,
+        },
     )
     .create_team
     .id;

@@ -1,7 +1,7 @@
-mutation UpdateProjectName($projectId: uuid!, $projectName: String!) {
+mutation UpdateProjectName($id: uuid!, $name: String!, $slug: String!) {
   update_project(
-    where: { id: { _eq: $projectId } }
-    _set: { name: $projectName }
+    where: { id: { _eq: $id } }
+    _set: { name: $name, slug: $slug }
   ) {
     affected_rows
   }

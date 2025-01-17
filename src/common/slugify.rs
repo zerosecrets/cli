@@ -1,4 +1,4 @@
-use dialoguer::{console::style, theme::ColorfulTheme, Input};
+use dialoguer::{theme::ColorfulTheme, Input};
 /// This function takes a text string as input and performs the following transformations:
 /// - Removes special characters, keeping only alphanumeric characters, spaces, and hyphens.
 /// - Trims leading and trailing spaces from the resulting string.
@@ -21,6 +21,8 @@ use dialoguer::{console::style, theme::ColorfulTheme, Input};
 ///
 /// A new formatted String.
 use regex::Regex;
+
+use super::print_formatted_error::print_formatted_error;
 
 ///
 pub fn slugify(text: &str) -> String {
@@ -61,54 +63,29 @@ pub fn validate_slug(slug: &String) -> Result<(), String> {
     }
 
     if !regex.is_match(slug.trim()) {
-        return Err("Only a-z, 0-9, ' ', '_', and '-' are allowed".to_string());
+        return Err(
+            "Only a-z, 0-9, and single hyphens (not at the start or end) are allowed.".to_string(),
+        );
     }
 
     Ok(())
 }
 
-pub fn slugify_prompt<F>(text: &str, prompt_message: &str, validator: Option<F>) -> String
-where
-    F: Fn(&str) -> Result<(), String>,
-{
-    let default_slug = slugify(text);
-
-    let validator_ref = &validator;
-
-    // TODO we need it loop?
+pub fn slugify_prompt<F>(text: &str, prompt_message: &str) -> String {
     return match Input::<String>::with_theme(&ColorfulTheme::default())
         .with_prompt(prompt_message)
-        .default(default_slug.clone())
-        .validate_with(move |val: &String| {
-            validate_slug(val)?;
-
-            if let Some(f) = validator_ref {
-                f(val)?;
-            }
-
-            Ok::<(), String>(())
-        })
+        .default(slugify(text))
+        .validate_with(validate_slug)
         .interact()
     {
         Ok(slug) => slug.trim().to_owned(),
+
         Err(_) => {
-            eprintln!("Failed to read slug input.");
+            print_formatted_error("Failed to read slug input.");
             std::process::exit(1);
         }
     };
 }
-
-// let team_slug = match Input::<String>::with_theme(&theme())
-// .with_prompt("Type a slug for the team:")
-// .default(slugify(&team_name))
-// .interact()
-// {
-// Ok(slug) => slug.trim().to_owned(),
-// Err(_) => {
-//     print_formatted_error("Failed to read team name input.");
-//     std::process::exit(1);
-// }
-// };
 
 #[cfg(test)]
 mod tests {

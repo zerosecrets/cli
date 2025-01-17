@@ -86,6 +86,8 @@ fn test_secrets_edit() -> Result<(), Error> {
     p.send_line("edited secret")?;
     p.send("\x1B[B")?;
     p.send_line("")?;
+    p.exp_string("Type a slug for the secret")?;
+    p.send_line("")?;
     p.exp_string("The secret has been successfully updated.")?;
     Ok(())
 }
@@ -146,6 +148,8 @@ fn test_secrets_field_edit() -> Result<(), Error> {
     p.send_line("newApiKey")?;
     p.exp_string("Type a new field value")?;
     p.send_line("1234Ssg")?;
+    p.exp_string("Type a slug for the secret")?;
+    p.send_line("")?;
     p.exp_string("The secret has been successfully updated.")?;
     Ok(())
 }

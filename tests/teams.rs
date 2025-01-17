@@ -6,6 +6,8 @@ fn test_teams_create() -> Result<(), Error> {
     let mut p = spawn("./target/debug/zero-cli teams create", Some(15000))?;
     p.exp_string("Type a name for the team")?;
     p.send_line("tested team")?;
+    p.exp_string("Type a slug for the team")?;
+    p.send_line("")?;
     p.exp_string("Team link")?;
     p.exp_string("Team ID")?;
     Ok(())
@@ -31,6 +33,8 @@ fn test_teams_edit() -> Result<(), Error> {
     p.send_line("update team name")?;
     p.exp_string("Type a new team description")?;
     p.send_line("update team description")?;
+    p.exp_string("Type a slug for the team")?;
+    p.send_line("")?;
     p.exp_string("The team has been successfully updated")?;
     Ok(())
 }

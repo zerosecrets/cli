@@ -50,6 +50,8 @@ fn test_projects_create_with_token_7_days() -> Result<(), Error> {
     p.exp_string("Expires in")?;
     p.send("\x1B[B")?;
     p.send_line("")?;
+    p.exp_string("Type a slug for the project")?;
+    p.send_line("")?;
     p.exp_string("You created the project")?;
     p.exp_string("Project link")?;
     p.exp_string("Project ID for CLI")?;
@@ -84,6 +86,8 @@ fn test_projects_edit() -> Result<(), Error> {
     p.send_line("y")?;
     p.exp_string("Type a new project description")?;
     p.send_line("description")?;
+    p.exp_string("Type a slug for the project")?;
+    p.send_line("")?;
     p.exp_string("The project has been successfully updated.")?;
     Ok(())
 }

@@ -209,6 +209,7 @@ input CreateSecretFieldInput {
 input CreateSecretInput {
   name: String!
   projectId: String!
+  slug: String!
   vendor: String!
 }
 
@@ -1773,7 +1774,7 @@ type mutation_root {
   resendSignUpEmail: ResendSignUpEmailOutput!
   sendInviteUserTeam(email: String!, teamId: String!): SendInviteUserTeamOutput!
   updateProjectSettings(icon: String!, id: String!, name: String!, slug: String!, teamId: String!): UpdateProjectSettingsOutput!
-  updateSecret(fields: [UpdateUserSecretFieldsInput!]!, id: String!, name: String!): UpdateSecretOutput!
+  updateSecret(fields: [UpdateUserSecretFieldsInput!]!, id: String!, name: String!, slug: String!): UpdateSecretOutput!
 
   """
   update data of the table: "integrationConnect"
@@ -2794,6 +2795,7 @@ type project {
   """
   lastUsedAt: timestamptz
   name: String!
+  slug: String!
 
   """An object relationship"""
   team: team
@@ -2934,6 +2936,7 @@ input project_bool_exp {
   lastUpdatedAt: timestamptz_comparison_exp
   lastUsedAt: timestamptz_comparison_exp
   name: String_comparison_exp
+  slug: String_comparison_exp
   team: team_bool_exp
   teamId: uuid_comparison_exp
   tokens: token_bool_exp
@@ -2955,6 +2958,7 @@ input project_max_order_by {
   id: order_by
   lastUpdatedAt: order_by
   name: order_by
+  slug: order_by
   teamId: order_by
   updatedAt: order_by
 }
@@ -2969,6 +2973,7 @@ input project_min_order_by {
   id: order_by
   lastUpdatedAt: order_by
   name: order_by
+  slug: order_by
   teamId: order_by
   updatedAt: order_by
 }
@@ -2994,6 +2999,7 @@ input project_order_by {
   lastUpdatedAt: order_by
   lastUsedAt: order_by
   name: order_by
+  slug: order_by
   team: team_order_by
   teamId: order_by
   tokens_aggregate: token_aggregate_order_by
@@ -3031,6 +3037,9 @@ enum project_select_column {
   name
 
   """column name"""
+  slug
+
+  """column name"""
   teamId
 
   """column name"""
@@ -3044,6 +3053,7 @@ input project_set_input {
   description: String
   icon: String
   name: String
+  slug: String
   teamId: uuid
 }
 
@@ -3066,6 +3076,7 @@ input project_stream_cursor_value_input {
   id: uuid
   lastUpdatedAt: timestamptz
   name: String
+  slug: String
   teamId: uuid
   updatedAt: timestamptz
 }
@@ -8093,3 +8104,4 @@ input viewPreferences_updates {
   """filter the rows which have to be updated"""
   where: viewPreferences_bool_exp!
 }
+

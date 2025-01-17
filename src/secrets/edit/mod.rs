@@ -7,7 +7,7 @@ use crate::common::{
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
-    slugify::slugify,
+    slugify::slugify_prompt,
     validate_secret_field_name::validate_secret_field_name,
     validate_secret_name::validate_secret_name,
     vendors::Vendors,
@@ -177,6 +177,7 @@ pub fn edit(args: &SecretsEditArgs) {
             update_secret_field_error_message,
             update_secret_fields::Variables {
                 id: secret_info.id.to_string(),
+                slug: slugify_prompt(&secret_info.name, "Type a slug for the secret:"),
                 name: secret_info.name,
                 user_secret_fields: updated_user_secret_fields,
             },
@@ -267,7 +268,11 @@ pub fn edit(args: &SecretsEditArgs) {
                 set: update_secret_info::userSecret_set_input {
                     name: Some(new_secret_name.to_owned()),
                     vendor: Some(new_secret_vendor),
-                    slug: Some(slugify(&new_secret_name)),
+                    slug: Some(slugify_prompt(
+                        &new_secret_name,
+                        "Type a slug for the secret:",
+                    )),
+                    note: None,
                 },
             },
         )

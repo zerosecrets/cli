@@ -4,12 +4,10 @@ pub mod update_secret_info {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "UpdateSecretInfo";
-    pub const QUERY : & str = "mutation UpdateSecretInfo($id: uuid!, $set: userSecret_set_input!) {\n  update_userSecret_by_pk(pk_columns: {id: $id}, _set: $set) {\n    id\n  }\n}\n" ;
-    use ::uuid::Uuid;
-    use chrono::offset::Utc;
-    use chrono::DateTime;
-    use serde::{Deserialize, Serialize};
+    pub const QUERY : & str = "mutation UpdateSecretInfo($id: uuid!, $set: userSecret_set_input!) {\n  update_userSecret_by_pk(pk_columns: { id: $id }, _set: $set) {\n    id\n  }\n}\n" ;
+    use super::*;
     use strum_macros::{Display, EnumIter};
+    use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
     #[allow(dead_code)]
@@ -18,8 +16,7 @@ pub mod update_secret_info {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
-    type timestamptz = DateTime<Utc>;
-    type uuid = Uuid;
+    type uuid = ::uuid::Uuid;
     #[derive(EnumIter, Display, Clone)]
     pub enum vendorEnum_enum {
         agora,
@@ -28,7 +25,7 @@ pub mod update_secret_info {
         azure,
         bitbucket,
         braintree,
-        claude,
+        cloudflare,
         datadog,
         digitalOcean,
         docker,
@@ -44,6 +41,7 @@ pub mod update_secret_info {
         linear,
         mailchimp,
         mixpanel,
+        netlify,
         openAI,
         other,
         paypal,
@@ -57,6 +55,7 @@ pub mod update_secret_info {
         terraform,
         trello,
         twilio,
+        vercel,
         zoom,
         Other(String),
     }
@@ -69,7 +68,7 @@ pub mod update_secret_info {
                 vendorEnum_enum::azure => "azure",
                 vendorEnum_enum::bitbucket => "bitbucket",
                 vendorEnum_enum::braintree => "braintree",
-                vendorEnum_enum::claude => "claude",
+                vendorEnum_enum::cloudflare => "cloudflare",
                 vendorEnum_enum::datadog => "datadog",
                 vendorEnum_enum::digitalOcean => "digitalOcean",
                 vendorEnum_enum::docker => "docker",
@@ -85,6 +84,7 @@ pub mod update_secret_info {
                 vendorEnum_enum::linear => "linear",
                 vendorEnum_enum::mailchimp => "mailchimp",
                 vendorEnum_enum::mixpanel => "mixpanel",
+                vendorEnum_enum::netlify => "netlify",
                 vendorEnum_enum::openAI => "openAI",
                 vendorEnum_enum::other => "other",
                 vendorEnum_enum::paypal => "paypal",
@@ -98,6 +98,7 @@ pub mod update_secret_info {
                 vendorEnum_enum::terraform => "terraform",
                 vendorEnum_enum::trello => "trello",
                 vendorEnum_enum::twilio => "twilio",
+                vendorEnum_enum::vercel => "vercel",
                 vendorEnum_enum::zoom => "zoom",
                 vendorEnum_enum::Other(ref s) => &s,
             })
@@ -113,7 +114,7 @@ pub mod update_secret_info {
                 "azure" => Ok(vendorEnum_enum::azure),
                 "bitbucket" => Ok(vendorEnum_enum::bitbucket),
                 "braintree" => Ok(vendorEnum_enum::braintree),
-                "claude" => Ok(vendorEnum_enum::claude),
+                "cloudflare" => Ok(vendorEnum_enum::cloudflare),
                 "datadog" => Ok(vendorEnum_enum::datadog),
                 "digitalOcean" => Ok(vendorEnum_enum::digitalOcean),
                 "docker" => Ok(vendorEnum_enum::docker),
@@ -129,6 +130,7 @@ pub mod update_secret_info {
                 "linear" => Ok(vendorEnum_enum::linear),
                 "mailchimp" => Ok(vendorEnum_enum::mailchimp),
                 "mixpanel" => Ok(vendorEnum_enum::mixpanel),
+                "netlify" => Ok(vendorEnum_enum::netlify),
                 "openAI" => Ok(vendorEnum_enum::openAI),
                 "other" => Ok(vendorEnum_enum::other),
                 "paypal" => Ok(vendorEnum_enum::paypal),
@@ -142,6 +144,7 @@ pub mod update_secret_info {
                 "terraform" => Ok(vendorEnum_enum::terraform),
                 "trello" => Ok(vendorEnum_enum::trello),
                 "twilio" => Ok(vendorEnum_enum::twilio),
+                "vercel" => Ok(vendorEnum_enum::vercel),
                 "zoom" => Ok(vendorEnum_enum::zoom),
                 _ => Ok(vendorEnum_enum::Other(s)),
             }
@@ -150,7 +153,11 @@ pub mod update_secret_info {
     #[derive(Serialize)]
     pub struct userSecret_set_input {
         pub name: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        pub note: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
         pub slug: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
         pub vendor: Option<vendorEnum_enum>,
     }
     #[derive(Serialize)]

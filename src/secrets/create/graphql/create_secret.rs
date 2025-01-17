@@ -25,6 +25,7 @@ pub mod create_secret {
         pub name: String,
         #[serde(rename = "projectId")]
         pub project_id: String,
+        pub slug: String,
         pub vendor: String,
     }
     #[derive(Serialize)]

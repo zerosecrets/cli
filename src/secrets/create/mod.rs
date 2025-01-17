@@ -1,16 +1,7 @@
 mod graphql;
 
 use crate::common::{
-    authorization_headers::authorization_headers,
-    colorful_theme::theme,
-    config::Config,
-    execute_graphql_request::execute_graphql_request,
-    keyring::keyring,
-    print_formatted_error::print_formatted_error,
-    query_full_id::{query_full_id, QueryType},
-    validate_secret_field_name::validate_secret_field_name,
-    validate_secret_name::validate_secret_name,
-    vendors::Vendors,
+    authorization_headers::authorization_headers, colorful_theme::theme, config::Config, execute_graphql_request::execute_graphql_request, keyring::keyring, print_formatted_error::print_formatted_error, query_full_id::{query_full_id, QueryType}, slugify::slugify_prompt, validate_secret_field_name::validate_secret_field_name, validate_secret_name::validate_secret_name, vendors::Vendors
 };
 
 use crate::secrets::create::graphql::create_secret::{create_secret, CreateSecret};
@@ -197,6 +188,7 @@ pub fn create(args: &SecretsCreateArgs) {
                 fields: secret_fields,
                 secret: create_secret::CreateSecretInput {
                     name: secret_name.clone(),
+                    slug: slugify_prompt(&secret_name, "Type a slug for the secret:"),
                     project_id: project_id.to_string(),
                     vendor: selected_vendor.to_string(),
                 },

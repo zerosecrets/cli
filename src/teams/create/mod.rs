@@ -120,11 +120,7 @@ pub fn create(args: &TeamsCreateArgs) {
             team_name
         ),
         create_team::Variables {
-            slug: slugify_prompt(
-                &team_name,
-                "Type a slug for the team:",
-                None::<fn(&str) -> Result<(), String>>,
-            ),
+            slug: slugify_prompt(&team_name, "Type a slug for the team:"),
             team_name,
         },
     )

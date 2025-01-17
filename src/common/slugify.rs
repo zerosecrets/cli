@@ -71,7 +71,7 @@ pub fn validate_slug(slug: &String) -> Result<(), String> {
     Ok(())
 }
 
-pub fn slugify_prompt<F>(text: &str, prompt_message: &str) -> String {
+pub fn slugify_prompt(text: &str, prompt_message: &str) -> String {
     return match Input::<String>::with_theme(&ColorfulTheme::default())
         .with_prompt(prompt_message)
         .default(slugify(text))

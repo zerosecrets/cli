@@ -2,6 +2,7 @@ name: integration-tests
 on:
   schedule:
     - cron: 0 13 * * 1-5
+  workflow_dispatch:
 jobs:
   integration-tests:
     name: integration-tests

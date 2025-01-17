@@ -7,6 +7,7 @@ use crate::common::{
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
+    slugify::slugify_prompt,
 };
 use crate::projects::edit::graphql::project_info::{project_info, ProjectInfo};
 use crate::projects::edit::graphql::update_project_description::{
@@ -147,8 +148,9 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
             &client,
             &update_project_name_error_message,
             update_project_name::Variables {
-                project_id: project_id.clone(),
-                project_name: name.clone(),
+                id: project_id.clone(),
+                name: name.clone(),
+                slug: slugify_prompt(&name, "Type a slug for the project:"),
             },
         )
         .update_project

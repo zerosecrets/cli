@@ -84,8 +84,6 @@ pub fn create(args: &TeamsCreateArgs) {
         .map(|team| team.name.to_owned())
         .collect::<Vec<String>>();
 
-    println!("{:?}", &existing_team_names);
-
     let team_name = if let Some(name) = &args.name {
         if let Err(err) = validate_team_name(&name, &existing_team_names) {
             eprintln!("Validation error: {}", err);

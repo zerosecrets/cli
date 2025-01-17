@@ -4,7 +4,7 @@ pub mod update_project_name {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "UpdateProjectName";
-    pub const QUERY : & str = "mutation UpdateProjectName($projectId: uuid!, $projectName: String!) {\n    update_project(where: {id: {_eq: $projectId}}, _set: {name: $projectName}) {\n        affected_rows\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation UpdateProjectName($id: uuid!, $name: String!, $slug: String!) {\n  update_project(\n    where: { id: { _eq: $id } }\n    _set: { name: $name, slug: $slug }\n  ) {\n    affected_rows\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -18,10 +18,9 @@ pub mod update_project_name {
     type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct Variables {
-        #[serde(rename = "projectId")]
-        pub project_id: uuid,
-        #[serde(rename = "projectName")]
-        pub project_name: String,
+        pub id: uuid,
+        pub name: String,
+        pub slug: String,
     }
     impl Variables {}
     #[derive(Deserialize)]

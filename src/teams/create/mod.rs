@@ -33,7 +33,7 @@ pub struct TeamsCreateArgs {
 
 fn validate_team_name(name: &String, existing_names: &Vec<String>) -> Result<(), String> {
     let min_length = 3;
-    let name_regex = Regex::new(r"^[\w -]+$").unwrap();
+    let max_length = 32;
 
     if name.trim().len() < min_length {
         return Err(format!(
@@ -42,8 +42,11 @@ fn validate_team_name(name: &String, existing_names: &Vec<String>) -> Result<(),
         ));
     }
 
-    if !name_regex.is_match(name.trim()) {
-        return Err("Only a-z, 0-9, ' ', '_', and '-' are allowed".to_string());
+    if name.trim().len() > min_length {
+        return Err(format!(
+            "Team name must be less than {} characters long.",
+            max_length
+        ));
     }
 
     if existing_names.contains(&name.trim().to_string()) {

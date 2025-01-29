@@ -24,7 +24,6 @@ use regex::Regex;
 
 use super::print_formatted_error::print_formatted_error;
 
-///
 pub fn slugify(text: &str) -> String {
     // convert everything to lowercase
     let mut slug = text.to_lowercase();
@@ -54,12 +53,17 @@ pub fn slugify(text: &str) -> String {
         .join("-")
 }
 
-pub fn validate_slug(slug: &String) -> Result<(), String> {
+fn validate_slug(slug: &String) -> Result<(), String> {
     let min_length = 3;
+    let max_length = 32;
     let regex = Regex::new(r"^[a-z\d]+(?:-[a-z\d]+)*$").unwrap();
 
     if slug.trim().len() < min_length {
         return Err(format!("Slug must be at least {} characters", min_length));
+    }
+
+    if slug.trim().len() > max_length {
+        return Err(format!("Slug must be less than {} characters", max_length));
     }
 
     if !regex.is_match(slug.trim()) {

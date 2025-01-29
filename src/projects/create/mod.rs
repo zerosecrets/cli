@@ -46,9 +46,17 @@ pub fn create(args: &ProjectsCreateArgs) {
 
     let project_name = match &args.name {
         Some(name) => {
-            if name.trim().chars().count() < 2 {
+            if name.trim().chars().count() < 3 {
                 print_formatted_error(
-                    "Creation failed. The project name must be at least 2 characters long.",
+                    "Creation failed. The project name must be at least 3 characters long.",
+                );
+
+                std::process::exit(1);
+            }
+
+            if name.trim().chars().count() > 32 {
+                print_formatted_error(
+                    "Creation failed. The project name must be less than 32 characters long.",
                 );
 
                 std::process::exit(1);

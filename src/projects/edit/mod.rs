@@ -7,7 +7,7 @@ use crate::common::{
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
-    slugify::slugify_prompt,
+    slugify::slugify_prompt, validate_name::validate_name,
 };
 use crate::projects::edit::graphql::project_info::{project_info, ProjectInfo};
 use crate::projects::edit::graphql::update_project_description::{
@@ -89,11 +89,7 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
         name = match Input::with_theme(&theme())
             .with_prompt("Type a new project name:")
             .validate_with(|name: &String| -> Result<(), &str> {
-                if name.trim().chars().count() < 2 {
-                    return Err("The project name must be at least 2 characters long.");
-                } else {
-                    Ok(())
-                }
+                validate_name(&name)
             })
             .default(project_info.name.clone())
             .interact()

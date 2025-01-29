@@ -4,7 +4,7 @@ use crate::common::slugify::slugify_prompt;
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
-    print_formatted_error::print_formatted_error,
+    print_formatted_error::print_formatted_error, validate_name::validate_name,
 };
 use crate::projects::create::graphql::create_project::{create_project, CreateProject};
 use chrono::{Duration, Utc};
@@ -46,30 +46,19 @@ pub fn create(args: &ProjectsCreateArgs) {
 
     let project_name = match &args.name {
         Some(name) => {
-            if name.trim().chars().count() < 2 {
-                print_formatted_error(
-                    "Creation failed. The project name must be at least 2 characters long.",
-                );
-
-                std::process::exit(1);
-            }
-
-            name.clone()
+            let _ = validate_name(name);
+            name
         }
 
         None => {
             match Input::with_theme(&theme())
                 .with_prompt("Type a project name:")
-                .validate_with(|name: &String| -> Result<(), &str> {
-                    if name.trim().chars().count() < 2 {
-                        return Err("The project name must be at least 2 characters long.");
-                    } else {
-                        Ok(())
-                    }
+                .validate_with(|input: &String| -> Result<(), &str> {
+                    validate_name(&input)
                 })
                 .interact()
             {
-                Ok(new_name) => new_name,
+                Ok(new_name) => &new_name.clone(),
 
                 Err(_) => {
                     print_formatted_error("Creation failed. Failed to read the project name.");

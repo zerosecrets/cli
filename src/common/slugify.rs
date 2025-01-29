@@ -56,20 +56,21 @@ pub fn slugify(text: &str) -> String {
 fn validate_slug(slug: &String) -> Result<(), String> {
     let min_length = 3;
     let max_length = 32;
-    let regex = Regex::new(r"^[a-z\d]+(?:-[a-z\d]+)*$").unwrap();
+    let regex: Regex = Regex::new(r"^[a-z\d]+(?:-[a-z\d]+)*$").unwrap();
+    let trimmed_slug = slug.trim();
 
-    if slug.trim().len() < min_length {
-        return Err(format!("Slug must be at least {} characters", min_length));
-    }
-
-    if slug.trim().len() > max_length {
-        return Err(format!("Slug must be less than {} characters", max_length));
-    }
-
-    if !regex.is_match(slug.trim()) {
+    if !regex.is_match(trimmed_slug) {
         return Err(
             "Only a-z, 0-9, and single hyphens (not at the start or end) are allowed.".to_string(),
         );
+    }
+
+    if trimmed_slug.len() < min_length {
+        return Err(format!("Slug must be at least {} characters", min_length));
+    }
+
+    if trimmed_slug.len() > max_length {
+        return Err(format!("Slug must be less than {} characters", max_length));
     }
 
     Ok(())

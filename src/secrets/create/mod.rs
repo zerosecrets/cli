@@ -1,11 +1,20 @@
 mod graphql;
 
 use crate::common::{
-    authorization_headers::authorization_headers, colorful_theme::theme, config::Config, execute_graphql_request::execute_graphql_request, keyring::keyring, print_formatted_error::print_formatted_error, query_full_id::{query_full_id, QueryType}, slugify::slugify_prompt, validate_secret_field_name::validate_secret_field_name, validate_secret_name::validate_secret_name, vendors::Vendors
+    authorization_headers::authorization_headers,
+    colorful_theme::theme,
+    config::Config,
+    execute_graphql_request::execute_graphql_request,
+    keyring::keyring,
+    print_formatted_error::print_formatted_error,
+    query_full_id::{query_full_id, QueryType},
+    slugify::slugify_prompt,
+    validate_name::validate_name,
+    validate_secret_field_name::validate_secret_field_name,
+    vendors::Vendors,
 };
 
 use crate::secrets::create::graphql::create_secret::{create_secret, CreateSecret};
-use crate::secrets::create::graphql::secret_names::{secret_names, SecretNames};
 use clap::Args;
 use dialoguer::{Confirm, Input, Password, Select};
 use graphql_client::GraphQLQuery;
@@ -50,27 +59,8 @@ pub fn create(args: &SecretsCreateArgs) {
     let headers = authorization_headers(&access_token);
     let project_id = query_full_id(QueryType::Project, args.id.clone(), &access_token);
 
-    let secret_names =
-        match execute_graphql_request::<secret_names::Variables, secret_names::ResponseData>(
-            headers.clone(),
-            SecretNames::build_query,
-            &client,
-            "Failed to retrieve secret names",
-            secret_names::Variables { project_id },
-        )
-        .project_by_pk
-        {
-            Some(token_by_pk) => token_by_pk
-                .user_secrets
-                .iter()
-                .map(|secret| secret.name.clone())
-                .collect(),
-
-            None => Vec::new(),
-        };
-
     let secret_name = match &args.name {
-        Some(name) => match validate_secret_name(&name, "", &secret_names) {
+        Some(name) => match validate_name(&name) {
             Ok(_) => name.clone(),
 
             Err(error) => {
@@ -83,7 +73,7 @@ pub fn create(args: &SecretsCreateArgs) {
             match Input::with_theme(&theme())
                 .with_prompt("Type a name for the secret:")
                 .validate_with(|input: &String| -> Result<(), &str> {
-                    return validate_secret_name(&input, "", &secret_names);
+                    validate_name(&input)
                 })
                 .interact()
             {

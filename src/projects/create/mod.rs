@@ -4,8 +4,7 @@ use crate::common::slugify::slugify_prompt;
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
-    print_formatted_error::print_formatted_error,
-    validate_project_name::validate_project_name
+    print_formatted_error::print_formatted_error, validate_name::validate_name,
 };
 use crate::projects::create::graphql::create_project::{create_project, CreateProject};
 use chrono::{Duration, Utc};
@@ -47,7 +46,7 @@ pub fn create(args: &ProjectsCreateArgs) {
 
     let project_name = match &args.name {
         Some(name) => {
-            let _ = validate_project_name(name);
+            let _ = validate_name(name);
             name
         }
 
@@ -55,7 +54,7 @@ pub fn create(args: &ProjectsCreateArgs) {
             match Input::with_theme(&theme())
                 .with_prompt("Type a project name:")
                 .validate_with(|input: &String| -> Result<(), &str> {
-                    validate_project_name(&input)
+                    validate_name(&input)
                 })
                 .interact()
             {

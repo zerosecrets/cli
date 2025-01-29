@@ -8,8 +8,8 @@ use crate::common::{
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
     slugify::slugify_prompt,
+    validate_name::validate_name,
     validate_secret_field_name::validate_secret_field_name,
-    validate_secret_name::validate_secret_name,
     vendors::Vendors,
 };
 use clap::Args;
@@ -192,25 +192,10 @@ pub fn edit(args: &SecretsEditArgs) {
 
     // otherwise update the secret information
     } else {
-        let existed_secret_names: Vec<String> = match secret_info.project {
-            Some(project) => project,
-
-            None => {
-                print_formatted_error("Editing failed. Failed to get existed secret names.");
-                std::process::exit(1);
-            }
-        }
-        .user_secrets
-        .iter()
-        .map(|secret| secret.name.to_string())
-        .collect();
-
         let new_secret_name: String = match Input::with_theme(&theme())
             .with_prompt("Type a new secret name:")
             .default(secret_info.name.clone())
-            .validate_with(|input: &String| -> Result<(), &str> {
-                return validate_secret_name(&input, &secret_info.name, &existed_secret_names);
-            })
+            .validate_with(|input: &String| -> Result<(), &str> { validate_name(&input) })
             .interact()
         {
             Ok(name) => name,

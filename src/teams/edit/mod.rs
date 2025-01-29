@@ -8,6 +8,7 @@ use crate::common::{
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
     slugify::slugify_prompt,
+    validate_team_name::validate_team_name,
 };
 use clap::Args;
 use dialoguer::Input;
@@ -90,6 +91,8 @@ pub fn edit(args: &TeamsEditArgs) -> () {
         name = match Input::with_theme(&theme())
             .with_prompt("Type a new team name:")
             .validate_with(|name: &String| -> Result<(), &str> {
+                let _ = validate_team_name(name, &already_used_team_names);
+
                 if already_used_team_names.contains(&name) && name != &edited_team.name {
                     return Err("The team name must be unique.");
                 } else {

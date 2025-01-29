@@ -5,13 +5,13 @@ use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
     print_formatted_error::print_formatted_error, take_user_id_from_token::take_user_id_from_token,
+    validate_team_name::validate_team_name
 };
 use crate::teams::create::graphql::create_team::{create_team, CreateTeam};
 use crate::teams::create::graphql::team_names::{team_names, TeamNames};
 use clap::Args;
 use dialoguer::Input;
 use graphql_client::GraphQLQuery;
-use regex::Regex;
 use reqwest::Client;
 use termimad::{
     crossterm::style::{style, Color, Stylize},
@@ -29,31 +29,6 @@ pub struct TeamsCreateArgs {
         help = "Access token, if not specified, the token will be taken from the keychain"
     )]
     access_token: Option<String>,
-}
-
-fn validate_team_name(name: &String, existing_names: &Vec<String>) -> Result<(), String> {
-    let min_length = 3;
-    let max_length = 32;
-
-    if name.trim().len() < min_length {
-        return Err(format!(
-            "Team name must be at least {} characters",
-            min_length
-        ));
-    }
-
-    if name.trim().len() > min_length {
-        return Err(format!(
-            "Team name must be less than {} characters long.",
-            max_length
-        ));
-    }
-
-    if existing_names.contains(&name.trim().to_string()) {
-        return Err("Team name is already in use".to_string());
-    }
-
-    Ok(())
 }
 
 pub fn create(args: &TeamsCreateArgs) {

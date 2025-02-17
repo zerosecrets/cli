@@ -1,4 +1,4 @@
-pub mod generate_secret_sharing_url;
+pub mod insert_secret_sharing_record;
 pub mod me;
 pub mod search_project_by_id;
 pub mod search_team_by_id;

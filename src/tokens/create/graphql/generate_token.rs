@@ -4,7 +4,7 @@ pub mod generate_token {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "GenerateToken";
-    pub const QUERY : & str = "mutation GenerateToken($id: String!, $name: String!, $expiresAt: String) {\n  createProjectToken(\n    object: { projectId: $id, name: $name, expiresAt: $expiresAt }\n  ) {\n    id\n    value\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation GenerateToken($id: ID!, $name: String!, $expiresAt: String) {\n  createProjectToken(\n    object: { projectId: $id, name: $name, expiresAt: $expiresAt }\n  ) {\n    id\n    value\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -17,7 +17,7 @@ pub mod generate_token {
     type ID = String;
     #[derive(Serialize)]
     pub struct Variables {
-        pub id: String,
+        pub id: ID,
         pub name: String,
         #[serde(rename = "expiresAt")]
         pub expires_at: Option<String>,

@@ -112,6 +112,12 @@ type CheckIntegrationDeployOutput {
   status: DeployStatusIntegration!
 }
 
+type CheckSharingRecordOutput {
+  isRecordValid: Boolean!
+  user: user
+  userId: String
+}
+
 type CheckUserEmailExistOutput {
   isExist: Boolean!
 }
@@ -250,11 +256,6 @@ enum DeployStatusIntegration {
 type Environment {
   isInUse: Boolean!
   name: String!
-}
-
-type FetchTeamOutput {
-  id: ID!
-  team: team
 }
 
 type GitHubEnvironment {
@@ -470,12 +471,6 @@ type ResendSignUpEmailOutput {
 
 type SendInviteUserTeamOutput {
   teamId: String!
-}
-
-type SharingDataOutput {
-  id: ID
-  user: user
-  userId: ID
 }
 
 """
@@ -959,6 +954,36 @@ enum cursor_ordering {
 
   """descending ordering of the cursor"""
   DESC
+}
+
+"""doesTeamExistNative Query Arguments"""
+input doesTeamExist_arguments {
+  """"""
+  teamSlug: String!
+}
+
+type exists {
+  exists: Boolean!
+}
+
+"""
+Boolean expression to filter rows from the logical model for "exists". All fields are combined with a logical 'AND'.
+"""
+input exists_bool_exp_bool_exp {
+  _and: [exists_bool_exp_bool_exp!]
+  _not: exists_bool_exp_bool_exp
+  _or: [exists_bool_exp_bool_exp!]
+  exists: Boolean_comparison_exp
+}
+
+enum exists_enum_name {
+  """column name"""
+  exists
+}
+
+"""Ordering options when selecting data from "exists"."""
+input exists_order_by {
+  exists: order_by
 }
 
 """
@@ -3422,6 +3447,7 @@ input project_updates {
 type query_root {
   bitbucketWorkspaceProjects(where: BitbucketWorkspaceProjectsInput!): BitbucketWorkspaceProjectsOutput!
   checkIntegrationDeploy(integrationConnect: CheckIntegrationDeployInput!): CheckIntegrationDeployOutput!
+  checkSharingRecord(id: String!): CheckSharingRecordOutput!
   checkUserEmailExist(email: String!): CheckUserEmailExistOutput!
   cloudflareProjects(where: CloudflareProjectsInput!): CloudflareProjectsOutput!
 
@@ -3472,7 +3498,25 @@ type query_root {
 
   """fetch data from the table: "credentialToken" using primary key columns"""
   credentialToken_by_pk(id: uuid!): credentialToken
-  fetchTeam(slug: String!): FetchTeamOutput!
+  doesTeamExist(
+    """doesTeamExistNative Query Arguments"""
+    args: doesTeamExist_arguments!
+
+    """distinct select on columns"""
+    distinct_on: [exists_enum_name!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [exists_order_by!]
+
+    """filter the rows returned"""
+    where: exists_bool_exp_bool_exp
+  ): [exists!]!
   githubProjects(where: GitHubProjectsInput!): GitHubProjectsOutput!
   gitlabProjects(where: GitLabProjectsInput!): GitLabProjectsOutput!
 
@@ -3887,7 +3931,6 @@ type query_root {
     """filter the rows returned"""
     where: userSecret_bool_exp
   ): userSecret_aggregate!
-  sharingData(id: ID!): SharingDataOutput!
 
   """
   fetch data from the table: "team"
@@ -4394,6 +4437,25 @@ type subscription_root {
     """filter the rows returned"""
     where: credentialToken_bool_exp
   ): [credentialToken!]!
+  doesTeamExist(
+    """doesTeamExistNative Query Arguments"""
+    args: doesTeamExist_arguments!
+
+    """distinct select on columns"""
+    distinct_on: [exists_enum_name!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [exists_order_by!]
+
+    """filter the rows returned"""
+    where: exists_bool_exp_bool_exp
+  ): [exists!]!
 
   """
   fetch data from the table: "integrationConnect"

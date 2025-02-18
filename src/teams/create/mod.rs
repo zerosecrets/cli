@@ -4,8 +4,7 @@ use crate::common::slugify::slugify_prompt;
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
-    print_formatted_error::print_formatted_error, take_user_id_from_token::take_user_id_from_token,
-    validate_name::validate_name,
+    print_formatted_error::print_formatted_error, validate_name::validate_name,
 };
 use crate::teams::create::graphql::create_team::{create_team, CreateTeam};
 use clap::Args;
@@ -16,7 +15,6 @@ use termimad::{
     crossterm::style::{style, Color, Stylize},
     minimad, MadSkin,
 };
-use uuid::Uuid;
 
 #[derive(Args, Debug)]
 pub struct TeamsCreateArgs {
@@ -38,15 +36,6 @@ pub fn create(args: &TeamsCreateArgs) {
 
     let client = Client::new();
     let headers = authorization_headers(&access_token);
-
-    let user_id = match Uuid::parse_str(&take_user_id_from_token(&access_token)) {
-        Ok(uuid) => uuid,
-
-        Err(err) => {
-            print_formatted_error(&format!("Invalid user id: {}", err));
-            std::process::exit(1);
-        }
-    };
 
     let team_name = if let Some(name) = &args.name {
         if let Err(err) = validate_name(&name) {

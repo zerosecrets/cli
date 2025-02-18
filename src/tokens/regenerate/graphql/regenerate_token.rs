@@ -4,7 +4,7 @@ pub mod regenerate_token {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "RegenerateToken";
-    pub const QUERY : & str = "mutation RegenerateToken($id: String!, $expiresAt: String) {\n  regenerateProjectToken(id: $id, expiresAt: $expiresAt) {\n    value\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation RegenerateToken($id: ID!, $expiresAt: String) {\n  regenerateProjectToken(id: $id, expiresAt: $expiresAt) {\n    value\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -17,7 +17,7 @@ pub mod regenerate_token {
     type ID = String;
     #[derive(Serialize)]
     pub struct Variables {
-        pub id: String,
+        pub id: ID,
         #[serde(rename = "expiresAt")]
         pub expires_at: Option<String>,
     }

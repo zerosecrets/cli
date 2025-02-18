@@ -1,4 +1,4 @@
-mutation RegenerateToken($id: String!, $expiresAt: String) {
+mutation RegenerateToken($id: ID!, $expiresAt: String) {
   regenerateProjectToken(id: $id, expiresAt: $expiresAt) {
     value
   }

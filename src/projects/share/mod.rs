@@ -4,7 +4,9 @@ use crate::common::{
     colorful_theme::theme,
     config::Config,
     execute_graphql_request::execute_graphql_request,
-    graphql::generate_secret_sharing_url::{generate_secret_sharing_url, GenerateSecretSharingUrl},
+    graphql::insert_secret_sharing_record::{
+        insert_secret_sharing_record, InsertSecretSharingRecord,
+    },
     keyring::keyring,
     print_formatted_error::print_formatted_error,
     query_full_id::{query_full_id, QueryType},
@@ -36,7 +38,8 @@ pub struct ProjectsShareArgs {
 }
 
 pub fn share(args: &ProjectsShareArgs) {
-    let items_per_page = Config::new().items_per_page;
+    let config = Config::new();
+    let items_per_page = config.items_per_page;
 
     let access_token = match &args.access_token {
         Some(token) => token.clone(),
@@ -179,25 +182,27 @@ pub fn share(args: &ProjectsShareArgs) {
         .flatten()
         .collect();
 
-    let secrets_sharing_url = execute_graphql_request::<
-        generate_secret_sharing_url::Variables,
-        generate_secret_sharing_url::ResponseData,
+    let secrets_sharing_id = execute_graphql_request::<
+        insert_secret_sharing_record::Variables,
+        insert_secret_sharing_record::ResponseData,
     >(
         authorization_headers(&access_token),
-        GenerateSecretSharingUrl::build_query,
+        InsertSecretSharingRecord::build_query,
         &Client::new(),
         &format!(
             "Sharing failed. Failed to generate a secret sharing url for the project '{}'.",
             &args.id.clone()
         ),
-        generate_secret_sharing_url::Variables {
+        insert_secret_sharing_record::Variables {
             expires_at: (Utc::now() + Duration::minutes(expires_at_minutes)).to_rfc3339(),
             passphrase: passphrase,
             secrets_field_ids: user_secret_fields_ids_vec,
         },
     )
-    .generate_secret_sharing_url
-    .url;
+    .insert_secret_sharing_record
+    .id;
+
+    let secrets_sharing_url = format!("{}/sharing/{}", config.webapp_url, secrets_sharing_id);
 
     println!(
         "Your link with secrets for the '{}' project",

@@ -1,4 +1,4 @@
-mutation GenerateToken($id: String!, $name: String!, $expiresAt: String) {
+mutation GenerateToken($id: ID!, $name: String!, $expiresAt: String) {
   createProjectToken(
     object: { projectId: $id, name: $name, expiresAt: $expiresAt }
   ) {

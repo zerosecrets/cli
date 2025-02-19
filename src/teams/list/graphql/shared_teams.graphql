@@ -11,6 +11,7 @@ query SharedTeams($userId: uuid!) {
   ) {
     id
     name
+    slug
 
     owner {
       id

@@ -5,7 +5,7 @@ pub mod teams_info {
     use std::result::Result;
     pub const OPERATION_NAME: &str = "TeamsInfo";
     pub const QUERY: &str =
-        "query TeamsInfo {\n  team {\n    id\n    name\n    description\n  }\n}\n";
+        "query TeamsInfo {\n  team {\n    id\n    name\n    description\n    slug\n  }\n}\n";
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -27,7 +27,8 @@ pub mod teams_info {
     pub struct TeamsInfoTeam {
         pub id: uuid,
         pub name: String,
-        pub description: Option<String>,
+        pub description: String,
+        pub slug: String,
     }
 }
 impl graphql_client::GraphQLQuery for TeamsInfo {

@@ -20,8 +20,8 @@ pub enum QueryType {
     Project,
     Teams,
     Tokens,
-    User,
     UsageHistory,
+    User,
     UserSecret,
 }
 

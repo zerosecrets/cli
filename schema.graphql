@@ -112,12 +112,6 @@ type CheckIntegrationDeployOutput {
   status: DeployStatusIntegration!
 }
 
-type CheckSharingRecordOutput {
-  isRecordValid: Boolean!
-  user: user
-  userId: String
-}
-
 type CheckUserEmailExistOutput {
   isExist: Boolean!
 }
@@ -192,6 +186,8 @@ type ConfirmEmailChangeOutput {
 type CreateProjectOutput {
   id: String
   project: project
+  projectTeamId: String
+  slug: String
   tokenValue: String
 }
 
@@ -453,8 +449,8 @@ type RemoveTeamOutput {
 }
 
 type RemoveUserFromTeamOutput {
-  teamId: String!
-  userId: String!
+  teamId: ID!
+  userId: ID!
 }
 
 type RequestEmailChangeOutput {
@@ -471,6 +467,12 @@ type ResendSignUpEmailOutput {
 
 type SendInviteUserTeamOutput {
   teamId: String!
+}
+
+type SharingDataOutput {
+  id: ID!
+  userAvatarUrl: String
+  userName: String!
 }
 
 """
@@ -2128,7 +2130,7 @@ type mutation_root {
   register(object: RegisterInput!): SuccessOutput!
   rejectInvitation(id: String!): RejectInvitationOutput!
   removeTeam(teamId: String!): RemoveTeamOutput!
-  removeUserFromTeam(ownerTeamUserId: String!, teamId: String!, userId: String!): RemoveUserFromTeamOutput!
+  removeUserFromTeam(teamId: ID!, userId: ID!): RemoveUserFromTeamOutput!
   requestEmailChange(newEmail: String!): RequestEmailChangeOutput!
   requestResetPassword(email: String!, isReset: Boolean!): RequestResetPasswordOutput!
   resendSignUpEmail: ResendSignUpEmailOutput!
@@ -3447,7 +3449,6 @@ input project_updates {
 type query_root {
   bitbucketWorkspaceProjects(where: BitbucketWorkspaceProjectsInput!): BitbucketWorkspaceProjectsOutput!
   checkIntegrationDeploy(integrationConnect: CheckIntegrationDeployInput!): CheckIntegrationDeployOutput!
-  checkSharingRecord(id: String!): CheckSharingRecordOutput!
   checkUserEmailExist(email: String!): CheckUserEmailExistOutput!
   cloudflareProjects(where: CloudflareProjectsInput!): CloudflareProjectsOutput!
 
@@ -3733,56 +3734,6 @@ type query_root {
   ): [project!]!
 
   """
-  execute function "search_team_by_id" which returns "team"
-  """
-  search_team_by_id(
-    """
-    input parameters for function "search_team_by_id"
-    """
-    args: search_team_by_id_args!
-
-    """distinct select on columns"""
-    distinct_on: [team_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [team_order_by!]
-
-    """filter the rows returned"""
-    where: team_bool_exp
-  ): [team!]!
-
-  """
-  execute function "search_team_by_id" and query aggregates on result of table type "team"
-  """
-  search_team_by_id_aggregate(
-    """
-    input parameters for function "search_team_by_id_aggregate"
-    """
-    args: search_team_by_id_args!
-
-    """distinct select on columns"""
-    distinct_on: [team_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [team_order_by!]
-
-    """filter the rows returned"""
-    where: team_bool_exp
-  ): team_aggregate!
-
-  """
   execute function "search_token_by_id" which returns "token"
   """
   search_token_by_id(
@@ -3931,6 +3882,7 @@ type query_root {
     """filter the rows returned"""
     where: userSecret_bool_exp
   ): userSecret_aggregate!
+  sharingData(id: ID!): SharingDataOutput
 
   """
   fetch data from the table: "team"
@@ -4341,10 +4293,6 @@ input search_project_by_id_args {
   match: String
 }
 
-input search_team_by_id_args {
-  match: String
-}
-
 input search_token_by_id_args {
   match: String
 }
@@ -4751,56 +4699,6 @@ type subscription_root {
     """filter the rows returned"""
     where: project_bool_exp
   ): [project!]!
-
-  """
-  execute function "search_team_by_id" which returns "team"
-  """
-  search_team_by_id(
-    """
-    input parameters for function "search_team_by_id"
-    """
-    args: search_team_by_id_args!
-
-    """distinct select on columns"""
-    distinct_on: [team_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [team_order_by!]
-
-    """filter the rows returned"""
-    where: team_bool_exp
-  ): [team!]!
-
-  """
-  execute function "search_team_by_id" and query aggregates on result of table type "team"
-  """
-  search_team_by_id_aggregate(
-    """
-    input parameters for function "search_team_by_id_aggregate"
-    """
-    args: search_team_by_id_args!
-
-    """distinct select on columns"""
-    distinct_on: [team_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [team_order_by!]
-
-    """filter the rows returned"""
-    where: team_bool_exp
-  ): team_aggregate!
 
   """
   execute function "search_token_by_id" which returns "token"

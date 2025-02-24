@@ -1,6 +1,5 @@
 use crate::common::graphql::{
     search_project_by_id::{search_project_by_id, SearchProjectById},
-    search_team_by_id::{search_team_by_id, SearchTeamById},
     search_token_by_id::{search_token_by_id, SearchTokenById},
     search_usage_history_by_id::{search_usage_history_by_id, SearchUsageHistoryById},
     search_user_by_id::{search_user_by_id, SearchUserById},
@@ -18,7 +17,6 @@ use uuid::Uuid;
 
 pub enum QueryType {
     Project,
-    Teams,
     Tokens,
     UsageHistory,
     User,
@@ -181,32 +179,6 @@ pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str
                 .collect()
         }
 
-        QueryType::Teams => {
-            let team_error_message = format!("Failed to retrieve team with ID '{}'.", &short_id);
-
-            let teams = execute_graphql_request::<
-                search_team_by_id::Variables,
-                search_team_by_id::ResponseData,
-            >(
-                authorization_headers.clone(),
-                SearchTeamById::build_query,
-                &client,
-                &team_error_message,
-                search_team_by_id::Variables {
-                    id: short_id.clone(),
-                },
-            )
-            .search_team_by_id;
-
-            teams
-                .iter()
-                .map(|element| SelectItem {
-                    id: element.id,
-                    description: element.name.clone(),
-                })
-                .collect()
-        }
-
         QueryType::Tokens => {
             let token_error_message = format!("Failed to retrieve token with ID '{}'.", &short_id);
 
@@ -261,13 +233,6 @@ pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str
                 QueryType::User => {
                     print_formatted_error(&format!(
                         "The user with short ID '{}' does not exist.",
-                        &short_id
-                    ));
-                }
-
-                QueryType::Teams => {
-                    print_formatted_error(&format!(
-                        "The team with short ID '{}' does not exist.",
                         &short_id
                     ));
                 }

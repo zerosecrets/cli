@@ -99,7 +99,6 @@ pub fn remove(args: &UserRemoveArgs) {
         &Client::new(),
         remove_team_error_message,
         remove_user_from_team::Variables {
-            owner_team_user_id: user_id.to_string(),
             team_id: team_id.to_string(),
             user_id: user_id_to_be_deleted.to_string(),
         },

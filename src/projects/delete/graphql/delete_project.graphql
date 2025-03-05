@@ -1,5 +1,5 @@
 mutation DeleteProject($id: ID!) {
-  deleteProject(id: $id, isVendorSecretsMarkedAsDeleted: true ) {
+  deleteProject( id: $id, isVendorSecretsMarkedAsDeleted: true ) {
     id
   }
 }

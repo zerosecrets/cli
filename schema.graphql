@@ -203,8 +203,6 @@ type CreateCredentialProjectTokenOutput {
 type CreateProjectOutput {
   id: ID
   project: project
-  projectTeamId: String
-  slug: String
   tokenValue: String
 }
 
@@ -558,7 +556,8 @@ type SuccessOutput {
 
 input TokenObject {
   expiresAt: String
-  name: String!
+  id: ID
+  name: String
 }
 
 type TransferCredentialProjectOutput {
@@ -1782,7 +1781,6 @@ input jsonb_comparison_exp {
 }
 
 enum listIdEnum_enum {
-  credentials
   integrations
   projects
   secrets
@@ -1814,7 +1812,7 @@ type mutation_root {
   cloudflareInstall(downloadSecrets: CloudflareDownloadSecretsInput!, integrationInstallation: CloudflareInstallInputIntegration!, zero: CloudflareInputZero!): SuccessOutput!
   cloudflareUpdateSecrets(integrationInstallation: CloudflareUpdateSecretsInputIntegration!, zero: CloudflareUpdateSecretsInputZero!): SuccessOutput!
   confirmEmailChange(code: String!): ConfirmEmailChangeOutput!
-  createCredentialProject(icon: String!, name: String!, slug: String!, token: TokenObject!): CreateCredentialProjectOutput!
+  createCredentialProject(icon: String!, name: String!, slug: String!, token: TokenObject): CreateCredentialProjectOutput!
   createCredentialProjectToken(object: CreateCredentialProjectTokenInput!): CreateCredentialProjectTokenOutput!
   createProject(icon: String!, name: String!, slug: String!, token: TokenObject): CreateProjectOutput!
   createProjectToken(object: CreateProjectTokenInput!): CreateProjectTokenOutput!
@@ -3826,6 +3824,56 @@ type query_root {
   ): [project!]!
 
   """
+  execute function "search_team_by_id" which returns "team"
+  """
+  search_team_by_id(
+    """
+    input parameters for function "search_team_by_id"
+    """
+    args: search_team_by_id_args!
+
+    """distinct select on columns"""
+    distinct_on: [team_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [team_order_by!]
+
+    """filter the rows returned"""
+    where: team_bool_exp
+  ): [team!]!
+
+  """
+  execute function "search_team_by_id" and query aggregates on result of table type "team"
+  """
+  search_team_by_id_aggregate(
+    """
+    input parameters for function "search_team_by_id_aggregate"
+    """
+    args: search_team_by_id_args!
+
+    """distinct select on columns"""
+    distinct_on: [team_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [team_order_by!]
+
+    """filter the rows returned"""
+    where: team_bool_exp
+  ): team_aggregate!
+
+  """
   execute function "search_token_by_id" which returns "token"
   """
   search_token_by_id(
@@ -3924,6 +3972,56 @@ type query_root {
     """filter the rows returned"""
     where: user_bool_exp
   ): [user!]!
+
+  """
+  execute function "search_user_secret_by_id" which returns "userSecret"
+  """
+  search_user_secret_by_id(
+    """
+    input parameters for function "search_user_secret_by_id"
+    """
+    args: search_user_secret_by_id_args!
+
+    """distinct select on columns"""
+    distinct_on: [userSecret_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [userSecret_order_by!]
+
+    """filter the rows returned"""
+    where: userSecret_bool_exp
+  ): [userSecret!]!
+
+  """
+  execute function "search_user_secret_by_id" and query aggregates on result of table type "userSecret"
+  """
+  search_user_secret_by_id_aggregate(
+    """
+    input parameters for function "search_user_secret_by_id_aggregate"
+    """
+    args: search_user_secret_by_id_args!
+
+    """distinct select on columns"""
+    distinct_on: [userSecret_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [userSecret_order_by!]
+
+    """filter the rows returned"""
+    where: userSecret_bool_exp
+  ): userSecret_aggregate!
   sharingData(id: ID!): SharingDataOutput
 
   """
@@ -4355,6 +4453,10 @@ input search_project_by_id_args {
   match: String
 }
 
+input search_team_by_id_args {
+  match: String
+}
+
 input search_token_by_id_args {
   match: String
 }
@@ -4364,6 +4466,10 @@ input search_usage_history_by_id_args {
 }
 
 input search_user_by_id_args {
+  match: String
+}
+
+input search_user_secret_by_id_args {
   match: String
 }
 
@@ -4759,6 +4865,56 @@ type subscription_root {
   ): [project!]!
 
   """
+  execute function "search_team_by_id" which returns "team"
+  """
+  search_team_by_id(
+    """
+    input parameters for function "search_team_by_id"
+    """
+    args: search_team_by_id_args!
+
+    """distinct select on columns"""
+    distinct_on: [team_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [team_order_by!]
+
+    """filter the rows returned"""
+    where: team_bool_exp
+  ): [team!]!
+
+  """
+  execute function "search_team_by_id" and query aggregates on result of table type "team"
+  """
+  search_team_by_id_aggregate(
+    """
+    input parameters for function "search_team_by_id_aggregate"
+    """
+    args: search_team_by_id_args!
+
+    """distinct select on columns"""
+    distinct_on: [team_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [team_order_by!]
+
+    """filter the rows returned"""
+    where: team_bool_exp
+  ): team_aggregate!
+
+  """
   execute function "search_token_by_id" which returns "token"
   """
   search_token_by_id(
@@ -4857,6 +5013,56 @@ type subscription_root {
     """filter the rows returned"""
     where: user_bool_exp
   ): [user!]!
+
+  """
+  execute function "search_user_secret_by_id" which returns "userSecret"
+  """
+  search_user_secret_by_id(
+    """
+    input parameters for function "search_user_secret_by_id"
+    """
+    args: search_user_secret_by_id_args!
+
+    """distinct select on columns"""
+    distinct_on: [userSecret_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [userSecret_order_by!]
+
+    """filter the rows returned"""
+    where: userSecret_bool_exp
+  ): [userSecret!]!
+
+  """
+  execute function "search_user_secret_by_id" and query aggregates on result of table type "userSecret"
+  """
+  search_user_secret_by_id_aggregate(
+    """
+    input parameters for function "search_user_secret_by_id_aggregate"
+    """
+    args: search_user_secret_by_id_args!
+
+    """distinct select on columns"""
+    distinct_on: [userSecret_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [userSecret_order_by!]
+
+    """filter the rows returned"""
+    where: userSecret_bool_exp
+  ): userSecret_aggregate!
 
   """
   fetch data from the table: "team"

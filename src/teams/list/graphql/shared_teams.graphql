@@ -6,7 +6,7 @@ query SharedTeams($userId: uuid!) {
         { ownerUserId: { _neq: $userId } }
       ]
     }
-    order_by: { lastUpdatedAt: desc }
+    order_by: { updatedAt: desc }
     limit: 1000
   ) {
     id

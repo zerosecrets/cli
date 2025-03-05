@@ -23,7 +23,6 @@ use termimad::{
     crossterm::style::{style, Color, Stylize},
     minimad, MadSkin,
 };
-use uuid::Uuid;
 
 #[derive(Args, Debug)]
 pub struct ProjectsCreateArgs {
@@ -147,9 +146,8 @@ pub fn create(args: &ProjectsCreateArgs) {
         };
 
         token = Some(create_project::TokenObject {
-            id: None,
             expires_at: token_expires_at,
-            name: Some(token_name),
+            name: token_name,
         });
     } else {
         token = None;
@@ -194,15 +192,8 @@ pub fn create(args: &ProjectsCreateArgs) {
         project_name.clone()
     );
 
-    let project_team_id = match project_response.project_team_id {
-        Some(id) => match Uuid::parse_str(&id) {
-            Ok(uuid) => uuid,
-
-            Err(err) => {
-                print_formatted_error(&format!("Invalid team id: {}", err));
-                std::process::exit(1);
-            }
-        },
+    let project_team_id = match &project_response.project {
+        Some(project) => project.team_id,
 
         None => {
             print_formatted_error("Project must belong to a team");
@@ -217,7 +208,7 @@ pub fn create(args: &ProjectsCreateArgs) {
             &client,
             &project_team_error_message,
             team_slug::Variables {
-                id: project_team_id,
+                id: project_team_id.clone(),
             },
         )
         .team_by_pk;
@@ -258,8 +249,8 @@ pub fn create(args: &ProjectsCreateArgs) {
 
     let mut expander = text_template.expander();
 
-    let project_slug = match project_response.slug {
-        Some(slug) => slug,
+    let project_slug = match project_response.project {
+        Some(project) => project.slug.clone(),
 
         None => {
             print_formatted_error(&create_project_error_message);

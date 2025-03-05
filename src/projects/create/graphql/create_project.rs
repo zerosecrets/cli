@@ -15,7 +15,7 @@ pub mod create_project {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
-    type uuid = super::uuid;
+    type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct TokenObject {
         #[serde(rename = "expiresAt")]

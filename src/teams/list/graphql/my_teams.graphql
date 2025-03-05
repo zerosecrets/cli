@@ -1,7 +1,7 @@
 query MyTeams($userId: uuid!) {
   team(
     where: { ownerUserId: { _eq: $userId }}
-    order_by: { lastUpdatedAt: desc }
+    order_by: { updatedAt: desc }
     limit: 1000
   ) {
     id

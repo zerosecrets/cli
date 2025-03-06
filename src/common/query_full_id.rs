@@ -1,5 +1,4 @@
 use crate::common::graphql::{
-    search_project_by_id::{search_project_by_id, SearchProjectById},
     search_token_by_id::{search_token_by_id, SearchTokenById},
     search_usage_history_by_id::{search_usage_history_by_id, SearchUsageHistoryById},
     search_user_by_id::{search_user_by_id, SearchUserById},
@@ -15,7 +14,6 @@ use termimad::crossterm::style::Stylize;
 use uuid::Uuid;
 
 pub enum QueryType {
-    Project,
     Tokens,
     UsageHistory,
     User,
@@ -51,7 +49,7 @@ struct SelectItem {
 /// # Examples
 ///
 /// ```rust
-/// let uuid = query_full_id(QueryType::Project, "1234".to_string());
+/// let uuid = query_full_id(QueryType::Tokens, "1234".to_string());
 /// ```
 ///
 pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str) -> Uuid {
@@ -70,33 +68,6 @@ pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str
     }
 
     let all_matches: Vec<SelectItem> = match query_type {
-        QueryType::Project => {
-            let project_error_message =
-                format!("Failed to retrieve project with ID '{}'.", &short_id);
-
-            let projects = execute_graphql_request::<
-                search_project_by_id::Variables,
-                search_project_by_id::ResponseData,
-            >(
-                authorization_headers.clone(),
-                SearchProjectById::build_query,
-                &client,
-                &project_error_message,
-                search_project_by_id::Variables {
-                    id: short_id.clone(),
-                },
-            )
-            .search_project_by_id;
-
-            projects
-                .iter()
-                .map(|element| SelectItem {
-                    id: element.id,
-                    description: element.name.clone(),
-                })
-                .collect()
-        }
-
         QueryType::UsageHistory => {
             let usage_history_error_message =
                 format!("Failed to retrieve usage history with ID '{}'.", &short_id);
@@ -180,13 +151,6 @@ pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str
     match all_matches.len() {
         0 => {
             match query_type {
-                QueryType::Project => {
-                    print_formatted_error(&format!(
-                        "The project with short ID '{}' does not exist.",
-                        &short_id
-                    ));
-                }
-
                 QueryType::UsageHistory => {
                     print_formatted_error(&format!(
                         "The usage history with short ID '{}' does not exist.",

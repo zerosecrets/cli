@@ -4,7 +4,7 @@ use rexpect::spawn;
 #[test]
 fn test_tokens_create() -> Result<(), Error> {
     let mut p = spawn(
-        "./target/debug/zero-cli tokens create --id dc1c",
+        "./target/debug/zero-cli tokens create --slug cli-secrets",
         Some(15000),
     )?;
 
@@ -34,7 +34,7 @@ fn test_tokens_delete() -> Result<(), Error> {
 
 #[test]
 fn test_tokens_list() -> Result<(), Error> {
-    let mut p = spawn("./target/debug/zero-cli tokens list --id dc1c", Some(15000))?;
+    let mut p = spawn("./target/debug/zero-cli tokens list --slug cli-secrets", Some(15000))?;
     p.exp_string("Tokens of the project")?;
     p.exp_string("Use <Esc>/<q> to exit")?;
     p.exp_string("#d2bd")?;

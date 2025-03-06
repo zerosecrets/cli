@@ -1,13 +1,12 @@
 mod graphql;
+
 use crate::common::{
-    authorization_headers::authorization_headers,
-    colorful_theme::theme,
-    config::Config,
-    execute_graphql_request::execute_graphql_request,
-    keyring::keyring,
+    authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
+    execute_graphql_request::execute_graphql_request, keyring::keyring,
     print_formatted_error::print_formatted_error,
-    query_full_id::{query_full_id, QueryType},
 };
+
+use crate::projects::common::project_info_by_slug::project_info_by_slug;
 use crate::tokens::create::graphql::generate_token::{generate_token, GenerateToken};
 use chrono::{Duration, Utc};
 use clap::Args;
@@ -17,6 +16,7 @@ use dialoguer::{Input, Select, Sort};
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
 use termimad::crossterm::style::style;
+
 use termimad::{
     crossterm::style::{Color, Stylize},
     minimad, MadSkin,
@@ -24,12 +24,8 @@ use termimad::{
 
 #[derive(Args, Debug)]
 pub struct TokenCreateArgs {
-    #[clap(
-        short,
-        long,
-        help = "Project ID (First 4 characters or more are allowed)"
-    )]
-    id: String,
+    #[clap(short, long, help = "Project slug")]
+    slug: String,
 
     #[clap(
         short,
@@ -47,11 +43,11 @@ pub fn create(args: &TokenCreateArgs) {
         None => keyring::get("access_token"),
     };
 
-    let project_id = query_full_id(QueryType::Project, args.id.clone(), &access_token);
+    let project_info = project_info_by_slug(&args.slug, &access_token);
 
     let project_tokens_error_message = format!(
-        "Failed to create token for the project with ID '{}'.",
-        &args.id
+        "Failed to create token for the project with slug '{}'.",
+        &args.slug
     );
 
     let token_name = match Input::<String>::with_theme(&theme())
@@ -119,7 +115,7 @@ pub fn create(args: &TokenCreateArgs) {
             &Client::new(),
             &project_tokens_error_message,
             generate_token::Variables {
-                id: project_id.to_string(),
+                id: project_info.id.to_string(),
                 name: token_name.to_owned(),
                 expires_at: token_expires_at_value.clone(),
             },
@@ -142,10 +138,7 @@ pub fn create(args: &TokenCreateArgs) {
 
     let mut expander = success_message_template.expander();
 
-    let styled_short_id = format!(
-        "{}",
-        &create_token_response.id[..4].with(Color::Green)
-    );
+    let styled_short_id = format!("{}", &create_token_response.id[..4].with(Color::Green));
 
     expander
         .set("id", &styled_short_id)

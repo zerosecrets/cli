@@ -1,10 +1,7 @@
 use crate::common::graphql::{
-    search_project_by_id::{search_project_by_id, SearchProjectById},
-    search_team_by_id::{search_team_by_id, SearchTeamById},
     search_token_by_id::{search_token_by_id, SearchTokenById},
     search_usage_history_by_id::{search_usage_history_by_id, SearchUsageHistoryById},
     search_user_by_id::{search_user_by_id, SearchUserById},
-    search_user_secret_by_id::{search_user_secret_by_id, SearchUserSecretById},
 };
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
@@ -17,12 +14,9 @@ use termimad::crossterm::style::Stylize;
 use uuid::Uuid;
 
 pub enum QueryType {
-    Project,
-    Teams,
     Tokens,
-    User,
     UsageHistory,
-    UserSecret,
+    User,
 }
 
 struct SelectItem {
@@ -55,7 +49,7 @@ struct SelectItem {
 /// # Examples
 ///
 /// ```rust
-/// let uuid = query_full_id(QueryType::Project, "1234".to_string());
+/// let uuid = query_full_id(QueryType::Tokens, "1234".to_string());
 /// ```
 ///
 pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str) -> Uuid {
@@ -74,33 +68,6 @@ pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str
     }
 
     let all_matches: Vec<SelectItem> = match query_type {
-        QueryType::Project => {
-            let project_error_message =
-                format!("Failed to retrieve project with ID '{}'.", &short_id);
-
-            let projects = execute_graphql_request::<
-                search_project_by_id::Variables,
-                search_project_by_id::ResponseData,
-            >(
-                authorization_headers.clone(),
-                SearchProjectById::build_query,
-                &client,
-                &project_error_message,
-                search_project_by_id::Variables {
-                    id: short_id.clone(),
-                },
-            )
-            .search_project_by_id;
-
-            projects
-                .iter()
-                .map(|element| SelectItem {
-                    id: element.id,
-                    description: element.name.clone(),
-                })
-                .collect()
-        }
-
         QueryType::UsageHistory => {
             let usage_history_error_message =
                 format!("Failed to retrieve usage history with ID '{}'.", &short_id);
@@ -128,33 +95,6 @@ pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str
                 .collect()
         }
 
-        QueryType::UserSecret => {
-            let user_secret_error_message =
-                format!("Failed to retrieve usage secret with ID '{}'.", &short_id);
-
-            let user_secrets = execute_graphql_request::<
-                search_user_secret_by_id::Variables,
-                search_user_secret_by_id::ResponseData,
-            >(
-                authorization_headers.clone(),
-                SearchUserSecretById::build_query,
-                &client,
-                &user_secret_error_message,
-                search_user_secret_by_id::Variables {
-                    id: short_id.clone(),
-                },
-            )
-            .search_user_secret_by_id;
-
-            user_secrets
-                .iter()
-                .map(|element| SelectItem {
-                    id: element.id,
-                    description: element.name.clone(),
-                })
-                .collect()
-        }
-
         QueryType::User => {
             let user_error_message = format!("Failed to retrieve user with ID '{}'.", &short_id);
 
@@ -177,32 +117,6 @@ pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str
                 .map(|element| SelectItem {
                     id: element.id,
                     description: format!("{} ({})", element.name, element.email),
-                })
-                .collect()
-        }
-
-        QueryType::Teams => {
-            let team_error_message = format!("Failed to retrieve team with ID '{}'.", &short_id);
-
-            let teams = execute_graphql_request::<
-                search_team_by_id::Variables,
-                search_team_by_id::ResponseData,
-            >(
-                authorization_headers.clone(),
-                SearchTeamById::build_query,
-                &client,
-                &team_error_message,
-                search_team_by_id::Variables {
-                    id: short_id.clone(),
-                },
-            )
-            .search_team_by_id;
-
-            teams
-                .iter()
-                .map(|element| SelectItem {
-                    id: element.id,
-                    description: element.name.clone(),
                 })
                 .collect()
         }
@@ -237,13 +151,6 @@ pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str
     match all_matches.len() {
         0 => {
             match query_type {
-                QueryType::Project => {
-                    print_formatted_error(&format!(
-                        "The project with short ID '{}' does not exist.",
-                        &short_id
-                    ));
-                }
-
                 QueryType::UsageHistory => {
                     print_formatted_error(&format!(
                         "The usage history with short ID '{}' does not exist.",
@@ -251,23 +158,9 @@ pub fn query_full_id(query_type: QueryType, short_id: String, access_token: &str
                     ));
                 }
 
-                QueryType::UserSecret => {
-                    print_formatted_error(&format!(
-                        "The user secret with short ID '{}' does not exist.",
-                        &short_id
-                    ));
-                }
-
                 QueryType::User => {
                     print_formatted_error(&format!(
                         "The user with short ID '{}' does not exist.",
-                        &short_id
-                    ));
-                }
-
-                QueryType::Teams => {
-                    print_formatted_error(&format!(
-                        "The team with short ID '{}' does not exist.",
                         &short_id
                     ));
                 }

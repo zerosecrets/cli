@@ -1,6 +1,0 @@
-query SearchProjectById($id: String!) {
-  search_project_by_id(args: { match: $id }) {
-    id
-    name
-  }
-}

@@ -1,14 +1,13 @@
 mod graphql;
+
 use crate::common::{
-    authorization_headers::authorization_headers,
-    config::Config,
-    execute_graphql_request::execute_graphql_request,
-    keyring::keyring,
-    pad_to_column_width::pad_to_column_width,
-    print_formatted_error::print_formatted_error,
-    query_full_id::{query_full_id, QueryType},
+    authorization_headers::authorization_headers, config::Config,
+    execute_graphql_request::execute_graphql_request, keyring::keyring,
+    pad_to_column_width::pad_to_column_width, print_formatted_error::print_formatted_error,
     table::table,
 };
+
+use crate::projects::common::project_info_by_slug::project_info_by_slug;
 use crate::tokens::list::graphql::token_list::{token_list, TokenList};
 use clap::Args;
 use graphql_client::GraphQLQuery;
@@ -17,12 +16,8 @@ use termimad::crossterm::style::Stylize;
 
 #[derive(Args, Debug)]
 pub struct TokenListArgs {
-    #[clap(
-        short,
-        long,
-        help = "Project ID (First 4 characters or more are allowed)"
-    )]
-    id: String,
+    #[clap(short, long, help = "Project slug")]
+    slug: String,
 
     #[clap(
         short,
@@ -38,11 +33,11 @@ pub fn list(args: &TokenListArgs) {
         None => keyring::get("access_token"),
     };
 
-    let project_id = query_full_id(QueryType::Project, args.id.clone(), &access_token);
+    let project_info = project_info_by_slug(&args.slug, &access_token);
 
     let project_tokens_error_message = format!(
-        "Failed to retrieve tokens for the project with ID '{}'.",
-        &args.id
+        "Failed to retrieve tokens for the project with slug '{}'.",
+        &args.slug
     );
 
     let project_token_list_response =
@@ -51,7 +46,9 @@ pub fn list(args: &TokenListArgs) {
             TokenList::build_query,
             &Client::new(),
             &project_tokens_error_message,
-            token_list::Variables { id: project_id },
+            token_list::Variables {
+                id: project_info.id,
+            },
         )
         .project;
 

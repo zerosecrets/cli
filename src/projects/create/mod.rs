@@ -1,5 +1,4 @@
 mod graphql;
-use crate::common::slugify::slugify_prompt;
 
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
@@ -13,7 +12,7 @@ use dialoguer::{console::Style, theme::ColorfulTheme, Confirm, Input, Select, So
 
 use graphql::{
     create_project::{create_project, CreateProject},
-    team_slug::{team_slug, TeamSlug},
+    team_id_by_slug::{team_id_by_slug, TeamIdBySlug},
 };
 
 use graphql_client::GraphQLQuery;
@@ -32,6 +31,8 @@ pub struct ProjectsCreateArgs {
         help = "Project name, if not specified, the user will be prompted to enter the name"
     )]
     name: Option<String>,
+    #[clap(short, long, help = "Team slug")]
+    slug: String,
     #[clap(
         short,
         long,
@@ -50,6 +51,32 @@ pub fn create(args: &ProjectsCreateArgs) {
 
     let client = Client::new();
     let headers = authorization_headers(&access_token);
+
+    let team_id_error_message = format!(
+        "Fetch failed. Failed to fetch the team id with the slug '{}'.",
+        args.slug.clone()
+    );
+
+    let team_id_response =
+        execute_graphql_request::<team_id_by_slug::Variables, team_id_by_slug::ResponseData>(
+            headers.clone(),
+            TeamIdBySlug::build_query,
+            &client,
+            &team_id_error_message,
+            team_id_by_slug::Variables {
+                slug: args.slug.clone(),
+            },
+        )
+        .team;
+
+    if team_id_response.len() != 1 {
+        print_formatted_error("Project must belong to a team");
+        std::process::exit(1);
+    }
+
+    let team_id = match &team_id_response[0] {
+        team => team.id.clone(),
+    };
 
     let project_name = match &args.name {
         Some(name) => {
@@ -180,48 +207,12 @@ pub fn create(args: &ProjectsCreateArgs) {
                     rand::random::<u8>(),
                     rand::random::<u8>()
                 ),
-                slug: slugify_prompt(&project_name, "Type a slug for the project:"),
                 name: project_name.clone(),
                 token,
+                team_id: team_id.to_string(),
             },
         )
         .create_project;
-
-    let project_team_error_message = format!(
-        "Creation failed. Failed to create a project with the name '{}'.",
-        project_name.clone()
-    );
-
-    let project_team_id = match &project_response.project {
-        Some(project) => project.team_id,
-
-        None => {
-            print_formatted_error("Project must belong to a team");
-            std::process::exit(1);
-        }
-    };
-
-    let project_team_response =
-        execute_graphql_request::<team_slug::Variables, team_slug::ResponseData>(
-            headers.clone(),
-            TeamSlug::build_query,
-            &client,
-            &project_team_error_message,
-            team_slug::Variables {
-                id: project_team_id.clone(),
-            },
-        )
-        .team_by_pk;
-
-    let project_team_slug = match project_team_response {
-        Some(team_info) => team_info.slug,
-
-        None => {
-            print_formatted_error("Project must belong to a team");
-            std::process::exit(1);
-        }
-    };
-
     // MD template for the project creation message
     let text_template = if is_token_needed {
         minimad::TextTemplate::from(
@@ -263,7 +254,7 @@ pub fn create(args: &ProjectsCreateArgs) {
     let project_link = style(format!(
         "{}/{}/{}",
         Config::new().webapp_url,
-        &project_team_slug,
+        &args.slug,
         &project_slug
     ))
     .with(Color::Rgb {

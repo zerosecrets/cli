@@ -4,7 +4,7 @@ pub mod create_project {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "CreateProject";
-    pub const QUERY : & str = "mutation CreateProject($icon: String!, $name: String!, $token: TokenObject, $slug: String!) {\n  createProject(icon: $icon, name: $name, token: $token, slug: $slug) {\n    id\n    tokenValue\n\n    project {\n      id\n      teamId\n      slug\n\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation CreateProject($icon: String!, $name: String!, $token: TokenObject, $teamId: ID!) {\n  createProject(icon: $icon, name: $name, token: $token, teamId: $teamId) {\n    id\n    tokenValue\n\n    project {\n      id\n      teamId\n      slug\n\n    }\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -27,7 +27,8 @@ pub mod create_project {
         pub icon: String,
         pub name: String,
         pub token: Option<TokenObject>,
-        pub slug: String,
+        #[serde(rename = "teamId")]
+        pub team_id: ID,
     }
     impl Variables {}
     #[derive(Deserialize)]

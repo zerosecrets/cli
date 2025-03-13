@@ -186,7 +186,7 @@ type ConfirmEmailChangeOutput {
 type CreateCredentialProjectOutput {
   credentialProject: credentialProject
   id: ID!
-  tokenValue: String
+  tokenValue: String!
 }
 
 input CreateCredentialProjectTokenInput {
@@ -196,6 +196,7 @@ input CreateCredentialProjectTokenInput {
 }
 
 type CreateCredentialProjectTokenOutput {
+  credentialProjectToken: credentialToken
   id: ID!
   value: String!
 }
@@ -344,6 +345,28 @@ input GitLabUpdateSecretsInputZero {
   secretsIds: [ID!]!
 }
 
+input GithubSignInInput {
+  code: String!
+}
+
+type GithubSignInOutput {
+  accessToken: String!
+  isNewUser: Boolean!
+}
+
+type GoogleAuthLinkOutput {
+  url: String!
+}
+
+input GoogleSignInInput {
+  code: String!
+}
+
+type GoogleSignInOutput {
+  accessToken: String!
+  isNewUser: Boolean!
+}
+
 type InsertCliCodeOutput {
   id: ID!
 }
@@ -487,6 +510,14 @@ type ResendSignUpEmailOutput {
   email: String!
 }
 
+type ResetPasswordOutput {
+  isReset: Boolean!
+}
+
+type SendEmailToContactUsOutput {
+  email: String!
+}
+
 type SendInviteUserTeamOutput {
   teamId: ID!
 }
@@ -573,7 +604,20 @@ type UpdateSecretOutput {
   id: ID!
 }
 
+type UpdateSecretsVaultSecretSlugOutput {
+  id: ID!
+}
+
+type UpdateTeamNameOutput {
+  id: ID!
+  team: team
+}
+
 type UpdateTeamOutput {
+  id: ID!
+}
+
+type UpdateTeamSlugOutput {
   id: ID!
 }
 
@@ -1838,9 +1882,9 @@ type mutation_root {
   cloudflareInstall(downloadSecrets: CloudflareDownloadSecretsInput!, integrationInstallation: CloudflareInstallInputIntegration!, zero: CloudflareInputZero!): SuccessOutput!
   cloudflareUpdateSecrets(integrationInstallation: CloudflareUpdateSecretsInputIntegration!, zero: CloudflareUpdateSecretsInputZero!): SuccessOutput!
   confirmEmailChange(code: String!): ConfirmEmailChangeOutput!
-  createCredentialProject(icon: String!, name: String!, slug: String!, token: TokenObject!): CreateCredentialProjectOutput!
+  createCredentialProject(icon: String!, name: String!, teamId: ID!, token: TokenObject!): CreateCredentialProjectOutput!
   createCredentialProjectToken(object: CreateCredentialProjectTokenInput!): CreateCredentialProjectTokenOutput!
-  createProject(icon: String!, name: String!, slug: String!, token: TokenObject): CreateProjectOutput!
+  createProject(icon: String!, name: String!, teamId: ID!, token: TokenObject): CreateProjectOutput!
   createProjectToken(object: CreateProjectTokenInput!): CreateProjectTokenOutput!
   createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!): CreateSecretOutput!
   createTeam(name: String!, slug: String!): CreateTeamOutput!
@@ -2004,9 +2048,12 @@ type mutation_root {
   """
   delete_userSecret_by_pk(id: uuid!): userSecret
   githubInstall(integrationInstallation: GitHubInstallInputIntegration!, zero: GitHubInputZero!): SuccessOutput!
+  githubSignIn(object: GithubSignInInput!): GithubSignInOutput!
   githubUpdateSecrets(integrationInstallation: GitHubUpdateSecretsInputIntegration!, zero: GitHubUpdateSecretsInputZero!): SuccessOutput!
   gitlabInstall(integrationInstallation: GitLabInstallInputIntegration!, zero: GitLabInputZero!): SuccessOutput!
   gitlabUpdateSecrets(integrationInstallation: GitLabUpdateSecretsInputIntegration!, zero: GitLabUpdateSecretsInputZero!): SuccessOutput!
+  googleAuthLink(state: String!): GoogleAuthLinkOutput!
+  googleSignIn(object: GoogleSignInInput!): GoogleSignInOutput!
   insertCliCode(code: String!): InsertCliCodeOutput!
   insertSecretSharingRecord(expiresAt: String!, passphrase: String!, secretsFieldIds: [ID!]!): InsertSecretSharingRecordOutput!
 
@@ -2249,11 +2296,16 @@ type mutation_root {
   requestEmailChange(newEmail: String!): RequestEmailChangeOutput!
   requestResetPassword(email: String!, isReset: Boolean!): RequestResetPasswordOutput!
   resendSignUpEmail: ResendSignUpEmailOutput!
+  resetPassword(code: String!, newPassword: String!): ResetPasswordOutput!
+  sendEmailToContactUs(email: String!, message: String!, name: String!): SendEmailToContactUsOutput!
   sendInviteUserTeam(email: String!, teamId: ID!): SendInviteUserTeamOutput!
   transferCredentialProject(projectId: ID!, teamId: ID!): TransferCredentialProjectOutput!
   updateProjectSettings(icon: String!, id: ID!, name: String!, slug: String!, teamId: ID!): UpdateProjectSettingsOutput!
   updateSecret(fields: [UpdateUserSecretFieldsInput!]!, id: ID!, name: String!, slug: String!): UpdateSecretOutput!
+  updateSecretsVaultSecretSlug(id: ID!, slug: String!): UpdateSecretsVaultSecretSlugOutput!
   updateTeam(id: ID!, name: String!, slug: String!): UpdateTeamOutput!
+  updateTeamName(id: ID!, name: String!): UpdateTeamNameOutput!
+  updateTeamSlug(id: ID!, slug: String!): UpdateTeamSlugOutput!
 
   """
   update data of the table: "credentialProject"
@@ -3825,31 +3877,6 @@ type query_root {
   project_by_pk(id: uuid!): project
 
   """
-  execute function "search_project_by_id" which returns "project"
-  """
-  search_project_by_id(
-    """
-    input parameters for function "search_project_by_id"
-    """
-    args: search_project_by_id_args!
-
-    """distinct select on columns"""
-    distinct_on: [project_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [project_order_by!]
-
-    """filter the rows returned"""
-    where: project_bool_exp
-  ): [project!]!
-
-  """
   execute function "search_token_by_id" which returns "token"
   """
   search_token_by_id(
@@ -4375,10 +4402,6 @@ input registrationStep_enum_comparison_exp {
   _nin: [registrationStep_enum!]
 }
 
-input search_project_by_id_args {
-  match: String
-}
-
 input search_token_by_id_args {
   match: String
 }
@@ -4752,31 +4775,6 @@ type subscription_root {
 
     """cursor to stream the results returned by the query"""
     cursor: [project_stream_cursor_input]!
-
-    """filter the rows returned"""
-    where: project_bool_exp
-  ): [project!]!
-
-  """
-  execute function "search_project_by_id" which returns "project"
-  """
-  search_project_by_id(
-    """
-    input parameters for function "search_project_by_id"
-    """
-    args: search_project_by_id_args!
-
-    """distinct select on columns"""
-    distinct_on: [project_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [project_order_by!]
 
     """filter the rows returned"""
     where: project_bool_exp

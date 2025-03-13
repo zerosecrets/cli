@@ -1,0 +1,5 @@
+query TeamIdBySlug($slug: String!) {
+  team(where: { slug: { _eq: $slug } }) {
+    id
+  }
+}

@@ -14,13 +14,11 @@ fn test_projects_list() -> Result<(), Error> {
 
 #[test]
 fn test_projects_create_without_token() -> Result<(), Error> {
-    let mut p = spawn("./target/debug/zero-cli projects create", Some(15000))?;
+    let mut p = spawn("./target/debug/zero-cli projects create --slug personal-projects-22", Some(15000))?;
     p.exp_string("Type a project name")?;
     p.send_line("project from test")?;
     p.exp_string("Do you want to generate a new token for this project?")?;
     p.send_line("n")?;
-    p.exp_string("Type a slug for the project")?;
-    p.send_line("")?;
     p.exp_string("You created the project named 'project from test'.")?;
     p.exp_string("Project link")?;
     p.exp_string("Project slug for CLI")?;
@@ -29,7 +27,7 @@ fn test_projects_create_without_token() -> Result<(), Error> {
 
 #[test]
 fn test_projects_create_with_token_endless() -> Result<(), Error> {
-    let mut p = spawn("./target/debug/zero-cli projects create", Some(15000))?;
+    let mut p = spawn("./target/debug/zero-cli projects create --slug personal-projects-22", Some(15000))?;
     p.exp_string("Type a project name")?;
     p.send_line("project with token")?;
     p.exp_string("Do you want to generate a new token for this project?")?;
@@ -38,8 +36,6 @@ fn test_projects_create_with_token_endless() -> Result<(), Error> {
     p.send_line("testToken")?;
     p.exp_string("Endless")?;
     p.send_line(" ")?;
-    p.exp_string("Type a slug for the project")?;
-    p.send_line("")?;
     p.exp_string("Project link")?;
     p.exp_string("Project slug for CLI")?;
     p.exp_string("Your token")?;
@@ -48,7 +44,7 @@ fn test_projects_create_with_token_endless() -> Result<(), Error> {
 
 #[test]
 fn test_projects_create_with_token_7_days() -> Result<(), Error> {
-    let mut p = spawn("./target/debug/zero-cli projects create", Some(15000))?;
+    let mut p = spawn("./target/debug/zero-cli projects create --slug personal-projects-22", Some(15000))?;
     p.exp_string("Type a project name")?;
     p.send_line("token7days")?;
     p.exp_string("Do you want to generate a new token for this project?")?;
@@ -57,8 +53,6 @@ fn test_projects_create_with_token_7_days() -> Result<(), Error> {
     p.send_line("test")?;
     p.exp_string("Expires in")?;
     p.send("\x1B[B")?;
-    p.send_line("")?;
-    p.exp_string("Type a slug for the project")?;
     p.send_line("")?;
     p.exp_string("You created the project")?;
     p.exp_string("Project link")?;

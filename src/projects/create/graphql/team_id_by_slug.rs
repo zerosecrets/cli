@@ -1,10 +1,10 @@
 #![allow(clippy::all, warnings)]
-pub struct TeamInfoBySlug;
-pub mod team_info_by_slug {
+pub struct TeamIdBySlug;
+pub mod team_id_by_slug {
     #![allow(dead_code)]
     use std::result::Result;
-    pub const OPERATION_NAME: &str = "TeamInfoBySlug";
-    pub const QUERY : & str = "query TeamInfoBySlug($slug: String!) {\n  team(where: { slug: { _eq: $slug } }) {\n    id\n  }\n}\n" ;
+    pub const OPERATION_NAME: &str = "TeamIdBySlug";
+    pub const QUERY : & str = "query TeamIdBySlug($slug: String!) {\n  team(where: { slug: { _eq: $slug } }) {\n    id\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -23,21 +23,21 @@ pub mod team_info_by_slug {
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        pub team: Vec<TeamInfoBySlugTeam>,
+        pub team: Vec<TeamIdBySlugTeam>,
     }
-    #[derive(Deserialize, Debug)]
-    pub struct TeamInfoBySlugTeam {
+    #[derive(Deserialize)]
+    pub struct TeamIdBySlugTeam {
         pub id: uuid,
     }
 }
-impl graphql_client::GraphQLQuery for TeamInfoBySlug {
-    type Variables = team_info_by_slug::Variables;
-    type ResponseData = team_info_by_slug::ResponseData;
+impl graphql_client::GraphQLQuery for TeamIdBySlug {
+    type Variables = team_id_by_slug::Variables;
+    type ResponseData = team_id_by_slug::ResponseData;
     fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
-            query: team_info_by_slug::QUERY,
-            operation_name: team_info_by_slug::OPERATION_NAME,
+            query: team_id_by_slug::QUERY,
+            operation_name: team_id_by_slug::OPERATION_NAME,
         }
     }
 }

@@ -12,7 +12,7 @@ use dialoguer::{console::Style, theme::ColorfulTheme, Confirm, Input, Select, So
 
 use graphql::{
     create_project::{create_project, CreateProject},
-    team_info_by_slug::{team_info_by_slug, TeamInfoBySlug},
+    team_id_by_slug::{team_id_by_slug, TeamIdBySlug},
 };
 
 use graphql_client::GraphQLQuery;
@@ -52,29 +52,29 @@ pub fn create(args: &ProjectsCreateArgs) {
     let client = Client::new();
     let headers = authorization_headers(&access_token);
 
-    let team_info_error_message = format!(
-        "Fetch failed. Failed to fetch the team info with the slug '{}'.",
+    let team_id_error_message = format!(
+        "Fetch failed. Failed to fetch the team id with the slug '{}'.",
         args.slug.clone()
     );
 
-    let team_info_response =
-        execute_graphql_request::<team_info_by_slug::Variables, team_info_by_slug::ResponseData>(
+    let team_id_response =
+        execute_graphql_request::<team_id_by_slug::Variables, team_id_by_slug::ResponseData>(
             headers.clone(),
-            TeamInfoBySlug::build_query,
+            TeamIdBySlug::build_query,
             &client,
-            &team_info_error_message,
-            team_info_by_slug::Variables {
+            &team_id_error_message,
+            team_id_by_slug::Variables {
                 slug: args.slug.clone(),
             },
         )
         .team;
 
-    if team_info_response.len() != 1 {
+    if team_id_response.len() != 1 {
         print_formatted_error("Project must belong to a team");
         std::process::exit(1);
     }
 
-    let team_id = match &team_info_response[0] {
+    let team_id = match &team_id_response[0] {
         team => team.id.clone(),
     };
 

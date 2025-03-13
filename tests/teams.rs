@@ -3,7 +3,7 @@ use rexpect::spawn;
 
 #[test]
 fn test_teams_create() -> Result<(), Error> {
-    let mut p = spawn("./target/debug/zero-cli teams create --slug personal-projects-22", Some(15000))?;
+    let mut p = spawn("./target/debug/zero-cli teams create", Some(15000))?;
     p.exp_string("Type a name for the team")?;
     p.send_line("tested team")?;
     p.exp_string("Type a slug for the team")?;

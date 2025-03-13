@@ -53,7 +53,7 @@ pub fn create(args: &ProjectsCreateArgs) {
     let headers = authorization_headers(&access_token);
 
     let team_id_error_message = format!(
-        "Fetch failed. Failed to fetch the team id with the slug '{}'.",
+        "Team with slug '{}' was not found, or you do not have access to it.",
         args.slug.clone()
     );
 
@@ -70,7 +70,7 @@ pub fn create(args: &ProjectsCreateArgs) {
         .team;
 
     if team_id_response.len() != 1 {
-        print_formatted_error("Project must belong to a team");
+        print_formatted_error(&team_id_error_message);
         std::process::exit(1);
     }
 

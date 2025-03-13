@@ -1,6 +1,0 @@
-query TeamSlug($id: uuid!) {
-  team_by_pk(id: $id) {
-    id
-    slug
-  }
-}

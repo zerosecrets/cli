@@ -53,7 +53,7 @@ pub fn create(args: &ProjectsCreateArgs) {
     let headers = authorization_headers(&access_token);
 
     let team_id_error_message = format!(
-        "Team with slug '{}' not found or you do not have access to it.",
+        "Team with slug '{}' was not found, or you do not have access to it.",
         args.slug.clone()
     );
 

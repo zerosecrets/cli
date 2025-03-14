@@ -4,7 +4,7 @@ pub mod create_secret {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "CreateSecret";
-    pub const QUERY : & str = "mutation CreateSecret(\n  $fields: [CreateSecretFieldInput!]!\n  $secret: CreateSecretInput!\n) {\n  createSecret(fields: $fields, secret: $secret) {\n    id\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation CreateSecret(\n  $fields: [CreateSecretFieldInput!]!\n  $secret: CreateSecretInput!\n) {\n  createSecret(fields: $fields, secret: $secret) {\n    id\n\n    userSecret {\n      id\n      slug\n    }\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -15,6 +15,7 @@ pub mod create_secret {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
+    type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct CreateSecretFieldInput {
         pub name: String,
@@ -24,8 +25,7 @@ pub mod create_secret {
     pub struct CreateSecretInput {
         pub name: String,
         #[serde(rename = "projectId")]
-        pub project_id: String,
-        pub slug: String,
+        pub project_id: ID,
         pub vendor: String,
     }
     #[derive(Serialize)]
@@ -41,7 +41,14 @@ pub mod create_secret {
     }
     #[derive(Deserialize)]
     pub struct CreateSecretCreateSecret {
-        pub id: String,
+        pub id: ID,
+        #[serde(rename = "userSecret")]
+        pub user_secret: Option<CreateSecretCreateSecretUserSecret>,
+    }
+    #[derive(Deserialize)]
+    pub struct CreateSecretCreateSecretUserSecret {
+        pub id: uuid,
+        pub slug: String,
     }
 }
 impl graphql_client::GraphQLQuery for CreateSecret {

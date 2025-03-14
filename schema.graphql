@@ -227,12 +227,12 @@ input CreateSecretFieldInput {
 input CreateSecretInput {
   name: String!
   projectId: ID!
-  slug: String!
   vendor: String!
 }
 
 type CreateSecretOutput {
   id: ID!
+  userSecret: userSecret
 }
 
 type CreateTeamOutput {
@@ -595,6 +595,11 @@ type TransferCredentialProjectOutput {
   id: ID!
 }
 
+type UpdateCredentialsVaultProjectSlugOutput {
+  id: ID!
+  slug: String!
+}
+
 type UpdateProjectSettingsOutput {
   id: ID!
   project: project
@@ -602,6 +607,11 @@ type UpdateProjectSettingsOutput {
 
 type UpdateSecretOutput {
   id: ID!
+}
+
+type UpdateSecretsVaultProjectSlugOutput {
+  id: ID!
+  slug: String!
 }
 
 type UpdateSecretsVaultSecretSlugOutput {
@@ -2300,8 +2310,10 @@ type mutation_root {
   sendEmailToContactUs(email: String!, message: String!, name: String!): SendEmailToContactUsOutput!
   sendInviteUserTeam(email: String!, teamId: ID!): SendInviteUserTeamOutput!
   transferCredentialProject(projectId: ID!, teamId: ID!): TransferCredentialProjectOutput!
+  updateCredentialsVaultProjectSlug(id: ID!, slug: String!): UpdateCredentialsVaultProjectSlugOutput!
   updateProjectSettings(icon: String!, id: ID!, name: String!, slug: String!, teamId: ID!): UpdateProjectSettingsOutput!
   updateSecret(fields: [UpdateUserSecretFieldsInput!]!, id: ID!, name: String!, slug: String!): UpdateSecretOutput!
+  updateSecretsVaultProjectSlug(id: ID!, slug: String!): UpdateSecretsVaultProjectSlugOutput!
   updateSecretsVaultSecretSlug(id: ID!, slug: String!): UpdateSecretsVaultSecretSlugOutput!
   updateTeam(id: ID!, name: String!, slug: String!): UpdateTeamOutput!
   updateTeamName(id: ID!, name: String!): UpdateTeamNameOutput!
@@ -6993,7 +7005,6 @@ type userCredentialSecret {
   """An object relationship"""
   project: credentialProject!
   projectId: uuid!
-  slug: String!
   updatedAt: timestamptz!
   vendor: credentialVendorEnum_enum!
 }
@@ -7274,7 +7285,6 @@ input userCredentialSecret_bool_exp {
   name: String_comparison_exp
   project: credentialProject_bool_exp
   projectId: uuid_comparison_exp
-  slug: String_comparison_exp
   updatedAt: timestamptz_comparison_exp
   vendor: credentialVendorEnum_enum_comparison_exp
 }
@@ -7320,7 +7330,6 @@ input userCredentialSecret_insert_input {
   meta: jsonb
   name: String
   projectId: uuid
-  slug: String
   vendor: credentialVendorEnum_enum
 }
 
@@ -7332,7 +7341,6 @@ type userCredentialSecret_max_fields {
   id: uuid
   name: String
   projectId: uuid
-  slug: String
   updatedAt: timestamptz
 }
 
@@ -7346,7 +7354,6 @@ input userCredentialSecret_max_order_by {
   id: order_by
   name: order_by
   projectId: order_by
-  slug: order_by
   updatedAt: order_by
 }
 
@@ -7358,7 +7365,6 @@ type userCredentialSecret_min_fields {
   id: uuid
   name: String
   projectId: uuid
-  slug: String
   updatedAt: timestamptz
 }
 
@@ -7372,7 +7378,6 @@ input userCredentialSecret_min_order_by {
   id: order_by
   name: order_by
   projectId: order_by
-  slug: order_by
   updatedAt: order_by
 }
 
@@ -7417,7 +7422,6 @@ input userCredentialSecret_order_by {
   name: order_by
   project: credentialProject_order_by
   projectId: order_by
-  slug: order_by
   updatedAt: order_by
   vendor: order_by
 }
@@ -7458,9 +7462,6 @@ enum userCredentialSecret_select_column {
   projectId
 
   """column name"""
-  slug
-
-  """column name"""
   updatedAt
 
   """column name"""
@@ -7475,7 +7476,6 @@ input userCredentialSecret_set_input {
   expiresAt: timestamptz
   meta: jsonb
   name: String
-  slug: String
   vendor: credentialVendorEnum_enum
 }
 
@@ -7499,7 +7499,6 @@ input userCredentialSecret_stream_cursor_value_input {
   meta: jsonb
   name: String
   projectId: uuid
-  slug: String
   updatedAt: timestamptz
   vendor: credentialVendorEnum_enum
 }
@@ -7519,9 +7518,6 @@ enum userCredentialSecret_update_column {
 
   """column name"""
   name
-
-  """column name"""
-  slug
 
   """column name"""
   vendor

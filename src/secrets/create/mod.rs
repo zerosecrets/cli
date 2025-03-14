@@ -1,15 +1,10 @@
 mod graphql;
 
 use crate::common::{
-    authorization_headers::authorization_headers,
-    colorful_theme::theme,
-    config::Config,
-    execute_graphql_request::execute_graphql_request,
-    keyring::keyring,
+    authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
+    execute_graphql_request::execute_graphql_request, keyring::keyring,
     print_formatted_error::print_formatted_error,
-    slugify::slugify_prompt,
-    validate_name::validate_name,
-    validate_secret_field_name::validate_secret_field_name,
+    validate_name::validate_name, validate_secret_field_name::validate_secret_field_name,
     vendors::Vendors,
 };
 
@@ -163,9 +158,8 @@ pub fn create(args: &SecretsCreateArgs) {
     }
 
     let project_info = project_info_by_slug(&args.slug, &access_token);
-    let secret_slug = slugify_prompt(&secret_name, "Type a slug for the secret:");
 
-    let secret_id =
+    let secret_response =
         execute_graphql_request::<create_secret::Variables, create_secret::ResponseData>(
             headers.clone(),
             CreateSecret::build_query,
@@ -175,14 +169,23 @@ pub fn create(args: &SecretsCreateArgs) {
                 fields: secret_fields,
                 secret: create_secret::CreateSecretInput {
                     name: secret_name.clone(),
-                    slug: secret_slug.clone(),
                     project_id: project_info.id.to_string(),
                     vendor: selected_vendor.to_string(),
                 },
             },
         )
-        .create_secret
-        .id;
+        .create_secret;
+
+    let secret_id = secret_response.id;
+
+    let secret_slug = match secret_response.user_secret {
+        Some(user_secret) => user_secret.slug,
+
+        None => {
+            print_formatted_error("Failed to get a secret slug");
+            std::process::exit(1);
+        }
+    };
 
     let text_template = minimad::TextTemplate::from(
         r#"

@@ -27,7 +27,7 @@ jobs:
             ${{ runner.os }}-cargo-
 
       - name: Run integration tests
-        run: cargo test --features "integration-test"
+        run: cargo test --features "integration-test" --test-threads=1
         env:
           INTEGRATION_TEST_USER_ID: ${{secrets.INTEGRATION_TEST_USER_ID}}
           INTEGRATION_TEST_USER_TOKEN: ${{secrets.INTEGRATION_TEST_USER_TOKEN}}

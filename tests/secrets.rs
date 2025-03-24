@@ -99,8 +99,8 @@ fn test_secrets_list() -> Result<(), Error> {
         Some(15000),
     )?;
 
-    p.exp_string("keys-for-test")?;
     p.exp_string("list secret")?;
+    p.exp_string("keys-for-test")?;
     Ok(())
 }
 

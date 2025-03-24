@@ -5,7 +5,7 @@ pub mod project_secrets {
     use std::result::Result;
     use std::fmt;
     pub const OPERATION_NAME: &str = "ProjectSecrets";
-    pub const QUERY : & str = "query ProjectSecrets($id: uuid!) {\n  project_by_pk(id: $id) {\n    id\n    name\n\n    userSecrets(limit: 1000) {\n      id\n      name\n      slug\n      updatedAt\n      vendor\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query ProjectSecrets($id: uuid!) {\n  project_by_pk(id: $id) {\n    id\n    name\n\n    userSecrets(limit: 1000, order_by: {updatedAt: desc}) {\n      id\n      name\n      slug\n      updatedAt\n      vendor\n    }\n  }\n}\n" ;
     use super::*;
     use ::uuid::Uuid;
     use chrono::offset::Utc;
@@ -159,7 +159,6 @@ pub mod project_secrets {
                 vendorEnum_enum::netlify => "netlify",
                 vendorEnum_enum::openAI => "openAI",
                 vendorEnum_enum::other => "other",
-                vendorEnum_enum::Other(ref s) => &s,
                 vendorEnum_enum::paypal => "paypal",
                 vendorEnum_enum::pulumi => "pulumi",
                 vendorEnum_enum::reddit => "reddit",
@@ -175,6 +174,7 @@ pub mod project_secrets {
                 vendorEnum_enum::twitter => "twitter",
                 vendorEnum_enum::vercel => "vercel",
                 vendorEnum_enum::zoom => "zoom",
+                vendorEnum_enum::Other(ref s) => &s,
             })
         }
     }

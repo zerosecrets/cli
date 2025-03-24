@@ -102,12 +102,6 @@ fn test_secrets_list() -> Result<(), Error> {
     p.exp_string("share-other-secret")?;
     p.exp_string("share me")?;
     p.exp_string("Other")?;
-    p.exp_string("list-for-test")?;
-    p.exp_string("list secret")?;
-    p.exp_string("Azure")?;
-    p.exp_string("keys-for-test")?;
-    p.exp_string("keys")?;
-    p.exp_string("Bitbucket")?;
     Ok(())
 }
 

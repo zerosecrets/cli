@@ -178,15 +178,7 @@ pub fn edit(args: &ProjectsEditArgs) -> () {
         style(format!(
             "{}/{}/{}",
             Config::new().webapp_url,
-            match &edit_project_info.team {
-                Some(team) => {
-                    team.slug.clone()
-                }
-                None => {
-                    print_formatted_error("Project must belong to a team");
-                    std::process::exit(1);
-                }
-            },
+            edit_project_info.team.slug.clone(),
             &edit_project_info.slug
         ))
         .with(Color::Rgb {

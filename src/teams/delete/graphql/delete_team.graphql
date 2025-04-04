@@ -1,5 +1,5 @@
-mutation DeleteTeam($id: uuid!) {
-  delete_team_by_pk(id: $id) {
+mutation DeleteTeam($id: String!) {
+  removeTeam(id: $id) {
     id
   }
 }

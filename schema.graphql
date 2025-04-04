@@ -25,6 +25,8 @@ input AWSUpdateSecretsInputZero {
 
 type AcceptInviteOutput {
   id: ID!
+  teamUser: teamUser
+  teamUserId: ID!
 }
 
 input BitbucketDownloadSecretsInput {
@@ -110,6 +112,10 @@ input CheckIntegrationDeployInput {
 
 type CheckIntegrationDeployOutput {
   status: DeployStatusIntegration!
+}
+
+type CheckTeamSlugUniquenessOutput {
+  isUnique: Boolean!
 }
 
 type CheckUserEmailExistOutput {
@@ -249,6 +255,10 @@ type DecryptedSecretField {
   value: String!
 }
 
+type DeleteCredentialsVaultProjectOutput {
+  id: ID!
+}
+
 input DeleteIntegrationInput {
   installationId: ID!
   isDeleteInRemoteSourceEnabled: Boolean
@@ -257,6 +267,10 @@ input DeleteIntegrationInput {
 type DeleteProjectOutput {
   id: ID!
   project: project
+}
+
+type DeleteSecretsVaultSecretOutput {
+  id: ID!
 }
 
 enum DeployStatusIntegration {
@@ -368,6 +382,10 @@ type GoogleSignInOutput {
 }
 
 type InsertCliCodeOutput {
+  id: ID!
+}
+
+type InsertSearchHistoryOutput {
   id: ID!
 }
 
@@ -491,6 +509,7 @@ type RejectInvitationOutput {
 
 type RemoveTeamOutput {
   id: ID!
+  teamUser: TeamUserOutput!
 }
 
 type RemoveUserFromTeamOutput {
@@ -585,6 +604,10 @@ type SuccessOutput {
   success: Boolean!
 }
 
+type TeamUserOutput {
+  id: ID!
+}
+
 input TokenObject {
   expiresAt: String
   name: String!
@@ -597,7 +620,6 @@ type TransferCredentialProjectOutput {
 
 type UpdateCredentialsVaultProjectSlugOutput {
   id: ID!
-  slug: String!
 }
 
 type UpdateProjectSettingsOutput {
@@ -611,7 +633,6 @@ type UpdateSecretOutput {
 
 type UpdateSecretsVaultProjectSlugOutput {
   id: ID!
-  slug: String!
 }
 
 type UpdateSecretsVaultSecretSlugOutput {
@@ -1114,6 +1135,25 @@ enum cursor_ordering {
 input doesTeamExist_arguments {
   """"""
   teamSlug: String!
+}
+
+enum entity_type_enum {
+  CREDENTIALS_VAULT_PROJECT
+  CREDENTIALS_VAULT_SECRET
+  SECRETS_VAULT_INTEGRATION
+  SECRETS_VAULT_PROJECT
+  SECRETS_VAULT_SECRET
+}
+
+"""
+Boolean expression to compare columns of type "entity_type_enum". All fields are combined with logical 'AND'.
+"""
+input entity_type_enum_comparison_exp {
+  _eq: entity_type_enum
+  _in: [entity_type_enum!]
+  _is_null: Boolean
+  _neq: entity_type_enum
+  _nin: [entity_type_enum!]
 }
 
 type exists {
@@ -1899,8 +1939,10 @@ type mutation_root {
   createSecret(fields: [CreateSecretFieldInput!]!, secret: CreateSecretInput!): CreateSecretOutput!
   createTeam(name: String!, slug: String!): CreateTeamOutput!
   decodeSharingSecrets(id: ID!, passphrase: String!): DecodeSharingSecretsOutput!
+  deleteCredentialsVaultProject(id: ID!): DeleteCredentialsVaultProjectOutput!
   deleteIntegration(integrationInstallation: DeleteIntegrationInput!): SuccessOutput!
   deleteProject(id: ID!, isVendorSecretsMarkedAsDeleted: Boolean!): DeleteProjectOutput!
+  deleteSecretsVaultSecret(id: ID!): DeleteSecretsVaultSecretOutput!
 
   """
   delete data from the table: "credentialProject"
@@ -2065,6 +2107,7 @@ type mutation_root {
   googleAuthLink(state: String!): GoogleAuthLinkOutput!
   googleSignIn(object: GoogleSignInInput!): GoogleSignInOutput!
   insertCliCode(code: String!): InsertCliCodeOutput!
+  insertSearchHistory(entityId: ID!, teamId: ID!, type: String!): InsertSearchHistoryOutput!
   insertSecretSharingRecord(expiresAt: String!, passphrase: String!, secretsFieldIds: [ID!]!): InsertSecretSharingRecordOutput!
 
   """
@@ -3629,6 +3672,7 @@ input project_updates {
 type query_root {
   bitbucketWorkspaceProjects(where: BitbucketWorkspaceProjectsInput!): BitbucketWorkspaceProjectsOutput!
   checkIntegrationDeploy(integrationConnect: CheckIntegrationDeployInput!): CheckIntegrationDeployOutput!
+  checkTeamSlugUniqueness(slug: String!): CheckTeamSlugUniquenessOutput!
   checkUserEmailExist(email: String!): CheckUserEmailExistOutput!
   cloudflareProjects(where: CloudflareProjectsInput!): CloudflareProjectsOutput!
 
@@ -3887,6 +3931,29 @@ type query_root {
 
   """fetch data from the table: "project" using primary key columns"""
   project_by_pk(id: uuid!): project
+
+  """
+  fetch data from the table: "search_history"
+  """
+  search_history(
+    """distinct select on columns"""
+    distinct_on: [search_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [search_history_order_by!]
+
+    """filter the rows returned"""
+    where: search_history_bool_exp
+  ): [search_history!]!
+
+  """fetch data from the table: "search_history" using primary key columns"""
+  search_history_by_pk(id: uuid!): search_history
 
   """
   execute function "search_token_by_id" which returns "token"
@@ -4414,6 +4481,90 @@ input registrationStep_enum_comparison_exp {
   _nin: [registrationStep_enum!]
 }
 
+"""Stores recent search queries made by users within their teams."""
+type search_history {
+  created_at: timestamptz
+  entity_id: uuid!
+  id: uuid!
+  team_user: uuid!
+
+  """An object relationship"""
+  team_user_relation: teamUser!
+  type: entity_type_enum!
+  updated_at: timestamptz
+}
+
+"""
+Boolean expression to filter rows from the table "search_history". All fields are combined with a logical 'AND'.
+"""
+input search_history_bool_exp {
+  _and: [search_history_bool_exp!]
+  _not: search_history_bool_exp
+  _or: [search_history_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  entity_id: uuid_comparison_exp
+  id: uuid_comparison_exp
+  team_user: uuid_comparison_exp
+  team_user_relation: teamUser_bool_exp
+  type: entity_type_enum_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""Ordering options when selecting data from "search_history"."""
+input search_history_order_by {
+  created_at: order_by
+  entity_id: order_by
+  id: order_by
+  team_user: order_by
+  team_user_relation: teamUser_order_by
+  type: order_by
+  updated_at: order_by
+}
+
+"""
+select columns of table "search_history"
+"""
+enum search_history_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  entity_id
+
+  """column name"""
+  id
+
+  """column name"""
+  team_user
+
+  """column name"""
+  type
+
+  """column name"""
+  updated_at
+}
+
+"""
+Streaming cursor of the table "search_history"
+"""
+input search_history_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: search_history_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input search_history_stream_cursor_value_input {
+  created_at: timestamptz
+  entity_id: uuid
+  id: uuid
+  team_user: uuid
+  type: entity_type_enum
+  updated_at: timestamptz
+}
+
 input search_token_by_id_args {
   match: String
 }
@@ -4791,6 +4942,43 @@ type subscription_root {
     """filter the rows returned"""
     where: project_bool_exp
   ): [project!]!
+
+  """
+  fetch data from the table: "search_history"
+  """
+  search_history(
+    """distinct select on columns"""
+    distinct_on: [search_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [search_history_order_by!]
+
+    """filter the rows returned"""
+    where: search_history_bool_exp
+  ): [search_history!]!
+
+  """fetch data from the table: "search_history" using primary key columns"""
+  search_history_by_pk(id: uuid!): search_history
+
+  """
+  fetch data from the table in a streaming manner: "search_history"
+  """
+  search_history_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [search_history_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: search_history_bool_exp
+  ): [search_history!]!
 
   """
   execute function "search_token_by_id" which returns "token"

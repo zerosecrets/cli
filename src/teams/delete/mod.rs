@@ -34,7 +34,10 @@ pub fn delete(args: &TeamsDeleteArgs) {
     let team_info = team_info(&access_token, args.slug.clone());
 
     let input: String = Input::with_theme(&theme())
-        .with_prompt(format!("Type {} to confirm deletion:", &args.slug))
+        .with_prompt(format!(
+            "Type {} to confirm deletion:",
+            args.slug.clone().green()
+        ))
         .interact_text()
         .expect("Deletion failed. Failed to read the user's reply.");
 

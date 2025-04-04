@@ -21,7 +21,7 @@ fn test_teams_delete() -> Result<(), Error> {
         Some(15000),
     )?;
 
-    p.exp_string("Type delete-me to confirm deletion")?;
+    p.exp_string("to confirm deletion")?;
     p.send_line("delete-me")?;
     p.exp_string("Team successfully deleted")?;
     Ok(())

@@ -5,7 +5,7 @@ pub mod delete_team {
     use std::result::Result;
     pub const OPERATION_NAME: &str = "DeleteTeam";
     pub const QUERY: &str =
-        "mutation DeleteTeam($id: String!) {\n  removeTeam(id: $id) {\n    id\n  }\n}\n";
+        "mutation DeleteTeam($id: ID!) {\n  removeTeam(teamId: $id) {\n    id\n  }\n}\n";
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -18,7 +18,7 @@ pub mod delete_team {
     type ID = String;
     #[derive(Serialize)]
     pub struct Variables {
-        pub id: String,
+        pub id: ID,
     }
     impl Variables {}
     #[derive(Deserialize)]

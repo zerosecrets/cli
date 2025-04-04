@@ -1,5 +1,5 @@
-mutation DeleteTeam($id: String!) {
-  removeTeam(id: $id) {
+mutation DeleteTeam($id: ID!) {
+  removeTeam(teamId: $id) {
     id
   }
 }

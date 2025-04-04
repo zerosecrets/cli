@@ -7,7 +7,7 @@ use crate::common::{
 use crate::projects::common::project_info_by_slug::project_info_by_slug;
 use crate::projects::delete::graphql::delete_project::{delete_project, DeleteProject};
 use clap::Args;
-use dialoguer::Input;
+use dialoguer::{Confirm, Input};
 use graphql_client::GraphQLQuery;
 use reqwest::Client;
 use termimad::crossterm::style::Stylize;
@@ -32,6 +32,31 @@ pub fn delete(args: &ProjectsDeleteArgs) {
 
     let authorization_headers = authorization_headers(&access_token);
     let delete_project_info = project_info_by_slug(&args.slug, &access_token);
+
+    let has_integrations = match &delete_project_info
+        .integration_installations_aggregate
+        .aggregate
+    {
+        Some(agg) => agg.count > 0,
+        None => false,
+    };
+
+    let is_vendor_secrets_marked_as_deleted = if has_integrations {
+        match Confirm::with_theme(&theme())
+            .with_prompt("Do you want to mark vendor secrets as deleted?")
+            .default(true)
+            .interact()
+        {
+            Ok(value) => value,
+
+            Err(_) => {
+                print_formatted_error("Deletion failed. Failed to get the user confirmation.");
+                std::process::exit(1);
+            }
+        }
+    } else {
+        false
+    };
 
     match Input::with_theme(&theme())
         .with_prompt(format!(
@@ -60,23 +85,18 @@ pub fn delete(args: &ProjectsDeleteArgs) {
         args.slug.clone()
     );
 
-    let delete_project_response =
-        execute_graphql_request::<delete_project::Variables, delete_project::ResponseData>(
-            authorization_headers.clone(),
-            DeleteProject::build_query,
-            &Client::new(),
-            &delete_project_error_message,
-            delete_project::Variables {
-                id: delete_project_info.id.to_string(),
-            },
-        )
-        .delete_project
-        .id;
-
-    if delete_project_response.to_string().trim().is_empty() {
-        print_formatted_error(&delete_project_error_message);
-        std::process::exit(1);
-    }
+    execute_graphql_request::<delete_project::Variables, delete_project::ResponseData>(
+        authorization_headers.clone(),
+        DeleteProject::build_query,
+        &Client::new(),
+        &delete_project_error_message,
+        delete_project::Variables {
+            id: delete_project_info.id.to_string(),
+            is_vendor_secrets_marked_as_deleted,
+        },
+    )
+    .delete_project
+    .id;
 
     println!("{} Project successfully deleted.", "✔".green());
 }

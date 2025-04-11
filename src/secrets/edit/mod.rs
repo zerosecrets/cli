@@ -206,7 +206,7 @@ pub fn edit(args: &SecretsEditArgs) {
             }
         };
 
-        let vendors: Vec<_> = update_secret_info::vendorEnum_enum::iter().collect();
+        let vendors: Vec<_> = update_secret_info::secretsVaultVendor_enum::iter().collect();
 
         let vendors_variants: &Vec<String> =
             &vendors.iter().map(|variant| variant.to_string()).collect();
@@ -256,7 +256,9 @@ pub fn edit(args: &SecretsEditArgs) {
                     name: Some(new_secret_name.to_owned()),
                     vendor: Some(new_secret_vendor),
                     slug: Some(secret_slug.clone()),
-                    note: None,
+                    description: Some("".to_string()),
+                    icon: Some("".to_string()),
+                    meta: None,
                 },
             },
         )

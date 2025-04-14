@@ -4,7 +4,7 @@ pub mod delete_project {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "DeleteProject";
-    pub const QUERY : & str = "mutation DeleteProject($id: ID!) {\n  deleteProject( id: $id, isVendorSecretsMarkedAsDeleted: true ) {\n    id\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation DeleteProject($id: ID!, $isVendorSecretsMarkedAsDeleted: Boolean!) {\n  deleteProject(\n    id: $id\n    isVendorSecretsMarkedAsDeleted: $isVendorSecretsMarkedAsDeleted\n  ) {\n    id\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -18,6 +18,8 @@ pub mod delete_project {
     #[derive(Serialize)]
     pub struct Variables {
         pub id: ID,
+        #[serde(rename = "isVendorSecretsMarkedAsDeleted")]
+        pub is_vendor_secrets_marked_as_deleted: Boolean,
     }
     impl Variables {}
     #[derive(Deserialize)]

@@ -1,5 +1,8 @@
-mutation DeleteProject($id: ID!) {
-  deleteProject( id: $id, isVendorSecretsMarkedAsDeleted: true ) {
+mutation DeleteProject($id: ID!, $isVendorSecretsMarkedAsDeleted: Boolean!) {
+  deleteProject(
+    id: $id
+    isVendorSecretsMarkedAsDeleted: $isVendorSecretsMarkedAsDeleted
+  ) {
     id
   }
 }

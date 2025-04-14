@@ -200,13 +200,7 @@ pub fn create(args: &SecretsCreateArgs) {
     let secret_link = style(format!(
         "{}/{}/{}/{}",
         config.webapp_url,
-        match &project_info.team {
-            Some(team) => team.slug.clone(),
-            None => {
-                print_formatted_error("Project must belong to a team");
-                std::process::exit(1);
-            }
-        },
+        &project_info.team.name,
         &project_info.slug.to_string(),
         &secret_slug,
     ))

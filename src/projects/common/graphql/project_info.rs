@@ -4,7 +4,7 @@ pub mod project_info {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "ProjectInfo";
-    pub const QUERY : & str = "query ProjectInfo($slug: String!) {\n  project(where: { slug: { _eq: $slug } }) {\n    id\n    name\n    slug\n\n    team {\n      id\n      name\n      slug\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query ProjectInfo($slug: String!) {\n  project(where: { slug: { _eq: $slug } }) {\n    id\n    name\n    slug\n\n    team {\n      id\n      name\n      slug\n    }\n\n    integrationInstallations_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -30,13 +30,24 @@ pub mod project_info {
         pub id: uuid,
         pub name: String,
         pub slug: String,
-        pub team: Option<ProjectInfoProjectTeam>,
+        pub team: ProjectInfoProjectTeam,
+        #[serde(rename = "integrationInstallations_aggregate")]
+        pub integration_installations_aggregate:
+            ProjectInfoProjectIntegrationInstallationsAggregate,
     }
     #[derive(Deserialize, Clone)]
     pub struct ProjectInfoProjectTeam {
         pub id: uuid,
         pub name: String,
         pub slug: String,
+    }
+    #[derive(Deserialize, Clone)]
+    pub struct ProjectInfoProjectIntegrationInstallationsAggregate {
+        pub aggregate: Option<ProjectInfoProjectIntegrationInstallationsAggregateAggregate>,
+    }
+    #[derive(Deserialize, Clone)]
+    pub struct ProjectInfoProjectIntegrationInstallationsAggregateAggregate {
+        pub count: Int,
     }
 }
 impl graphql_client::GraphQLQuery for ProjectInfo {

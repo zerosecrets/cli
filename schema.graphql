@@ -8944,4 +8944,3 @@ input viewPreferences_updates {
   """filter the rows which have to be updated"""
   where: viewPreferences_bool_exp!
 }
-

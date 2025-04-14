@@ -259,6 +259,10 @@ type DeleteCredentialsVaultProjectOutput {
   id: ID!
 }
 
+type DeleteCredentialsVaultSecretOutput {
+  id: ID!
+}
+
 input DeleteIntegrationInput {
   installationId: ID!
   isDeleteInRemoteSourceEnabled: Boolean
@@ -271,6 +275,10 @@ type DeleteProjectOutput {
 
 type DeleteSecretsVaultSecretOutput {
   id: ID!
+}
+
+type DeletedRecordOutput {
+  id: ID
 }
 
 enum DeployStatusIntegration {
@@ -386,7 +394,9 @@ type InsertCliCodeOutput {
 }
 
 type InsertSearchHistoryOutput {
+  deletedRecord: DeletedRecordOutput!
   id: ID!
+  search_history: search_history
 }
 
 type InsertSecretSharingRecordOutput {
@@ -1096,30 +1106,30 @@ input credentialToken_updates {
   where: credentialToken_bool_exp!
 }
 
-enum credentialVendorEnum_enum {
+enum credentialsVaultVendor_enum {
   auth0
   bitbucket
   discord
   dropbox
   figma
-  gitHub
-  gitLab
+  github
+  gitlab
   google
-  linkedIn
+  linkedin
   reddit
-  twitter
+  x
   zoom
 }
 
 """
-Boolean expression to compare columns of type "credentialVendorEnum_enum". All fields are combined with logical 'AND'.
+Boolean expression to compare columns of type "credentialsVaultVendor_enum". All fields are combined with logical 'AND'.
 """
-input credentialVendorEnum_enum_comparison_exp {
-  _eq: credentialVendorEnum_enum
-  _in: [credentialVendorEnum_enum!]
+input credentialsVaultVendor_enum_comparison_exp {
+  _eq: credentialsVaultVendor_enum
+  _in: [credentialsVaultVendor_enum!]
   _is_null: Boolean
-  _neq: credentialVendorEnum_enum
-  _nin: [credentialVendorEnum_enum!]
+  _neq: credentialsVaultVendor_enum
+  _nin: [credentialsVaultVendor_enum!]
 }
 
 """ordering argument of a cursor"""
@@ -1223,7 +1233,7 @@ type integrationConnect {
   ): integrationInstallation_aggregate!
   name: String!
   userId: uuid!
-  vendorName: integrationVendorNameEnum_enum!
+  vendorName: integrationsVendor_enum!
 }
 
 """
@@ -1255,7 +1265,7 @@ input integrationConnect_bool_exp {
   installations_aggregate: integrationInstallation_aggregate_bool_exp
   name: String_comparison_exp
   userId: uuid_comparison_exp
-  vendorName: integrationVendorNameEnum_enum_comparison_exp
+  vendorName: integrationsVendor_enum_comparison_exp
 }
 
 """aggregate max on columns"""
@@ -1338,7 +1348,7 @@ input integrationConnect_stream_cursor_value_input {
   id: uuid
   name: String
   userId: uuid
-  vendorName: integrationVendorNameEnum_enum
+  vendorName: integrationsVendor_enum
 }
 
 input integrationConnect_updates {
@@ -1841,25 +1851,25 @@ input integrationInstallation_updates {
   where: integrationInstallation_bool_exp!
 }
 
-enum integrationVendorNameEnum_enum {
-  aws
+enum integrationsVendor_enum {
+  amazonwebservices
   bitbucket
   cloudflare
-  gitHub
-  gitLab
+  github
+  gitlab
   netlify
   vercel
 }
 
 """
-Boolean expression to compare columns of type "integrationVendorNameEnum_enum". All fields are combined with logical 'AND'.
+Boolean expression to compare columns of type "integrationsVendor_enum". All fields are combined with logical 'AND'.
 """
-input integrationVendorNameEnum_enum_comparison_exp {
-  _eq: integrationVendorNameEnum_enum
-  _in: [integrationVendorNameEnum_enum!]
+input integrationsVendor_enum_comparison_exp {
+  _eq: integrationsVendor_enum
+  _in: [integrationsVendor_enum!]
   _is_null: Boolean
-  _neq: integrationVendorNameEnum_enum
-  _nin: [integrationVendorNameEnum_enum!]
+  _neq: integrationsVendor_enum
+  _nin: [integrationsVendor_enum!]
 }
 
 scalar jsonb
@@ -1940,6 +1950,7 @@ type mutation_root {
   createTeam(name: String!, slug: String!): CreateTeamOutput!
   decodeSharingSecrets(id: ID!, passphrase: String!): DecodeSharingSecretsOutput!
   deleteCredentialsVaultProject(id: ID!): DeleteCredentialsVaultProjectOutput!
+  deleteCredentialsVaultSecret(id: ID!): DeleteCredentialsVaultSecretOutput!
   deleteIntegration(integrationInstallation: DeleteIntegrationInput!): SuccessOutput!
   deleteProject(id: ID!, isVendorSecretsMarkedAsDeleted: Boolean!): DeleteProjectOutput!
   deleteSecretsVaultSecret(id: ID!): DeleteSecretsVaultSecretOutput!
@@ -2008,6 +2019,19 @@ type mutation_root {
   delete single row from the table: "integrationInstallation"
   """
   delete_integrationInstallation_by_pk(id: uuid!): integrationInstallation
+
+  """
+  delete data from the table: "search_history"
+  """
+  delete_search_history(
+    """filter the rows which have to be deleted"""
+    where: search_history_bool_exp!
+  ): search_history_mutation_response
+
+  """
+  delete single row from the table: "search_history"
+  """
+  delete_search_history_by_pk(id: uuid!): search_history
 
   """
   delete data from the table: "team"
@@ -4460,9 +4484,6 @@ type query_root {
 }
 
 enum registrationStep_enum {
-  """billing information collection step"""
-  billingInformation
-
   """registration is complete"""
   complete
 
@@ -4495,6 +4516,15 @@ type search_history {
 }
 
 """
+order by aggregate values of table "search_history"
+"""
+input search_history_aggregate_order_by {
+  count: order_by
+  max: search_history_max_order_by
+  min: search_history_min_order_by
+}
+
+"""
 Boolean expression to filter rows from the table "search_history". All fields are combined with a logical 'AND'.
 """
 input search_history_bool_exp {
@@ -4508,6 +4538,39 @@ input search_history_bool_exp {
   team_user_relation: teamUser_bool_exp
   type: entity_type_enum_comparison_exp
   updated_at: timestamptz_comparison_exp
+}
+
+"""
+order by max() on columns of table "search_history"
+"""
+input search_history_max_order_by {
+  created_at: order_by
+  entity_id: order_by
+  id: order_by
+  team_user: order_by
+  updated_at: order_by
+}
+
+"""
+order by min() on columns of table "search_history"
+"""
+input search_history_min_order_by {
+  created_at: order_by
+  entity_id: order_by
+  id: order_by
+  team_user: order_by
+  updated_at: order_by
+}
+
+"""
+response of any mutation on the table "search_history"
+"""
+type search_history_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [search_history!]!
 }
 
 """Ordering options when selecting data from "search_history"."""
@@ -4575,6 +4638,65 @@ input search_usage_history_by_id_args {
 
 input search_user_by_id_args {
   match: String
+}
+
+enum secretsVaultVendor_enum {
+  agora
+  amazonwebservices
+  ansible
+  auth0
+  bitbucket
+  braintree
+  cloudflare
+  datadog
+  digitalocean
+  discord
+  docker
+  dropbox
+  facebook
+  figma
+  github
+  gitlab
+  google
+  googlecloud
+  googlegemini
+  jenkins
+  jirasoftware
+  kubernetes
+  linear
+  linkedin
+  mailchimp
+  microsoftazure
+  mixpanel
+  netlify
+  openai
+  other
+  paypal
+  pulumi
+  reddit
+  salesforce
+  segment
+  sendgrid
+  shopify
+  slack
+  stripe
+  terraform
+  trello
+  twilio
+  vercel
+  x
+  zoom
+}
+
+"""
+Boolean expression to compare columns of type "secretsVaultVendor_enum". All fields are combined with logical 'AND'.
+"""
+input secretsVaultVendor_enum_comparison_exp {
+  _eq: secretsVaultVendor_enum
+  _in: [secretsVaultVendor_enum!]
+  _is_null: Boolean
+  _neq: secretsVaultVendor_enum
+  _nin: [secretsVaultVendor_enum!]
 }
 
 type subscription_root {
@@ -5989,6 +6111,24 @@ type teamUser {
   """An object relationship"""
   member: user!
 
+  """An array relationship"""
+  search_histories(
+    """distinct select on columns"""
+    distinct_on: [search_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [search_history_order_by!]
+
+    """filter the rows returned"""
+    where: search_history_bool_exp
+  ): [search_history!]!
+
   """An object relationship"""
   team: team!
   teamId: uuid!
@@ -6043,6 +6183,7 @@ input teamUser_bool_exp {
   createdAt: timestamptz_comparison_exp
   id: uuid_comparison_exp
   member: user_bool_exp
+  search_histories: search_history_bool_exp
   team: team_bool_exp
   teamId: uuid_comparison_exp
   updatedAt: timestamptz_comparison_exp
@@ -6135,6 +6276,7 @@ input teamUser_order_by {
   createdAt: order_by
   id: order_by
   member: user_order_by
+  search_histories_aggregate: search_history_aggregate_order_by
   team: team_order_by
   teamId: order_by
   updatedAt: order_by
@@ -7194,7 +7336,7 @@ type userCredentialSecret {
   project: credentialProject!
   projectId: uuid!
   updatedAt: timestamptz!
-  vendor: credentialVendorEnum_enum!
+  vendor: credentialsVaultVendor_enum!
 }
 
 """userCredentialSecret fields"""
@@ -7474,7 +7616,7 @@ input userCredentialSecret_bool_exp {
   project: credentialProject_bool_exp
   projectId: uuid_comparison_exp
   updatedAt: timestamptz_comparison_exp
-  vendor: credentialVendorEnum_enum_comparison_exp
+  vendor: credentialsVaultVendor_enum_comparison_exp
 }
 
 """
@@ -7518,7 +7660,7 @@ input userCredentialSecret_insert_input {
   meta: jsonb
   name: String
   projectId: uuid
-  vendor: credentialVendorEnum_enum
+  vendor: credentialsVaultVendor_enum
 }
 
 """aggregate max on columns"""
@@ -7664,7 +7806,7 @@ input userCredentialSecret_set_input {
   expiresAt: timestamptz
   meta: jsonb
   name: String
-  vendor: credentialVendorEnum_enum
+  vendor: credentialsVaultVendor_enum
 }
 
 """
@@ -7688,7 +7830,7 @@ input userCredentialSecret_stream_cursor_value_input {
   name: String
   projectId: uuid
   updatedAt: timestamptz
-  vendor: credentialVendorEnum_enum
+  vendor: credentialsVaultVendor_enum
 }
 
 """
@@ -7762,6 +7904,7 @@ type userSecret {
     """filter the rows returned"""
     where: userSecretField_bool_exp
   ): [userSecretField!]!
+  icon: String!
   id: uuid!
 
   """An array relationship"""
@@ -7828,7 +7971,7 @@ type userSecret {
     """filter the rows returned"""
     where: usageHistorySecret_bool_exp
   ): usageHistorySecret_aggregate!
-  vendor: vendorEnum_enum!
+  vendor: secretsVaultVendor_enum!
 }
 
 """Fields of the user secrets."""
@@ -8173,6 +8316,7 @@ input userSecret_bool_exp {
   createdAt: timestamptz_comparison_exp
   description: String_comparison_exp
   fields: userSecretField_bool_exp
+  icon: String_comparison_exp
   id: uuid_comparison_exp
   installations: integrationInstallationUserSecret_bool_exp
   meta: jsonb_comparison_exp
@@ -8183,7 +8327,7 @@ input userSecret_bool_exp {
   updatedAt: timestamptz_comparison_exp
   userSecret_usageHistorySecrets: usageHistorySecret_bool_exp
   userSecret_usageHistorySecrets_aggregate: usageHistorySecret_aggregate_bool_exp
-  vendor: vendorEnum_enum_comparison_exp
+  vendor: secretsVaultVendor_enum_comparison_exp
 }
 
 """
@@ -8223,18 +8367,20 @@ input type for inserting data into table "userSecret"
 input userSecret_insert_input {
   description: String
   fields: userSecretField_arr_rel_insert_input
+  icon: String
   installations: integrationInstallationUserSecret_arr_rel_insert_input
   meta: jsonb
   name: String
   projectId: uuid
   slug: String
-  vendor: vendorEnum_enum
+  vendor: secretsVaultVendor_enum
 }
 
 """aggregate max on columns"""
 type userSecret_max_fields {
   createdAt: timestamptz
   description: String
+  icon: String
   id: uuid
   name: String
   projectId: uuid
@@ -8248,6 +8394,7 @@ order by max() on columns of table "userSecret"
 input userSecret_max_order_by {
   createdAt: order_by
   description: order_by
+  icon: order_by
   id: order_by
   name: order_by
   projectId: order_by
@@ -8259,6 +8406,7 @@ input userSecret_max_order_by {
 type userSecret_min_fields {
   createdAt: timestamptz
   description: String
+  icon: String
   id: uuid
   name: String
   projectId: uuid
@@ -8272,6 +8420,7 @@ order by min() on columns of table "userSecret"
 input userSecret_min_order_by {
   createdAt: order_by
   description: order_by
+  icon: order_by
   id: order_by
   name: order_by
   projectId: order_by
@@ -8314,6 +8463,7 @@ input userSecret_order_by {
   createdAt: order_by
   description: order_by
   fields_aggregate: userSecretField_aggregate_order_by
+  icon: order_by
   id: order_by
   installations_aggregate: integrationInstallationUserSecret_aggregate_order_by
   meta: order_by
@@ -8347,6 +8497,9 @@ enum userSecret_select_column {
   description
 
   """column name"""
+  icon
+
+  """column name"""
   id
 
   """column name"""
@@ -8373,10 +8526,11 @@ input type for updating data in table "userSecret"
 """
 input userSecret_set_input {
   description: String
+  icon: String
   meta: jsonb
   name: String
   slug: String
-  vendor: vendorEnum_enum
+  vendor: secretsVaultVendor_enum
 }
 
 """
@@ -8394,13 +8548,14 @@ input userSecret_stream_cursor_input {
 input userSecret_stream_cursor_value_input {
   createdAt: timestamptz
   description: String
+  icon: String
   id: uuid
   meta: jsonb
   name: String
   projectId: uuid
   slug: String
   updatedAt: timestamptz
-  vendor: vendorEnum_enum
+  vendor: secretsVaultVendor_enum
 }
 
 """
@@ -8409,6 +8564,9 @@ update columns of table "userSecret"
 enum userSecret_update_column {
   """column name"""
   description
+
+  """column name"""
+  icon
 
   """column name"""
   meta
@@ -8602,65 +8760,6 @@ input uuid_comparison_exp {
   _lte: uuid
   _neq: uuid
   _nin: [uuid!]
-}
-
-enum vendorEnum_enum {
-  agora
-  ansible
-  auth0
-  aws
-  azure
-  bitbucket
-  braintree
-  cloudflare
-  datadog
-  digitalOcean
-  discord
-  docker
-  dropbox
-  facebook
-  figma
-  gemini
-  gitHub
-  gitLab
-  google
-  googleCloud
-  jenkins
-  jira
-  kubernetes
-  linear
-  linkedIn
-  mailchimp
-  mixpanel
-  netlify
-  openAI
-  other
-  paypal
-  pulumi
-  reddit
-  salesforce
-  segment
-  sendgrid
-  shopify
-  slack
-  stripe
-  terraform
-  trello
-  twilio
-  twitter
-  vercel
-  zoom
-}
-
-"""
-Boolean expression to compare columns of type "vendorEnum_enum". All fields are combined with logical 'AND'.
-"""
-input vendorEnum_enum_comparison_exp {
-  _eq: vendorEnum_enum
-  _in: [vendorEnum_enum!]
-  _is_null: Boolean
-  _neq: vendorEnum_enum
-  _nin: [vendorEnum_enum!]
 }
 
 """

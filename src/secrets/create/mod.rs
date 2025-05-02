@@ -3,7 +3,7 @@ mod graphql;
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
-    print_formatted_error::print_formatted_error, slugify::slugify_prompt,
+    print_formatted_error::print_formatted_error,
     validate_name::validate_name, validate_secret_field_name::validate_secret_field_name,
     vendors::Vendors,
 };

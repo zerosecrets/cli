@@ -158,9 +158,8 @@ pub fn create(args: &SecretsCreateArgs) {
     }
 
     let project_info = project_info_by_slug(&args.slug, &access_token);
-    let secret_slug = slugify_prompt(&secret_name, "Type a slug for the secret:");
 
-    let secret_id =
+    let secret_response =
         execute_graphql_request::<create_secret::Variables, create_secret::ResponseData>(
             headers.clone(),
             CreateSecret::build_query,
@@ -175,8 +174,18 @@ pub fn create(args: &SecretsCreateArgs) {
                 },
             },
         )
-        .create_secret
-        .id;
+        .create_secret;
+
+    let secret_id = secret_response.id;
+
+    let secret_slug = match secret_response.user_secret {
+        Some(user_secret) => user_secret.slug,
+
+        None => {
+            print_formatted_error("Failed to get a secret slug");
+            std::process::exit(1);
+        }
+    };
 
     let text_template = minimad::TextTemplate::from(
         r#"

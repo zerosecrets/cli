@@ -2,7 +2,6 @@ mod graphql;
 use crate::common::{
     authorization_headers::authorization_headers, colorful_theme::theme,
     execute_graphql_request::execute_graphql_request, keyring::keyring,
-    print_formatted_error::print_formatted_error,
 };
 use crate::teams::common::team_info::team_info;
 use clap::Args;
@@ -35,7 +34,10 @@ pub fn delete(args: &TeamsDeleteArgs) {
     let team_info = team_info(&access_token, args.slug.clone());
 
     let input: String = Input::with_theme(&theme())
-        .with_prompt(format!("Type {} to confirm deletion:", &args.slug))
+        .with_prompt(format!(
+            "Type {} to confirm deletion:",
+            args.slug.clone().green()
+        ))
         .interact_text()
         .expect("Deletion failed. Failed to read the user's reply.");
 
@@ -53,23 +55,15 @@ pub fn delete(args: &TeamsDeleteArgs) {
         args.slug
     );
 
-    let remove_team_response =
-        execute_graphql_request::<delete_team::Variables, delete_team::ResponseData>(
-            authorization_headers.clone(),
-            DeleteTeam::build_query,
-            &client,
-            &remove_team_error_message,
-            delete_team::Variables { id: team_info.id },
-        )
-        .delete_team_by_pk;
-
-    match remove_team_response {
-        Some(data) => data.id,
-        None => {
-            print_formatted_error(&remove_team_error_message);
-            std::process::exit(1);
-        }
-    };
+    execute_graphql_request::<delete_team::Variables, delete_team::ResponseData>(
+        authorization_headers.clone(),
+        DeleteTeam::build_query,
+        &client,
+        &remove_team_error_message,
+        delete_team::Variables {
+            id: team_info.id.to_string(),
+        },
+    );
 
     println!("{} {}", "✔".green(), "Team successfully deleted");
 }

@@ -5,7 +5,7 @@ pub mod delete_team {
     use std::result::Result;
     pub const OPERATION_NAME: &str = "DeleteTeam";
     pub const QUERY: &str =
-        "mutation DeleteTeam($id: uuid!) {\n  delete_team_by_pk(id: $id) {\n    id\n  }\n}\n";
+        "mutation DeleteTeam($id: ID!) {\n  removeTeam(teamId: $id) {\n    id\n  }\n}\n";
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -16,19 +16,19 @@ pub mod delete_team {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
-    type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct Variables {
-        pub id: uuid,
+        pub id: ID,
     }
     impl Variables {}
     #[derive(Deserialize)]
     pub struct ResponseData {
-        pub delete_team_by_pk: Option<DeleteTeamDeleteTeamByPk>,
+        #[serde(rename = "removeTeam")]
+        pub remove_team: DeleteTeamRemoveTeam,
     }
     #[derive(Deserialize)]
-    pub struct DeleteTeamDeleteTeamByPk {
-        pub id: uuid,
+    pub struct DeleteTeamRemoveTeam {
+        pub id: ID,
     }
 }
 impl graphql_client::GraphQLQuery for DeleteTeam {

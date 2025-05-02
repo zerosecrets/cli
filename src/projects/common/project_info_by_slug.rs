@@ -50,7 +50,7 @@ pub fn project_info_by_slug(
 
     let options: Vec<String> = project_info_response
         .iter()
-        .map(|project| format!("{} (Team: {})", project.name, project.team.name.clone()))
+        .map(|project| format!("{} (Team: {})", project.name, &project.team.name))
         .collect();
 
     let selected_index = if options.len() < 1 {

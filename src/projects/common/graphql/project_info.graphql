@@ -9,5 +9,11 @@ query ProjectInfo($slug: String!) {
       name
       slug
     }
+
+    integrationInstallations_aggregate {
+      aggregate {
+        count
+      }
+    }
   }
 }

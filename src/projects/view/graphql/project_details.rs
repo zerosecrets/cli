@@ -4,7 +4,7 @@ pub mod project_details {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "ProjectDetails";
-    pub const QUERY : & str = "query ProjectDetails($id: uuid!) {\n  project(where: {id: {_eq: $id}}) {\n    id\n    name\n    description\n\n    usageHistories(limit: 1, order_by: {createdAt: desc}) {\n      createdAt\n    }\n\n    team {\n      name\n    }\n\n    integrationInstallations_aggregate {\n      aggregate {\n        count\n      }\n    }\n\n    userSecrets_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query ProjectDetails($id: uuid!) {\n  project(where: { id: { _eq: $id } }) {\n    id\n    name\n    description\n\n    usageHistories(limit: 1, order_by: { createdAt: desc }) {\n      createdAt\n    }\n\n    team {\n      name\n    }\n\n    integrationInstallations_aggregate {\n      aggregate {\n        count\n      }\n    }\n\n    userSecrets_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
     use super::*;
     use ::uuid::Uuid;
     use chrono::offset::Utc;
@@ -33,10 +33,10 @@ pub mod project_details {
     pub struct ProjectDetailsProject {
         pub id: uuid,
         pub name: String,
-        pub description: Option<String>,
+        pub description: String,
         #[serde(rename = "usageHistories")]
         pub usage_histories: Vec<ProjectDetailsProjectUsageHistories>,
-        pub team: Option<ProjectDetailsProjectTeam>,
+        pub team: ProjectDetailsProjectTeam,
         #[serde(rename = "integrationInstallations_aggregate")]
         pub integration_installations_aggregate:
             ProjectDetailsProjectIntegrationInstallationsAggregate,

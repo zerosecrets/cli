@@ -3,7 +3,7 @@ pub struct DeleteUserSecret;
 pub mod delete_user_secret {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "DeleteUserSecret";
-    pub const QUERY : & str = "mutation DeleteUserSecret($id: uuid!) {\n    delete_userSecret_by_pk(id: $id) {\n        id\n    }\n}\n" ;
+    pub const QUERY : & str = "mutation DeleteUserSecret($id: uuid!) {\n  delete_userSecret_by_pk(id: $id) {\n    id\n  }\n}\n" ;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;

@@ -50,20 +50,7 @@ pub fn project_info_by_slug(
 
     let options: Vec<String> = project_info_response
         .iter()
-        .map(|project| {
-            format!(
-                "{} (Team: {})",
-                project.name,
-                match &project.team {
-                    Some(team) => team.name.clone(),
-
-                    None => {
-                        print_formatted_error("Project must belong to a team");
-                        std::process::exit(1);
-                    }
-                }
-            )
-        })
+        .map(|project| format!("{} (Team: {})", project.name, project.team.name.clone()))
         .collect();
 
     let selected_index = if options.len() < 1 {
@@ -91,5 +78,5 @@ pub fn project_info_by_slug(
         }
     };
 
-    return project_info_response[selected_index].clone();
+    project_info_response[selected_index].clone()
 }

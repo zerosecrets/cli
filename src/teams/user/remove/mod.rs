@@ -86,7 +86,7 @@ pub fn remove(args: &UserRemoveArgs) {
 
     let remove_team_error_message = "Failed to remove the user from the team.";
 
-    let response_team_id = execute_graphql_request::<
+    let user_team_relation_id = execute_graphql_request::<
         remove_user_from_team::Variables,
         remove_user_from_team::ResponseData,
     >(
@@ -100,9 +100,9 @@ pub fn remove(args: &UserRemoveArgs) {
         },
     )
     .remove_user_from_team
-    .team_id;
+    .id;
 
-    if response_team_id.is_empty() {
+    if user_team_relation_id.is_empty() {
         println!(
             "{} User '{}' has not been removed from the '{}' team.",
             "❌".red(),

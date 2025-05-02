@@ -30,7 +30,7 @@ pub mod project_info {
         pub id: uuid,
         pub name: String,
         pub slug: String,
-        pub team: Option<ProjectInfoProjectTeam>,
+        pub team: ProjectInfoProjectTeam,
     }
     #[derive(Deserialize, Clone)]
     pub struct ProjectInfoProjectTeam {

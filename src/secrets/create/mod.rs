@@ -1,15 +1,10 @@
 mod graphql;
 
 use crate::common::{
-    authorization_headers::authorization_headers,
-    colorful_theme::theme,
-    config::Config,
-    execute_graphql_request::execute_graphql_request,
-    keyring::keyring,
-    print_formatted_error::print_formatted_error,
-    slugify::slugify_prompt,
-    validate_name::validate_name,
-    validate_secret_field_name::validate_secret_field_name,
+    authorization_headers::authorization_headers, colorful_theme::theme, config::Config,
+    execute_graphql_request::execute_graphql_request, keyring::keyring,
+    print_formatted_error::print_formatted_error, slugify::slugify_prompt,
+    validate_name::validate_name, validate_secret_field_name::validate_secret_field_name,
     vendors::Vendors,
 };
 
@@ -175,7 +170,6 @@ pub fn create(args: &SecretsCreateArgs) {
                 fields: secret_fields,
                 secret: create_secret::CreateSecretInput {
                     name: secret_name.clone(),
-                    slug: secret_slug.clone(),
                     project_id: project_info.id.to_string(),
                     vendor: selected_vendor.to_string(),
                 },
@@ -197,13 +191,7 @@ pub fn create(args: &SecretsCreateArgs) {
     let secret_link = style(format!(
         "{}/{}/{}/{}",
         config.webapp_url,
-        match &project_info.team {
-            Some(team) => team.slug.clone(),
-            None => {
-                print_formatted_error("Project must belong to a team");
-                std::process::exit(1);
-            }
-        },
+        &project_info.team.slug,
         &project_info.slug.to_string(),
         &secret_slug,
     ))

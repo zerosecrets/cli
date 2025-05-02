@@ -3,7 +3,7 @@ pub struct UpdateTeamDescription;
 pub mod update_team_description {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "UpdateTeamDescription";
-    pub const QUERY : & str = "mutation UpdateTeamDescription($id: uuid!, $description: String!) {\n  update_team_by_pk(pk_columns: {id: $id}, _set: {description: $description}) {\n    id\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation UpdateTeamDescription($id: uuid!, $description: String!) {\n  update_team_by_pk(\n    pk_columns: { id: $id }\n    _set: { description: $description }\n  ) {\n    id\n  }\n}\n" ;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;

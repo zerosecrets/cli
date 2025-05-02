@@ -38,7 +38,7 @@ pub mod secret_info {
         pub id: uuid,
         pub name: String,
         pub slug: String,
-        pub team: Option<SecretInfoUserSecretProjectTeam>,
+        pub team: SecretInfoUserSecretProjectTeam,
     }
     #[derive(Deserialize, Clone)]
     pub struct SecretInfoUserSecretProjectTeam {

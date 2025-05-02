@@ -3,7 +3,7 @@ pub struct SecretFieldsIds;
 pub mod secret_fields_ids {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "SecretFieldsIds";
-    pub const QUERY : & str = "query SecretFieldsIds($id: uuid!) {\n   userSecret_by_pk(id: $id) {\n    id\n\n    fields {\n      id\n      name\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query SecretFieldsIds($id: uuid!) {\n  userSecret_by_pk(id: $id) {\n    id\n\n    fields {\n      id\n      name\n    }\n  }\n}\n" ;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
     type Boolean = bool;
@@ -13,9 +13,10 @@ pub mod secret_fields_ids {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
+    type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct Variables {
-        pub id: uuid::Uuid,
+        pub id: uuid,
     }
     impl Variables {}
     #[derive(Deserialize)]
@@ -25,19 +26,19 @@ pub mod secret_fields_ids {
     }
     #[derive(Deserialize)]
     pub struct SecretFieldsIdsUserSecretByPk {
-        pub id: uuid::Uuid,
+        pub id: uuid,
         pub fields: Vec<SecretFieldsIdsUserSecretByPkFields>,
     }
     #[derive(Deserialize)]
     pub struct SecretFieldsIdsUserSecretByPkFields {
-        pub id: uuid::Uuid,
+        pub id: uuid,
         pub name: String,
     }
 }
 impl graphql_client::GraphQLQuery for SecretFieldsIds {
     type Variables = secret_fields_ids::Variables;
     type ResponseData = secret_fields_ids::ResponseData;
-    fn build_query(variables: Self::Variables) -> graphql_client::QueryBody<Self::Variables> {
+    fn build_query(variables: Self::Variables) -> ::graphql_client::QueryBody<Self::Variables> {
         graphql_client::QueryBody {
             variables,
             query: secret_fields_ids::QUERY,

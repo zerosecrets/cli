@@ -63,7 +63,7 @@ pub fn leave(args: &TeamLeaveArgs) {
     let team_info = team_info(&access_token, args.slug.clone());
     let leave_team_error_message = "Failed to leave the team.";
 
-    let leave_team_id = execute_graphql_request::<
+    let user_team_relation_id = execute_graphql_request::<
         remove_user_from_team::Variables,
         remove_user_from_team::ResponseData,
     >(
@@ -77,16 +77,15 @@ pub fn leave(args: &TeamLeaveArgs) {
         },
     )
     .remove_user_from_team
-    .team_id;
+    .id;
 
-    if leave_team_id.is_empty() {
+    if user_team_relation_id.is_empty() {
         print_formatted_error(&leave_team_error_message);
         std::process::exit(1);
     } else {
         println!(
-            "{} You have successfully left the '{}' team.",
+            "{} You have successfully left the team.",
             "✔".green(),
-            team_info.name
         );
     }
 }

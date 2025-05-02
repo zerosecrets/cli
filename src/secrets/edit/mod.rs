@@ -206,7 +206,7 @@ pub fn edit(args: &SecretsEditArgs) {
             }
         };
 
-        let vendors: Vec<_> = update_secret_info::vendorEnum_enum::iter().collect();
+        let vendors: Vec<_> = update_secret_info::secretsVaultVendor_enum::iter().collect();
 
         let vendors_variants: &Vec<String> =
             &vendors.iter().map(|variant| variant.to_string()).collect();
@@ -244,7 +244,7 @@ pub fn edit(args: &SecretsEditArgs) {
 
         secret_slug = slugify_prompt(&args.slug, "Type a slug for the secret:");
 
-        // Don't forget add to generated query [serde(skip_serializing_if = "Option::is_none")] if you re-generate query
+        // Remember to add to a generated query [serde(skip_serializing_if = "Option::is_none")] if you re-generate a query
         execute_graphql_request::<update_secret_info::Variables, update_secret_info::ResponseData>(
             headers,
             UpdateSecretInfo::build_query,
@@ -252,12 +252,9 @@ pub fn edit(args: &SecretsEditArgs) {
             &update_secret_error_message,
             update_secret_info::Variables {
                 id: secret_info.id,
-                set: update_secret_info::userSecret_set_input {
-                    name: Some(new_secret_name.to_owned()),
-                    vendor: Some(new_secret_vendor),
-                    slug: Some(secret_slug.clone()),
-                    note: None,
-                },
+                name: new_secret_name.to_owned(),
+                vendor: Some(new_secret_vendor),
+                slug: secret_slug.clone(),
             },
         )
         .update_user_secret_by_pk;
@@ -274,13 +271,7 @@ pub fn edit(args: &SecretsEditArgs) {
         style(format!(
             "{}/{}/{}/{}",
             config.webapp_url,
-            match &edited_secret.project.team {
-                Some(team) => team.slug.clone(),
-                None => {
-                    print_formatted_error("Project must belong to a team");
-                    std::process::exit(1);
-                }
-            },
+            &edited_secret.project.team.slug,
             &edited_secret.project.slug,
             &secret_slug,
         ))

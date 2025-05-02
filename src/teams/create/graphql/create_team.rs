@@ -29,7 +29,7 @@ pub mod create_team {
     }
     #[derive(Deserialize)]
     pub struct CreateTeamCreateTeam {
-        pub id: String,
+        pub id: ID,
     }
 }
 impl graphql_client::GraphQLQuery for CreateTeam {

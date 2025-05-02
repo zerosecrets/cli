@@ -54,16 +54,7 @@ pub fn secret_info_by_slug(
             format!(
                 "{} (Team: {}, Project: {})",
                 secret.name,
-
-                match &secret.project.team {
-                    Some(team) => team.name.clone(),
-
-                    None => {
-                        print_formatted_error("Secret must belong to a project");
-                        std::process::exit(1);
-                    }
-                },
-
+                &secret.project.team.name,
                 &secret.project.name
             )
         })

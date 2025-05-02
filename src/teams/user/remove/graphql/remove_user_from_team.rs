@@ -4,7 +4,7 @@ pub mod remove_user_from_team {
     #![allow(dead_code)]
     use std::result::Result;
     pub const OPERATION_NAME: &str = "RemoveUserFromTeam";
-    pub const QUERY : & str = "mutation RemoveUserFromTeam($teamId: ID!, $userId: ID!) {\n  removeUserFromTeam(teamId: $teamId, userId: $userId) {\n    teamId\n  }\n}\n" ;
+    pub const QUERY : & str = "mutation RemoveUserFromTeam($teamId: ID!, $userId: ID!) {\n  removeUserFromTeam(teamId: $teamId, userId: $userId) {\n    id\n  }\n}\n" ;
     use super::*;
     use serde::{Deserialize, Serialize};
     #[allow(dead_code)]
@@ -30,8 +30,7 @@ pub mod remove_user_from_team {
     }
     #[derive(Deserialize)]
     pub struct RemoveUserFromTeamRemoveUserFromTeam {
-        #[serde(rename = "teamId")]
-        pub team_id: ID,
+        pub id: ID,
     }
 }
 impl graphql_client::GraphQLQuery for RemoveUserFromTeam {

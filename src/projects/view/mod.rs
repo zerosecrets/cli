@@ -1,12 +1,9 @@
 use clap::Args;
 mod graphql;
 use crate::common::{
-    authorization_headers::authorization_headers,
-    config::Config,
-    execute_graphql_request::execute_graphql_request,
-    format_relative_time::format_relative_time,
-    keyring::keyring,
-    print_formatted_error::print_formatted_error,
+    authorization_headers::authorization_headers, config::Config,
+    execute_graphql_request::execute_graphql_request, format_relative_time::format_relative_time,
+    keyring::keyring, print_formatted_error::print_formatted_error,
 };
 use crate::projects::common::project_info_by_slug::project_info_by_slug;
 use crate::projects::view::graphql::project_details::{project_details, ProjectDetails};
@@ -94,21 +91,9 @@ pub fn view(args: &ProjectsViewArgs) {
         } else {
             0
         },
-        match &project_info.team {
-            Some(team) => team.name.clone(),
-            None => {
-                print_formatted_error("Project must belong to a team");
-                std::process::exit(1);
-            }
-        },
+        &project_info.team.name,
         style(format!("{}/{}/{}", Config::new().webapp_url,
-        match &project_info.team {
-            Some(team) => team.slug.clone(),
-            None => {
-                print_formatted_error("Project must belong to a team");
-                std::process::exit(1);
-            }
-        },
+        &project_info.team.slug,
         &project_info.slug)).with(Color::Rgb {
             r: 0,
             g: 135,

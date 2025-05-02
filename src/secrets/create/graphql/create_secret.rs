@@ -24,8 +24,7 @@ pub mod create_secret {
     pub struct CreateSecretInput {
         pub name: String,
         #[serde(rename = "projectId")]
-        pub project_id: String,
-        pub slug: String,
+        pub project_id: ID,
         pub vendor: String,
     }
     #[derive(Serialize)]
@@ -41,7 +40,7 @@ pub mod create_secret {
     }
     #[derive(Deserialize)]
     pub struct CreateSecretCreateSecret {
-        pub id: String,
+        pub id: ID,
     }
 }
 impl graphql_client::GraphQLQuery for CreateSecret {

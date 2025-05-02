@@ -3,7 +3,7 @@ pub struct ProjectUsage;
 pub mod project_usage {
     #![allow(dead_code)]
     pub const OPERATION_NAME: &str = "ProjectUsage";
-    pub const QUERY : & str = "query ProjectUsage($id: uuid!) {\n  project(where: {id: {_eq: $id}}, limit: 1000) {\n    id\n    name\n\n    usageHistories(order_by: {createdAt: desc}) {\n      id\n      createdAt\n      callerName\n      remoteIp\n\n      secrets_aggregate {\n        aggregate {\n          count\n        }\n      }\n    }\n\n    usageHistories_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
+    pub const QUERY : & str = "query ProjectUsage($id: uuid!) {\n  project(where: { id: { _eq: $id } }, limit: 1000) {\n    id\n    name\n\n    usageHistories(order_by: { createdAt: desc }) {\n      id\n      createdAt\n      callerName\n      remoteIp\n\n      secrets_aggregate {\n        aggregate {\n          count\n        }\n      }\n    }\n\n    usageHistories_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n}\n" ;
     use chrono::offset::Utc;
     use chrono::DateTime;
     use serde::{Deserialize, Serialize};
@@ -15,9 +15,10 @@ pub mod project_usage {
     type Int = i64;
     #[allow(dead_code)]
     type ID = String;
+    type uuid = ::uuid::Uuid;
     #[derive(Serialize)]
     pub struct Variables {
-        pub id: uuid::Uuid,
+        pub id: uuid,
     }
     impl Variables {}
     #[derive(Deserialize)]
@@ -26,7 +27,7 @@ pub mod project_usage {
     }
     #[derive(Deserialize)]
     pub struct ProjectUsageProject {
-        pub id: uuid::Uuid,
+        pub id: uuid,
         pub name: String,
         #[serde(rename = "usageHistories")]
         pub usage_histories: Vec<ProjectUsageProjectUsageHistories>,
@@ -35,13 +36,13 @@ pub mod project_usage {
     }
     #[derive(Deserialize)]
     pub struct ProjectUsageProjectUsageHistories {
-        pub id: uuid::Uuid,
+        pub id: uuid,
         #[serde(rename = "createdAt")]
         pub created_at: DateTime<Utc>,
         #[serde(rename = "callerName")]
         pub caller_name: Option<String>,
         #[serde(rename = "remoteIp")]
-        pub remote_ip: Option<String>,
+        pub remote_ip: String,
         pub secrets_aggregate: ProjectUsageProjectUsageHistoriesSecretsAggregate,
     }
     #[derive(Deserialize)]

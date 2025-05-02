@@ -85,7 +85,7 @@ pub fn usage(args: &ProjectsUsageListArgs) {
             column_width_size.caller_name = column_width_size.caller_name.max(name.len());
         }
 
-        let unwrapped_history = history.remote_ip.clone().unwrap_or("N\\A".to_string());
+        let unwrapped_history = history.remote_ip.clone();
         column_width_size.remote_ip = column_width_size.remote_ip.max(unwrapped_history.len());
         let created_at_data = &history.created_at.format(date_format);
 
@@ -104,7 +104,7 @@ pub fn usage(args: &ProjectsUsageListArgs) {
     // output data to the console. If no field contains caller_name then do not include it in the text
     for history in &project_usage_stats.usage_histories {
         let created_at_data = &history.created_at.format(date_format);
-        let unwrapped_history = history.remote_ip.clone().unwrap_or("N\\A".to_string());
+        let unwrapped_history = history.remote_ip.clone();
 
         list.push(format!(
             "{}{}{}{}{}",
